@@ -101,9 +101,9 @@ const ESPECIALIDADES = [
 ];
 
 const CORPO = [
-  { nome: "Dra. Helena Prado", area: "Clínica geral", crm: "CRM/SP 000000", seed: "vitta-2" },
-  { nome: "Dr. Caio Monteiro", area: "Cardiologia", crm: "CRM/SP 000000", seed: "vitta-3" },
-  { nome: "Dra. Júlia Tavares", area: "Dermatologia", crm: "CRM/SP 000000", seed: "vitta-4" },
+  { nome: "Dra. Helena Prado", area: "Clínica geral", crm: "CRM/SP 000000", foto: "/demos/vitta/dra-helena.avif" },
+  { nome: "Dr. Caio Monteiro", area: "Cardiologia", crm: "CRM/SP 000000", foto: "/demos/vitta/dr-caio.avif" },
+  { nome: "Dra. Júlia Tavares", area: "Dermatologia", crm: "CRM/SP 000000", foto: "/demos/vitta/dra-julia.avif" },
 ];
 
 function LinhaPulso({ id }: { id: string }) {
@@ -220,7 +220,7 @@ export default function VittaPagina() {
         </div>
         <div className={`${s.foto} ${s.heroFoto}`} data-hero-plate data-kenburns>
           <Image
-            src="https://picsum.photos/seed/vitta-1/1000/1250"
+            src="/demos/vitta/recepcao.avif"
             alt="Recepção clara e tranquila da clínica"
             fill
             priority
@@ -277,7 +277,7 @@ export default function VittaPagina() {
             <div className={s.perfil} key={p.nome}>
               <div className={`${s.foto} ${s.perfilFoto}`} data-reveal="plate">
                 <Image
-                  src={`https://picsum.photos/seed/${p.seed}/750/1000`}
+                  src={p.foto}
                   alt={`Retrato de ${p.nome}`}
                   fill
                   sizes="(max-width: 860px) 100vw, 360px"
@@ -325,7 +325,7 @@ export default function VittaPagina() {
                 data-parallax
               >
                 <Image
-                  src="https://picsum.photos/seed/vitta-5/1200/750"
+                  src="/demos/vitta/corredor.avif"
                   alt="Corredor claro da clínica"
                   fill
                   sizes="(max-width: 860px) 100vw, 520px"
@@ -417,7 +417,7 @@ export default function VittaPagina() {
               data-parallax
             >
               <Image
-                src="https://picsum.photos/seed/vitta-6/1200/750"
+                src="/demos/vitta/fachada.avif"
                 alt="Fachada da clínica pela manhã"
                 fill
                 sizes="(max-width: 860px) 100vw, 420px"

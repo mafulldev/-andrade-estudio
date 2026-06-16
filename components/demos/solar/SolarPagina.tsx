@@ -26,7 +26,7 @@ const IMOVEIS = [
       ["Vagas", "3 cobertas"],
       ["Preço", "R$ 1.890.000"],
     ],
-    seeds: ["solar-2", "solar-3", "solar-4"],
+    fotos: ["/demos/solar/casa-patio-patio.avif", "/demos/solar/casa-patio-interior.avif", "/demos/solar/varanda.avif"],
   },
   {
     nome: "Apartamento Horizonte",
@@ -38,7 +38,7 @@ const IMOVEIS = [
       ["Vagas", "2 livres"],
       ["Preço", "R$ 1.150.000"],
     ],
-    seeds: ["solar-5", "solar-6", "solar-7"],
+    fotos: ["/demos/solar/apartamento-interior.avif", "/demos/solar/vista-horizonte.avif", "/demos/solar/varanda-gourmet.avif"],
   },
   {
     nome: "Refúgio da Serra",
@@ -50,11 +50,11 @@ const IMOVEIS = [
       ["Vagas", "4, sendo 2 cobertas"],
       ["Preço", "R$ 2.400.000"],
     ],
-    seeds: ["solar-8", "solar-4", "solar-6"],
+    fotos: ["/demos/solar/refugio-serra.avif", "/demos/solar/varanda.avif", "/demos/solar/vista-horizonte.avif"],
   },
 ];
 
-function Microgaleria({ seeds, alt }: { seeds: string[]; alt: string }) {
+function Microgaleria({ fotos, alt }: { fotos: string[]; alt: string }) {
   const [ativa, setAtiva] = useState(0);
   const [anterior, setAnterior] = useState(0);
 
@@ -67,15 +67,15 @@ function Microgaleria({ seeds, alt }: { seeds: string[]; alt: string }) {
   return (
     <div className={s.galeria}>
       <div className={s.galeriaQuadro} data-contra-solar data-reveal="plate">
-        {seeds.map((seed, i) => (
+        {fotos.map((foto, i) => (
           <div
-            key={`${seed}-${i}`}
+            key={`${foto}-${i}`}
             className={`${s.galeriaImg} ${
               i === ativa ? s.galeriaImgAtiva : i === anterior ? s.galeriaImgAnterior : ""
             }`}
           >
             <Image
-              src={`https://picsum.photos/seed/${seed}/1200/750`}
+              src={foto}
               alt={i === ativa ? alt : ""}
               fill
               sizes="(max-width: 860px) 100vw, 640px"
@@ -84,12 +84,12 @@ function Microgaleria({ seeds, alt }: { seeds: string[]; alt: string }) {
         ))}
       </div>
       <div className={s.galeriaDots} role="group" aria-label={`Fotos de ${alt}`}>
-        {seeds.map((seed, i) => (
+        {fotos.map((foto, i) => (
           <button
-            key={`${seed}-dot-${i}`}
+            key={`${foto}-dot-${i}`}
             type="button"
             aria-current={i === ativa}
-            aria-label={`Foto ${i + 1} de ${seeds.length}`}
+            aria-label={`Foto ${i + 1} de ${fotos.length}`}
             onClick={() => trocar(i)}
           />
         ))}
@@ -188,7 +188,7 @@ export default function SolarPagina() {
           data-parallax
         >
           <Image
-            src="https://picsum.photos/seed/solar-1/1100/1500"
+            src="/demos/solar/casa-patio-fachada.avif"
             alt="Fachada do imóvel em destaque ao entardecer"
             fill
             priority
@@ -220,7 +220,7 @@ export default function SolarPagina() {
         {IMOVEIS.map((im) => (
           <article className={s.imovel} key={im.nome}>
             <div className={s.imovelGaleria}>
-              <Microgaleria seeds={im.seeds} alt={`${im.nome}, ${im.bairro}`} />
+              <Microgaleria fotos={im.fotos} alt={`${im.nome}, ${im.bairro}`} />
             </div>
             <div className={s.imovelTexto}>
               <span className={s.rotulo} data-reveal="mascara">
@@ -279,7 +279,7 @@ export default function SolarPagina() {
           </div>
           <div className={`${s.foto} ${s.sobreFoto}`} data-reveal="plate" data-parallax>
             <Image
-              src="https://picsum.photos/seed/solar-5/900/1125"
+              src="/demos/solar/apartamento-interior.avif"
               alt="O escritório da imobiliária ao entardecer"
               fill
               sizes="(max-width: 860px) 100vw, 420px"

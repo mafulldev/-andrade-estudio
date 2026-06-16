@@ -101,7 +101,7 @@ export default function BrasaPagina() {
         <div data-hero-conjunto style={{ position: "absolute", inset: 0, display: "grid", alignContent: "end" }}>
           <div className={s.heroFundo} data-hero-plate data-kenburns>
             <Image
-              src="https://picsum.photos/seed/brasa-1/1920/1280"
+              src="/demos/brasa/hero.avif"
               alt="Prato principal servido à luz do fogo"
               fill
               priority
@@ -177,7 +177,7 @@ export default function BrasaPagina() {
                   style={{ aspectRatio: "4 / 3", display: "block" }}
                 >
                   <Image
-                    src={`https://picsum.photos/seed/brasa-${i + 1}/800/600`}
+                    src={`/demos/brasa/prato-${i + 1}.avif`}
                     alt={`Foto do prato ${p.nome}`}
                     fill
                     sizes="420px"
@@ -198,7 +198,7 @@ export default function BrasaPagina() {
             style={{ position: "absolute", inset: 0 }}
           >
             <Image
-              src={`https://picsum.photos/seed/brasa-${i + 1}/600/450`}
+              src={`/demos/brasa/prato-${i + 1}.avif`}
               alt=""
               fill
               sizes="300px"
@@ -244,7 +244,7 @@ export default function BrasaPagina() {
             data-parallax
           >
             <Image
-              src="https://picsum.photos/seed/brasa-3/1200/900"
+              src="/demos/brasa/forno.avif"
               alt="O forno de barro aceso na cozinha"
               fill
               sizes="(max-width: 860px) 100vw, 560px"
@@ -256,7 +256,7 @@ export default function BrasaPagina() {
             data-parallax
           >
             <Image
-              src="https://picsum.photos/seed/brasa-6/1400/788"
+              src="/demos/brasa/salao.avif"
               alt="O salão da casa à noite"
               fill
               sizes="(max-width: 860px) 100vw, 620px"

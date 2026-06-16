@@ -167,7 +167,7 @@ export default function PrumoPagina() {
         </button>
         <div className={`${s.foto} ${s.heroFaixa}`} data-hero-plate data-parallax>
           <Image
-            src="https://picsum.photos/seed/prumo-1/1600/500"
+            src="/demos/prumo/hero-equipe.avif"
             alt="A equipe em obra, faixa panorâmica"
             fill
             priority
@@ -203,7 +203,7 @@ export default function PrumoPagina() {
         </div>
         <div className={`${s.foto} ${s.servicosFoto}`} data-reveal="plate" data-parallax>
           <Image
-            src="https://picsum.photos/seed/prumo-2/1600/686"
+            src="/demos/prumo/servicos-ferramentas.avif"
             alt="Bancada de ferramentas organizada da equipe"
             fill
             sizes="(max-width: 860px) 100vw, 1140px"
@@ -237,7 +237,7 @@ export default function PrumoPagina() {
             onPointerCancel={aoSoltar}
           >
             <Image
-              src="https://picsum.photos/seed/prumo-4/1600/900"
+              src="/demos/prumo/cozinha-depois.avif"
               alt="A cozinha depois da reforma"
               fill
               sizes="(max-width: 860px) 100vw, 1100px"
@@ -247,7 +247,7 @@ export default function PrumoPagina() {
               style={{ clipPath: `inset(0 ${100 - pos}% 0 0)` }}
             >
               <Image
-                src="https://picsum.photos/seed/prumo-3/1600/900"
+                src="/demos/prumo/cozinha-antes.avif"
                 alt="A mesma cozinha antes da reforma"
                 fill
                 sizes="(max-width: 860px) 100vw, 1100px"
@@ -302,7 +302,7 @@ export default function PrumoPagina() {
             </p>
             <div className={`${s.foto} ${s.orcamentoFoto}`} data-reveal="plate" data-parallax>
               <Image
-                src="https://picsum.photos/seed/prumo-5/1200/750"
+                src="/demos/prumo/medicao-laser.avif"
                 alt="Medição em obra com nível a laser"
                 fill
                 sizes="(max-width: 860px) 100vw, 520px"
@@ -374,7 +374,7 @@ export default function PrumoPagina() {
             </div>
             <div className={`${s.foto} ${s.coberturaFoto}`} data-reveal="plate" data-parallax>
               <Image
-                src="https://picsum.photos/seed/prumo-6/1200/750"
+                src="/demos/prumo/van-equipe.avif"
                 alt="A van da equipe estacionada em frente à obra"
                 fill
                 sizes="(max-width: 860px) 100vw, 480px"

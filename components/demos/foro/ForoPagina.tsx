@@ -44,21 +44,21 @@ const ARTIGOS = [
     titulo: "O contrato como instrumento de previsibilidade",
     resumo:
       "Cláusulas claras custam menos que litígios longos. O que todo contrato de prestação de serviços deveria prever antes da assinatura.",
-    seed: "foro-3",
+    foto: "/demos/foro/artigo-contrato.avif",
   },
   {
     data: "28 de março de 2026",
     titulo: "Guarda compartilhada: o que muda na prática",
     resumo:
       "A diferença entre guarda e convivência, e por que o calendário importa mais que o rótulo no acordo entre as partes.",
-    seed: "foro-4",
+    foto: "/demos/foro/artigo-familia.avif",
   },
   {
     data: "9 de fevereiro de 2026",
     titulo: "Proteção de dados para pequenas empresas: por onde começar",
     resumo:
       "O mapeamento mínimo que a LGPD espera de qualquer operação, mesmo a de um escritório com três pessoas.",
-    seed: "foro-5",
+    foto: "/demos/foro/artigo-lgpd.avif",
   },
 ];
 
@@ -178,7 +178,7 @@ export default function ForoPagina() {
         </button>
         <div className={`${s.foto} ${s.heroFoto}`} data-hero-plate data-parallax>
           <Image
-            src="https://picsum.photos/seed/foro-1/690/920"
+            src="/demos/foro/arquivo.avif"
             alt="Detalhe do arquivo do escritório"
             fill
             priority
@@ -226,7 +226,7 @@ export default function ForoPagina() {
         <div className={s.escritorio}>
           <div className={`${s.foto} ${s.escFoto}`} data-reveal="plate" data-parallax>
             <Image
-              src="https://picsum.photos/seed/foro-2/900/1125"
+              src="/demos/foro/biblioteca.avif"
               alt="A biblioteca do escritório"
               fill
               sizes="(max-width: 860px) 100vw, 460px"
@@ -285,7 +285,7 @@ export default function ForoPagina() {
             <article className={s.artigo} key={a.titulo}>
               <div className={`${s.foto} ${s.artigoFoto}`} data-reveal="plate">
                 <Image
-                  src={`https://picsum.photos/seed/${a.seed}/660/495`}
+                  src={a.foto}
                   alt={`Imagem da publicação ${a.titulo}`}
                   fill
                   sizes="(max-width: 860px) 360px, 220px"
@@ -330,7 +330,7 @@ export default function ForoPagina() {
             </p>
             <div className={`${s.foto} ${s.consultaFoto}`} data-reveal="plate" data-parallax>
               <Image
-                src="https://picsum.photos/seed/foro-6/1200/750"
+                src="/demos/foro/sala-reuniao.avif"
                 alt="A sala de reunião do escritório"
                 fill
                 sizes="(max-width: 860px) 100vw, 480px"
