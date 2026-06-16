@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1250">
+  <defs>
+    <radialGradient id="calor" cx="50%" cy="92%" r="80%">
+      <stop offset="0%" stop-color="#1a1d23"/>
+      <stop offset="55%" stop-color="#14161b"/>
+      <stop offset="100%" stop-color="#0f1115"/>
+    </radialGradient>
+    <linearGradient id="fio" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0%" stop-color="#8b94a3"/>
+      <stop offset="100%" stop-color="#8b94a3" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="1000" height="1250" fill="url(#calor)"/>
+  <g stroke="url(#fio)" stroke-width="2" fill="none" stroke-linecap="round">
+    <path d="M280 1250 C 300 1000, 240 860, 290 660"/>
+    <path d="M430 1250 C 410 1040, 470 900, 440 620 C 430 540, 460 470, 450 400"/>
+    <path d="M580 1250 C 600 1060, 540 920, 590 700"/>
+    <path d="M720 1250 C 700 1080, 760 940, 730 760 C 720 660, 750 600, 740 520"/>
+  </g>
+  <g fill="#d9a05f">
+    <circle cx="292" cy="640" r="3.2"/>
+    <circle cx="452" cy="382" r="2.4"/>
+    <circle cx="592" cy="682" r="2.8"/>
+    <circle cx="742" cy="500" r="2.2"/>
+    <circle cx="380" cy="820" r="1.8" opacity="0.7"/>
+    <circle cx="660" cy="880" r="1.6" opacity="0.6"/>
+  </g>
+  <rect x="60" y="60" width="880" height="1130" fill="none" stroke="#aeb6c2" stroke-opacity="0.14" stroke-width="1"/>
+</svg>

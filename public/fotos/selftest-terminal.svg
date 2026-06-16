@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 1120" font-family="Consolas, 'Cascadia Mono', monospace">
+  <rect width="1280" height="1120" fill="#14161b"/>
+  <rect x="60" y="60" width="1160" height="1000" fill="#0f1115" stroke="#aeb6c2" stroke-opacity="0.22"/>
+  <g>
+    <circle cx="96" cy="96" r="6" fill="#aeb6c2" opacity="0.35"/>
+    <circle cx="120" cy="96" r="6" fill="#aeb6c2" opacity="0.25"/>
+    <circle cx="144" cy="96" r="6" fill="#d9a05f"/>
+    <text x="640" y="101" font-size="16" fill="#8b94a3" text-anchor="middle">andrade · selftest</text>
+  </g>
+  <line x1="60" y1="124" x2="1220" y2="124" stroke="#aeb6c2" stroke-opacity="0.14"/>
+  <g font-size="22" fill="#aeb6c2">
+    <text x="100" y="180"><tspan fill="#8b94a3">$</tspan> npm run selftest</text>
+    <text x="100" y="232" fill="#8b94a3">&gt; andrade-estudio@1.0.0 selftest</text>
+    <text x="100" y="264" fill="#8b94a3">&gt; tsx scripts/selftest.ts</text>
+    <text x="100" y="328"><tspan fill="#d9a05f">[PASS]</tspan> Cenário A: advocacia, contatos, [blogSeo], urgente, até 2.500</text>
+    <text x="100" y="366"><tspan fill="#d9a05f">[PASS]</tspan> Cenário B: loja online, vender, [pagamentos, blogSeo], flexível</text>
+    <text x="100" y="404"><tspan fill="#d9a05f">[PASS]</tspan> Cenário C: startup, sistema, [admin, integracoes], urgente</text>
+    <text x="100" y="442"><tspan fill="#d9a05f">[PASS]</tspan> Cenário D: serialização e parse do payload B idênticos</text>
+    <text x="100" y="502" fill="#e8ecf2">Self-test completo: 4 de 4 em PASS.</text>
+    <text x="100" y="562" fill="#8b94a3">Verificações estáticas da casa:</text>
+    <text x="100" y="600"><tspan fill="#d9a05f">[PASS]</tspan> Lenis com autoRaf e syncTouch desligados no provider</text>
+    <text x="100" y="638"><tspan fill="#d9a05f">[PASS]</tspan> Registro GSAP sem Wiggle/Bounce e com Morph/MotionPath</text>
+    <text x="100" y="676"><tspan fill="#d9a05f">[PASS]</tspan> Motion apenas via m.*, sem framer-motion nem useScroll</text>
+    <text x="100" y="714"><tspan fill="#d9a05f">[PASS]</tspan> Eases GSAP do estúdio restritas a "andrade", "cortina" e "none"</text>
+    <text x="100" y="752"><tspan fill="#d9a05f">[PASS]</tspan> Travessão ausente de texto visível</text>
+    <text x="100" y="790"><tspan fill="#d9a05f">[PASS]</tspan> CSS sem hex, rgb ou hsl (OKLCH only)</text>
+    <text x="100" y="828"><tspan fill="#d9a05f">[PASS]</tspan> Specs da ficha técnica todas com medidoEm</text>
+    <text x="100" y="866"><tspan fill="#d9a05f">[PASS]</tspan> Springs do Motion sempre com bounce zero</text>
+    <text x="100" y="926" fill="#e8ecf2">Estático: 8 de 8 em PASS.</text>
+    <text x="100" y="990"><tspan fill="#8b94a3">$</tspan> <tspan fill="#e8ecf2">_</tspan></text>
+  </g>
+</svg>

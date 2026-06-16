@@ -1,0 +1,182 @@
+/* Comparador PRONTO × SOB MEDIDA: duas faces sobrepostas recortadas por uma
+   régua vertical arrastável. Editorial: hairlines, cantos retos; o accent só
+   aparece em foco/arraste. Abaixo de 720px (ou reduced-motion) vira pilha. */
+
+.quadro {
+  --pos: 50%;
+  position: relative;
+  border: 1px solid var(--hairline);
+  isolation: isolate;
+  touch-action: pan-y;
+}
+
+.face {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  min-height: clamp(360px, 52vh, 520px);
+}
+
+.faceTopo {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  clip-path: inset(0 calc(100% - var(--pos)) 0 0);
+  background: var(--bg-deep);
+}
+
+.faceBase {
+  position: relative;
+  z-index: 1;
+  background: var(--bg-2);
+}
+
+.faceMiolo {
+  display: grid;
+  align-content: start;
+  gap: clamp(18px, 3vh, 30px);
+  padding: clamp(22px, 3.5vh, 40px) clamp(20px, 3vw, 48px);
+  width: 100%;
+}
+
+/* cada face ancora o conteúdo num dos lados para a régua "revelar" */
+
+.faceTopo .faceMiolo {
+  max-width: min(46ch, 44vw);
+}
+
+.faceBase .faceMiolo {
+  max-width: min(46ch, 44vw);
+  margin-left: auto;
+  text-align: right;
+  justify-items: end;
+}
+
+.faceCabeca {
+  display: grid;
+  gap: 6px;
+}
+
+.faceNome {
+  font-family: var(--serif);
+  font-size: clamp(1.7rem, 3vw, 2.6rem);
+  line-height: 1.05;
+}
+
+.faceDe {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.faceValor {
+  font-family: var(--serif);
+  font-size: clamp(2rem, 4vw, 3.4rem);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.facePrazo {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.faceItens {
+  display: grid;
+}
+
+.faceItens li {
+  border-top: 1px solid var(--hairline);
+  padding-block: clamp(10px, 1.6vh, 14px);
+  font-size: 14.5px;
+  color: var(--muted);
+}
+
+.faceBase .faceItens li {
+  color: var(--muted);
+}
+
+/* régua */
+
+.regua {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--pos);
+  z-index: 3;
+  width: 44px;
+  margin-left: -22px;
+  display: grid;
+  place-items: center;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  cursor: ew-resize;
+  touch-action: none;
+}
+
+.regua::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 1px;
+  background: var(--hairline-forte);
+}
+
+.reguaPega {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--hairline-forte);
+  background: var(--bg);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  transition: border-color 0.45s var(--ease), color 0.45s var(--ease);
+}
+
+.regua:hover .reguaPega,
+.regua:focus-visible .reguaPega,
+.regua[data-arrastando="1"] .reguaPega {
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+.regua:focus-visible {
+  outline: none;
+}
+
+/* pilha (mobile e reduced-motion): as duas faces completas, sem régua */
+
+.quadro[data-pilha="1"] .faceTopo {
+  position: relative;
+  clip-path: none;
+}
+
+.quadro[data-pilha="1"] .faceTopo .faceMiolo,
+.quadro[data-pilha="1"] .faceBase .faceMiolo {
+  max-width: none;
+  margin-left: 0;
+  text-align: left;
+  justify-items: start;
+}
+
+.quadro[data-pilha="1"] .faceBase {
+  border-top: 1px solid var(--hairline);
+}
+
+.quadro[data-pilha="1"] .regua {
+  display: none;
+}
+
+.quadro[data-pilha="1"] .face {
+  min-height: 0;
+}

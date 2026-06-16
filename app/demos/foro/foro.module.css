@@ -1,0 +1,432 @@
+/* FORO — tinta, creme-papel e bordô. Playfair Display + Public Sans.
+   Grade neutra de papel. Cores apenas dos tokens desta rota. */
+
+.pagina {
+  --tinta: oklch(0.15 0.008 270);
+  --papel: oklch(0.95 0.01 90);
+  --papel-2: oklch(0.91 0.012 90);
+  --bordo: oklch(0.45 0.12 20);
+  --mudo: oklch(0.15 0.008 270 / 0.62);
+  --linha: oklch(0.15 0.008 270 / 0.16);
+  --serif: var(--fonte-foro-titulo), Georgia, serif;
+  --sans: var(--fonte-foro-corpo), system-ui, sans-serif;
+
+  background: var(--papel);
+  color: var(--tinta);
+  font-family: var(--sans);
+  font-size: 1.04rem;
+  line-height: 1.7;
+  min-height: 100svh;
+  padding-bottom: 44px;
+  overflow-x: clip;
+}
+
+.pagina ::selection {
+  background: var(--bordo);
+  color: var(--papel);
+}
+
+.rotulo {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--mudo);
+}
+
+.titulo {
+  font-family: var(--serif);
+  font-weight: 500;
+  line-height: 1.12;
+  margin: 0;
+  text-wrap: balance;
+}
+
+.secao {
+  padding: clamp(90px, 14vh, 150px) clamp(20px, 5vw, 72px) 0;
+  max-width: 1140px;
+  margin: 0 auto;
+}
+
+.cabecaSecao {
+  display: grid;
+  gap: 14px;
+  margin-bottom: clamp(36px, 6vh, 60px);
+}
+
+.foto {
+  position: relative;
+  overflow: hidden;
+  background: var(--papel-2);
+}
+
+.foto img {
+  object-fit: cover;
+  filter: grayscale(0.55) sepia(0.14) contrast(0.98) brightness(1.02);
+}
+
+/* assinatura: sublinhado caligráfico */
+
+.sub {
+  position: relative;
+  white-space: nowrap;
+}
+
+.subSvg {
+  position: absolute;
+  left: -2%;
+  bottom: -0.16em;
+  width: 104%;
+  height: 0.3em;
+  color: var(--bordo);
+  overflow: visible;
+}
+
+/* 1. HERO — declaração de princípio */
+
+.hero {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  display: grid;
+  align-content: center;
+  justify-items: start;
+  gap: clamp(24px, 4vh, 40px);
+  padding: clamp(80px, 12vh, 120px) clamp(20px, 5vw, 72px) clamp(48px, 8vh, 90px);
+  max-width: 1140px;
+  margin: 0 auto;
+}
+
+.heroTopo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: clamp(18px, 3vh, 30px) clamp(20px, 5vw, 72px);
+  border-bottom: 1px solid var(--linha);
+}
+
+.wordmark {
+  font-family: var(--serif);
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+}
+
+.heroTitulo {
+  font-size: clamp(2.4rem, 6vw, 5rem);
+  max-width: 18ch;
+}
+
+/* as linhas mascaradas do hero reservam espaço para o sublinhado caligráfico */
+
+.heroTitulo :global(.linha) {
+  padding-bottom: 0.2em;
+  margin-bottom: -0.2em;
+}
+
+.heroFoto {
+  position: absolute;
+  right: clamp(20px, 5vw, 72px);
+  bottom: clamp(70px, 12vh, 130px);
+  width: clamp(150px, 16vw, 230px);
+  aspect-ratio: 3 / 4;
+}
+
+.heroTitulo em {
+  font-style: italic;
+}
+
+.heroSub {
+  color: var(--mudo);
+  max-width: 52ch;
+  margin: 0;
+}
+
+.botaoForo {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid var(--tinta);
+  background: var(--tinta);
+  color: var(--papel);
+  padding: 15px 30px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.4s ease, color 0.4s ease;
+}
+
+.botaoForo:hover {
+  background: transparent;
+  color: var(--tinta);
+}
+
+/* 2. ÁREAS NUMERADAS */
+
+.areas {
+  display: grid;
+}
+
+.area {
+  display: grid;
+  grid-template-columns: 56px minmax(0, 0.85fr) minmax(0, 1fr);
+  gap: 10px clamp(16px, 3vw, 40px);
+  align-items: baseline;
+  border-top: 1px solid var(--linha);
+  padding: clamp(20px, 3vh, 30px) 4px;
+}
+
+.area:last-child {
+  border-bottom: 1px solid var(--linha);
+}
+
+.areaNum {
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  color: var(--bordo);
+  font-weight: 700;
+}
+
+.areaNome {
+  font-family: var(--serif);
+  font-size: clamp(1.4rem, 2.6vw, 2rem);
+  font-weight: 500;
+}
+
+.areaDesc {
+  color: var(--mudo);
+  font-size: 15px;
+  max-width: 50ch;
+}
+
+/* 3. O ESCRITÓRIO */
+
+.escritorio {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: clamp(16px, 2.5vw, 36px);
+  align-items: start;
+}
+
+.escFoto {
+  grid-column: 1 / 6;
+  aspect-ratio: 4 / 5;
+}
+
+.escTexto {
+  grid-column: 7 / 13;
+  display: grid;
+  gap: 18px;
+}
+
+.escTexto p {
+  margin: 0;
+  color: var(--mudo);
+}
+
+.escPrincipios {
+  display: grid;
+  margin-top: 8px;
+}
+
+.escPrincipios li {
+  border-top: 1px solid var(--linha);
+  padding-block: 12px;
+  font-size: 15px;
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+}
+
+.escPrincipios li::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  flex: none;
+  transform: translateY(1px) rotate(45deg);
+  background: var(--bordo);
+}
+
+/* 4. PUBLICAÇÕES */
+
+.publicacoes {
+  display: grid;
+}
+
+.artigo {
+  display: grid;
+  grid-template-columns: minmax(0, 220px) 1fr;
+  gap: 8px clamp(20px, 3vw, 40px);
+  align-items: start;
+  border-top: 1px solid var(--linha);
+  padding: clamp(20px, 3vh, 30px) 4px;
+}
+
+.artigoFoto {
+  grid-row: 1 / 4;
+  aspect-ratio: 4 / 3;
+}
+
+.artigo:last-child {
+  border-bottom: 1px solid var(--linha);
+}
+
+.artigoData {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--bordo);
+}
+
+.artigoTitulo {
+  font-family: var(--serif);
+  font-size: clamp(1.3rem, 2.4vw, 1.8rem);
+  font-weight: 500;
+}
+
+.artigoResumo {
+  color: var(--mudo);
+  font-size: 15px;
+  max-width: 64ch;
+}
+
+/* 5. CONSULTA E ENDEREÇO */
+
+.consulta {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: clamp(16px, 2.5vw, 36px);
+}
+
+.consultaInfo {
+  grid-column: 1 / 6;
+  display: grid;
+  gap: 16px;
+  align-content: start;
+}
+
+.consultaFoto {
+  aspect-ratio: 16 / 10;
+  margin-top: 6px;
+}
+
+.consultaInfo p {
+  margin: 0;
+  color: var(--mudo);
+  font-size: 15px;
+}
+
+.consultaInfo strong {
+  color: var(--tinta);
+}
+
+.consultaForm {
+  grid-column: 7 / 13;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.campoForo {
+  display: grid;
+  gap: 7px;
+}
+
+.campoForo span {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--mudo);
+}
+
+.campoForo input,
+.campoForo select,
+.campoForo textarea {
+  background: transparent;
+  border: 1px solid var(--linha);
+  border-radius: 0;
+  padding: 13px 14px;
+  font: inherit;
+  font-size: 15px;
+  color: var(--tinta);
+  transition: border-color 0.3s ease;
+  resize: vertical;
+}
+
+.campoForo input:focus-visible,
+.campoForo select:focus-visible,
+.campoForo textarea:focus-visible {
+  outline: none;
+  border-color: var(--bordo);
+}
+
+.campoLargo {
+  grid-column: 1 / -1;
+}
+
+/* rodapé */
+
+.rodape {
+  margin-top: clamp(90px, 14vh, 150px);
+  border-top: 1px solid var(--linha);
+  padding: 28px clamp(20px, 5vw, 72px) 36px;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+  flex-wrap: wrap;
+  font-size: 13px;
+  color: var(--mudo);
+}
+
+/* responsivo */
+
+@media (max-width: 860px) {
+  .heroFoto {
+    position: static;
+    width: min(280px, 70%);
+    margin-top: 8px;
+  }
+
+  .artigo {
+    grid-template-columns: 1fr;
+  }
+
+  .artigoFoto {
+    grid-row: auto;
+    max-width: 360px;
+  }
+
+  .area {
+    grid-template-columns: 44px 1fr;
+  }
+
+  .areaDesc {
+    grid-column: 2;
+  }
+
+  .escritorio,
+  .consulta {
+    grid-template-columns: 1fr;
+  }
+
+  .escFoto,
+  .escTexto,
+  .consultaInfo,
+  .consultaForm {
+    grid-column: 1 / -1;
+  }
+
+  .consultaForm {
+    grid-template-columns: 1fr;
+    margin-top: 20px;
+  }
+}

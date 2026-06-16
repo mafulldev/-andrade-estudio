@@ -1,0 +1,451 @@
+/* BRASA — carvão, creme e brasa. Cormorant Garamond + Karla.
+   Grade quente de contraste alto. Cores apenas dos tokens desta rota. */
+
+.pagina {
+  --carvao: oklch(0.13 0.01 40);
+  --carvao-2: oklch(0.17 0.012 40);
+  --creme: oklch(0.94 0.015 85);
+  --brasa: oklch(0.62 0.19 35);
+  --mudo: oklch(0.94 0.015 85 / 0.6);
+  --linha: oklch(0.94 0.015 85 / 0.16);
+  --serif: var(--fonte-brasa-titulo), Georgia, serif;
+  --sans: var(--fonte-brasa-corpo), system-ui, sans-serif;
+
+  background: var(--carvao);
+  color: var(--creme);
+  font-family: var(--sans);
+  font-size: 1.0525rem;
+  line-height: 1.65;
+  min-height: 100svh;
+  padding-bottom: 44px;
+  overflow-x: clip;
+}
+
+.pagina ::selection {
+  background: var(--brasa);
+  color: var(--creme);
+}
+
+.rotulo {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--mudo);
+}
+
+.titulo {
+  font-family: var(--serif);
+  font-weight: 500;
+  line-height: 1.05;
+  margin: 0;
+  text-wrap: balance;
+}
+
+.secao {
+  padding: clamp(90px, 14vh, 150px) clamp(20px, 5vw, 72px) 0;
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+.cabecaSecao {
+  display: grid;
+  gap: 14px;
+  margin-bottom: clamp(36px, 6vh, 64px);
+}
+
+.foto {
+  position: relative;
+  overflow: hidden;
+  background: var(--carvao-2);
+}
+
+.foto img {
+  object-fit: cover;
+  filter: sepia(0.3) contrast(1.18) saturate(1.12) brightness(0.88);
+}
+
+/* 1. HERO */
+
+.hero {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  display: grid;
+  align-content: end;
+  padding: clamp(20px, 5vw, 72px);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.heroFundo {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+}
+
+.heroFundo img {
+  object-fit: cover;
+  filter: sepia(0.3) contrast(1.2) saturate(1.1) brightness(0.62);
+}
+
+.heroFundo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, var(--carvao) 4%, transparent 55%);
+}
+
+.heroTopo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: clamp(18px, 3vh, 30px) clamp(20px, 5vw, 72px);
+}
+
+.wordmark {
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  font-weight: 600;
+  letter-spacing: 0.42em;
+}
+
+.heroMiolo {
+  display: grid;
+  gap: 22px;
+  justify-items: start;
+  max-width: 760px;
+  padding-bottom: clamp(40px, 8vh, 90px);
+}
+
+.heroTitulo {
+  font-size: clamp(2.8rem, 7.5vw, 6rem);
+}
+
+.heroTitulo em {
+  font-style: italic;
+  font-weight: 400;
+}
+
+.heroSub {
+  color: var(--mudo);
+  max-width: 44ch;
+}
+
+.botaoBrasa {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid var(--linha);
+  padding: 15px 30px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--creme);
+  background: none;
+  cursor: pointer;
+  transition: border-color 0.4s ease, background 0.4s ease;
+}
+
+.botaoBrasa:hover {
+  border-color: var(--brasa);
+  background: oklch(0.62 0.19 35 / 0.12);
+}
+
+/* 2. MENU DEGUSTAÇÃO — assinatura: hairline acendendo em gradiente de brasa */
+
+.prato {
+  position: relative;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 6px 28px;
+  align-items: baseline;
+  padding: clamp(18px, 2.8vh, 26px) 4px;
+  text-align: left;
+  background: none;
+  border: 0;
+  border-top: 1px solid var(--linha);
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.prato:last-of-type {
+  border-bottom: 1px solid var(--linha);
+}
+
+.prato::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -1px;
+  height: 1px;
+  background: linear-gradient(90deg, var(--brasa), oklch(0.75 0.16 60), transparent 85%);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.prato:hover::after,
+.prato[data-aceso="true"]::after {
+  transform: scaleX(1);
+}
+
+.pratoNome {
+  font-family: var(--serif);
+  font-size: clamp(1.25rem, 2.2vw, 1.7rem);
+  font-weight: 500;
+  transition: color 0.4s ease;
+}
+
+.prato:hover .pratoNome,
+.prato[data-aceso="true"] .pratoNome {
+  color: var(--brasa);
+}
+
+.pratoDesc {
+  grid-column: 1;
+  color: var(--mudo);
+  font-size: 14.5px;
+  max-width: 52ch;
+}
+
+.pratoPreco {
+  grid-row: 1;
+  grid-column: 2;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  color: var(--mudo);
+}
+
+.pratoFotoTouch {
+  grid-column: 1 / -1;
+  margin-top: 14px;
+  max-width: 420px;
+}
+
+.fotoFlutuante {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 90;
+  width: clamp(200px, 20vw, 300px);
+  aspect-ratio: 4 / 3;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.fotoFlutuante .foto {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.fotoFlutuante .fotoAtiva {
+  opacity: 1;
+}
+
+/* 3. A CASA E O FOGO */
+
+.casaGrid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: clamp(16px, 2.5vw, 36px);
+  align-items: start;
+}
+
+.casaTexto {
+  grid-column: 1 / 6;
+  display: grid;
+  gap: 20px;
+}
+
+.casaTexto p {
+  color: var(--mudo);
+}
+
+.casaCitacao {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(1.5rem, 2.8vw, 2.2rem);
+  line-height: 1.3;
+  color: var(--creme);
+  border-left: 1px solid var(--brasa);
+  padding-left: 22px;
+}
+
+.casaFotoA {
+  grid-column: 7 / 13;
+  aspect-ratio: 4 / 3;
+}
+
+.casaFotoB {
+  grid-column: 5 / 10;
+  aspect-ratio: 16 / 9;
+  margin-top: clamp(-60px, -4vw, -20px);
+}
+
+/* 4. RESERVAS */
+
+.reservas {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: clamp(16px, 2.5vw, 36px);
+}
+
+.reservasInfo {
+  grid-column: 1 / 6;
+  display: grid;
+  gap: 16px;
+  align-content: start;
+}
+
+.reservasForm {
+  grid-column: 7 / 13;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.campoBrasa {
+  display: grid;
+  gap: 7px;
+}
+
+.campoBrasa span {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--mudo);
+}
+
+.campoBrasa input,
+.campoBrasa select {
+  background: transparent;
+  border: 1px solid var(--linha);
+  border-radius: 0;
+  padding: 13px 14px;
+  font: inherit;
+  font-size: 15px;
+  color: var(--creme);
+  color-scheme: dark;
+  transition: border-color 0.3s ease;
+}
+
+.campoBrasa input:focus-visible,
+.campoBrasa select:focus-visible {
+  outline: none;
+  border-color: var(--brasa);
+}
+
+.campoBrasa select option {
+  background: var(--carvao-2);
+}
+
+.campoLargo {
+  grid-column: 1 / -1;
+}
+
+/* 5. ENDEREÇO, HORÁRIOS E MAPA */
+
+.onde {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: clamp(16px, 2.5vw, 36px);
+  align-items: center;
+}
+
+.ondeInfo {
+  grid-column: 1 / 6;
+  display: grid;
+  gap: 22px;
+}
+
+.horarios {
+  display: grid;
+}
+
+.horarios li {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  border-top: 1px solid var(--linha);
+  padding-block: 11px;
+  font-size: 14.5px;
+}
+
+.horarios li:last-child {
+  border-bottom: 1px solid var(--linha);
+}
+
+.horarios li span:last-child {
+  color: var(--mudo);
+}
+
+.mapa {
+  grid-column: 7 / 13;
+  border: 1px solid var(--linha);
+}
+
+.mapa svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* rodapé da demo */
+
+.rodape {
+  margin-top: clamp(90px, 14vh, 150px);
+  border-top: 1px solid var(--linha);
+  padding: 28px clamp(20px, 5vw, 72px) 36px;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+  flex-wrap: wrap;
+  font-size: 13px;
+  color: var(--mudo);
+}
+
+/* responsivo */
+
+@media (max-width: 860px) {
+  .casaGrid,
+  .reservas,
+  .onde {
+    grid-template-columns: 1fr;
+  }
+
+  .casaTexto,
+  .casaFotoA,
+  .casaFotoB,
+  .reservasInfo,
+  .reservasForm,
+  .ondeInfo,
+  .mapa {
+    grid-column: 1 / -1;
+  }
+
+  .casaFotoB {
+    margin-top: 0;
+  }
+
+  .reservasForm {
+    grid-template-columns: 1fr;
+    margin-top: 20px;
+  }
+
+  .mapa {
+    margin-top: 24px;
+  }
+}

@@ -1,0 +1,468 @@
+/* PRUMO — cimento, preto e laranja queimado. Archivo em pesos altos + Inter.
+   Grade firme e realista. Cores apenas dos tokens desta rota. */
+
+.pagina {
+  --cimento: oklch(0.92 0.005 90);
+  --cimento-2: oklch(0.88 0.006 90);
+  --preto: oklch(0.14 0.005 90);
+  --laranja: oklch(0.65 0.17 50);
+  --mudo: oklch(0.14 0.005 90 / 0.62);
+  --linha: oklch(0.14 0.005 90 / 0.18);
+  --titulo: var(--fonte-prumo-titulo), system-ui, sans-serif;
+  --corpo: var(--fonte-prumo-corpo), system-ui, sans-serif;
+
+  background: var(--cimento);
+  color: var(--preto);
+  font-family: var(--corpo);
+  font-size: 1.03rem;
+  line-height: 1.65;
+  min-height: 100svh;
+  padding-bottom: 44px;
+  overflow-x: clip;
+}
+
+.pagina ::selection {
+  background: var(--laranja);
+  color: var(--preto);
+}
+
+.rotulo {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--mudo);
+}
+
+.titulo {
+  font-family: var(--titulo);
+  font-weight: 800;
+  line-height: 1.02;
+  letter-spacing: -0.015em;
+  text-transform: uppercase;
+  margin: 0;
+  text-wrap: balance;
+}
+
+.secao {
+  padding: clamp(90px, 14vh, 150px) clamp(20px, 5vw, 72px) 0;
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+.cabecaSecao {
+  display: grid;
+  gap: 14px;
+  margin-bottom: clamp(36px, 6vh, 60px);
+}
+
+.foto {
+  position: relative;
+  overflow: hidden;
+  background: var(--cimento-2);
+}
+
+.foto img {
+  object-fit: cover;
+  filter: contrast(1.06) saturate(0.95);
+}
+
+/* 1. HERO direto */
+
+.hero {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  display: grid;
+  align-content: center;
+  justify-items: start;
+  gap: clamp(22px, 4vh, 36px);
+  padding: clamp(80px, 12vh, 120px) clamp(20px, 5vw, 72px) clamp(48px, 8vh, 90px);
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+.heroTopo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: clamp(18px, 3vh, 30px) clamp(20px, 5vw, 72px);
+}
+
+.wordmark {
+  font-family: var(--titulo);
+  font-size: 1.15rem;
+  font-weight: 900;
+  letter-spacing: 0.3em;
+}
+
+.heroTitulo {
+  font-size: clamp(2.8rem, 8vw, 6.4rem);
+}
+
+.heroTitulo em {
+  font-style: normal;
+  color: var(--laranja);
+}
+
+.heroSub {
+  color: var(--mudo);
+  max-width: 46ch;
+  margin: 0;
+}
+
+.selos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 22px;
+}
+
+.selo {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  border: 1px solid var(--linha);
+  padding: 8px 14px;
+}
+
+.heroFaixa {
+  position: relative;
+  width: 100%;
+  height: clamp(110px, 17vh, 180px);
+  margin-top: clamp(8px, 1.6vh, 18px);
+  border: 2px solid var(--preto);
+  overflow: hidden;
+}
+
+.servicosFoto {
+  aspect-ratio: 21 / 9;
+  margin-top: clamp(28px, 5vh, 48px);
+  border: 2px solid var(--preto);
+}
+
+.orcamentoFoto {
+  aspect-ratio: 16 / 10;
+  border: 1px solid oklch(0.92 0.005 90 / 0.3);
+  margin-top: 6px;
+}
+
+.coberturaFoto {
+  aspect-ratio: 16 / 10;
+  border: 2px solid var(--preto);
+}
+
+.botaoPrumo {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--laranja);
+  color: var(--preto);
+  border: 1px solid var(--laranja);
+  padding: 16px 34px;
+  font-family: var(--titulo);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.35s ease, color 0.35s ease;
+}
+
+.botaoPrumo:hover {
+  background: var(--preto);
+  color: var(--cimento);
+  border-color: var(--preto);
+}
+
+/* 2. SERVIÇOS */
+
+.servicos {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 clamp(24px, 4vw, 56px);
+}
+
+.servico {
+  border-top: 2px solid var(--preto);
+  padding: 20px 0 28px;
+  display: grid;
+  gap: 8px;
+}
+
+.servicoNome {
+  font-family: var(--titulo);
+  font-size: clamp(1.3rem, 2.4vw, 1.8rem);
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.servicoDesc {
+  color: var(--mudo);
+  font-size: 15px;
+  max-width: 44ch;
+}
+
+.servicoPrazo {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--laranja);
+}
+
+/* 3. ANTES E DEPOIS — assinatura: slider por clip-path */
+
+.slider {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border: 2px solid var(--preto);
+  touch-action: none;
+  user-select: none;
+}
+
+.slider img {
+  pointer-events: none;
+}
+
+.camadaAntes {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+
+.camadaAntes img {
+  filter: grayscale(0.9) contrast(1.02) brightness(0.82);
+}
+
+.etiquetaAntes,
+.etiquetaDepois {
+  position: absolute;
+  top: 14px;
+  z-index: 4;
+  font-family: var(--titulo);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  padding: 7px 12px;
+  background: var(--preto);
+  color: var(--cimento);
+}
+
+.etiquetaAntes {
+  left: 14px;
+}
+
+.etiquetaDepois {
+  right: 14px;
+  background: var(--laranja);
+  color: var(--preto);
+}
+
+.divisor {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: 3;
+  width: 2px;
+  background: var(--cimento);
+  transform: translateX(-1px);
+}
+
+.alca {
+  position: absolute;
+  top: 50%;
+  z-index: 5;
+  width: 46px;
+  height: 46px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: var(--cimento);
+  border: 2px solid var(--preto);
+  display: grid;
+  place-items: center;
+  cursor: ew-resize;
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--preto);
+}
+
+.alca:focus-visible {
+  outline: 2px solid var(--laranja);
+  outline-offset: 3px;
+}
+
+.sliderLegenda {
+  margin-top: 14px;
+  font-size: 14px;
+  color: var(--mudo);
+}
+
+/* 4. ORÇAMENTO RÁPIDO */
+
+.orcamento {
+  background: var(--preto);
+  color: var(--cimento);
+  padding-bottom: clamp(90px, 14vh, 150px);
+}
+
+.orcamentoGrid {
+  max-width: 1180px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(24px, 4vw, 64px);
+  align-items: start;
+}
+
+.orcamentoInfo {
+  display: grid;
+  gap: 16px;
+}
+
+.orcamentoInfo .rotulo {
+  color: oklch(0.92 0.005 90 / 0.6);
+}
+
+.orcamentoInfo p {
+  margin: 0;
+  color: oklch(0.92 0.005 90 / 0.72);
+}
+
+.orcamentoForm {
+  display: grid;
+  gap: 20px;
+}
+
+.campoPrumo {
+  display: grid;
+  gap: 7px;
+}
+
+.campoPrumo span {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: oklch(0.92 0.005 90 / 0.6);
+}
+
+.campoPrumo input,
+.campoPrumo select {
+  background: transparent;
+  border: 1px solid oklch(0.92 0.005 90 / 0.3);
+  border-radius: 0;
+  padding: 14px;
+  font: inherit;
+  font-size: 15px;
+  color: var(--cimento);
+  color-scheme: dark;
+  transition: border-color 0.3s ease;
+}
+
+.campoPrumo input:focus-visible,
+.campoPrumo select:focus-visible {
+  outline: none;
+  border-color: var(--laranja);
+}
+
+.campoPrumo select option {
+  background: var(--preto);
+}
+
+/* 5. COBERTURA E COMPROMISSOS */
+
+.cobertura {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: clamp(20px, 3vw, 44px);
+  align-items: start;
+}
+
+.coberturaBloco {
+  grid-column: 1 / 6;
+  display: grid;
+  gap: 14px;
+}
+
+.regioes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.regiao {
+  border: 1px solid var(--linha);
+  padding: 7px 14px;
+  font-size: 13px;
+}
+
+.compromissos {
+  grid-column: 7 / 13;
+  display: grid;
+}
+
+.compromissos li {
+  border-top: 2px solid var(--preto);
+  padding-block: 16px;
+  display: grid;
+  gap: 4px;
+}
+
+.compromissos li strong {
+  font-family: var(--titulo);
+  font-size: 1.02rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.compromissos li span {
+  color: var(--mudo);
+  font-size: 14.5px;
+}
+
+/* rodapé */
+
+.rodape {
+  margin-top: clamp(90px, 14vh, 150px);
+  border-top: 2px solid var(--preto);
+  padding: 28px clamp(20px, 5vw, 72px) 36px;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+  flex-wrap: wrap;
+  font-size: 13px;
+  color: var(--mudo);
+}
+
+/* responsivo */
+
+@media (max-width: 860px) {
+  .servicos {
+    grid-template-columns: 1fr;
+  }
+
+  .orcamentoGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .cobertura {
+    grid-template-columns: 1fr;
+  }
+
+  .coberturaBloco,
+  .compromissos {
+    grid-column: 1 / -1;
+  }
+
+  .slider {
+    aspect-ratio: 4 / 3;
+  }
+}

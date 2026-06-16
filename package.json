@@ -1,0 +1,32 @@
+{
+  "name": "andrade-estudio",
+  "version": "1.0.0",
+  "private": true,
+  "description": "ANDRADE, Estúdio digital. Site, diagnóstico com motor de orçamento, CRM próprio e automação de leads em infraestrutura gratuita.",
+  "scripts": {
+    "dev": "next dev",
+    "prebuild": "tsx scripts/selftest.ts",
+    "build": "next build",
+    "start": "next start",
+    "selftest": "tsx scripts/selftest.ts"
+  },
+  "dependencies": {
+    "@gsap/react": "^2.1.2",
+    "@supabase/supabase-js": "^2.49.4",
+    "gsap": "^3.15.0",
+    "lenis": "^1.3.23",
+    "lucide-react": "^1.18.0",
+    "motion": "^12.40.0",
+    "next": "^15.3.2",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "resend": "^4.5.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.17",
+    "@types/react": "^19.1.3",
+    "@types/react-dom": "^19.1.3",
+    "tsx": "^4.19.4",
+    "typescript": "^5.8.3"
+  }
+}

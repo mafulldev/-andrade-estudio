@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1250">
+  <defs>
+    <radialGradient id="respiro" cx="30%" cy="30%" r="90%">
+      <stop offset="0%" stop-color="#171a1f"/>
+      <stop offset="100%" stop-color="#101216"/>
+    </radialGradient>
+  </defs>
+  <rect width="1000" height="1250" fill="url(#respiro)"/>
+  <g fill="none" stroke="#9aa3b1" stroke-opacity="0.18" stroke-width="1">
+    <circle cx="500" cy="540" r="300"/>
+    <circle cx="500" cy="540" r="210"/>
+    <circle cx="500" cy="540" r="120"/>
+  </g>
+  <path
+    d="M80 625 L340 625 L395 625 L430 545 L465 705 L495 455 L525 760 L555 580 L585 625 L660 625 L920 625"
+    fill="none" stroke="#d9a05f" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+  <circle cx="495" cy="455" r="4" fill="#d9a05f"/>
+  <g stroke="#9aa3b1" stroke-opacity="0.25" stroke-width="1">
+    <line x1="80" y1="940" x2="920" y2="940"/>
+    <line x1="80" y1="1000" x2="700" y2="1000"/>
+    <line x1="80" y1="1060" x2="820" y2="1060"/>
+  </g>
+  <rect x="60" y="60" width="880" height="1130" fill="none" stroke="#aeb6c2" stroke-opacity="0.14" stroke-width="1"/>
+</svg>

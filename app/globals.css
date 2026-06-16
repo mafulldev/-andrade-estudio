@@ -1,0 +1,1687 @@
+/* =============================================================================
+   ANDRADE — sistema SOLACE
+   Arquitetura sensorial noturna: grafite frio monocromático, silêncio
+   visual, luxo por contenção. A única cor quente é a luz âmbar (--warm),
+   usada raríssimas vezes como brilho pontual, nunca em botões ou textos
+   grandes. Cormorant Garamond protagonista; Hanken Grotesk no UI.
+   ========================================================================== */
+
+/* 1. Tokens ---------------------------------------------------------------- */
+
+[data-theme="dark"] {
+  /* SOLACE literal */
+  --bg: oklch(17.5% 0.008 245);
+  --bg-soft: oklch(20.5% 0.008 243);
+  --bg-deep: oklch(12.5% 0.006 242);
+  --ink: oklch(93% 0.006 240);
+  --muted: oklch(68% 0.009 240);
+  --faint: oklch(48% 0.009 240);
+  --line: oklch(62% 0.008 240 / 0.26);
+  --line-soft: oklch(62% 0.008 240 / 0.14);
+  --warm: oklch(76% 0.09 62);
+  --glow: oklch(62% 0.008 240 / 0.1);
+  --cobertura: oklch(13% 0.007 243 / 0.985);
+  --veu-alpha: 0.88;
+  --grain-opacity: 0.03;
+  color-scheme: dark;
+}
+
+[data-theme="light"] {
+  /* adaptação "grafite de dia": o toggle de tema é funcionalidade
+     preservada; mesma família fria, AA garantido, warm mais denso */
+  --bg: oklch(96% 0.004 240);
+  --bg-soft: oklch(93.5% 0.005 240);
+  --bg-deep: oklch(89.5% 0.006 240);
+  --ink: oklch(21% 0.01 245);
+  --muted: oklch(43% 0.01 240);
+  --faint: oklch(56% 0.01 240);
+  --line: oklch(30% 0.008 240 / 0.26);
+  --line-soft: oklch(30% 0.008 240 / 0.14);
+  --warm: oklch(58% 0.1 62);
+  --glow: oklch(30% 0.008 240 / 0.08);
+  --cobertura: oklch(91% 0.006 240 / 0.985);
+  --veu-alpha: 0.92;
+  --grain-opacity: 0.035;
+  color-scheme: light;
+}
+
+:root {
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --respiro: clamp(120px, 16vh, 200px);
+  --margem: clamp(20px, 4.5vw, 64px);
+  --medida: 68ch;
+  --coluna-estreita: 56ch;
+  --serif: var(--font-serif), Georgia, serif;
+  --hanken: var(--font-hanken), system-ui, sans-serif;
+
+  /* nomes históricos consumidos pelos módulos: mesmos valores SOLACE.
+     Estados interativos são monocromáticos (ink); o âmbar é declarado
+     explicitamente onde a luz pontual é permitida. */
+  --bg-2: var(--bg-soft);
+  --text: var(--ink);
+  --accent: var(--ink);
+  --accent-ink: var(--bg);
+  --hairline: var(--line-soft);
+  --hairline-forte: var(--line);
+  --sombra: none;
+}
+
+/* 2. Reset e base ----------------------------------------------------------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--hanken);
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+
+img,
+svg,
+video,
+canvas {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+p {
+  margin: 0;
+  max-width: 34rem;
+}
+
+ul,
+ol,
+figure {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* 3. Tipografia ------------------------------------------------------------- */
+
+h1,
+h2,
+h3,
+h4 {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 300;
+  line-height: 1.08;
+  letter-spacing: 0.005em;
+  text-wrap: balance;
+}
+
+em,
+i {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 300;
+}
+
+p {
+  font-size: 0.95rem;
+  line-height: 1.8;
+  color: var(--muted);
+}
+
+.label {
+  font-family: var(--hanken);
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.titulo-secao {
+  font-size: clamp(2.4rem, 4.6vw, 4.2rem);
+}
+
+.corpo-max {
+  max-width: 34rem;
+}
+
+.mudo {
+  color: var(--muted);
+}
+
+/* 4. Foco, seleção, scrollbar, skip-link ------------------------------------ */
+
+::selection {
+  background: var(--ink);
+  color: var(--bg);
+}
+
+:focus {
+  outline: none;
+}
+
+/* foco visível: o brilho âmbar pontual, funcional e raro; o aro chega
+   largo e ASSENTA no elemento (micro de 0.45s na curva da casa) */
+:focus-visible {
+  outline: 1px solid var(--warm);
+  outline-offset: 2px;
+  animation: foco-assenta 0.45s var(--ease);
+}
+
+@keyframes foco-assenta {
+  from {
+    outline-offset: 6px;
+  }
+}
+
+html {
+  scrollbar-width: thin;
+  scrollbar-color: oklch(0.60 0.012 85 / 0.45) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: oklch(0.60 0.012 85 / 0.40);
+  border: 3px solid var(--bg);
+  border-radius: 8px;
+}
+
+.skip-link {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 400;
+  padding: 12px 20px;
+  background: var(--bg-2);
+  border: 1px solid var(--hairline);
+  font-size: 13px;
+  transform: translateY(-200%);
+}
+
+.skip-link:focus-visible {
+  transform: none;
+}
+
+/* 5. Grain ------------------------------------------------------------------ */
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  pointer-events: none;
+  opacity: var(--grain-opacity);
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='280'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+}
+
+/* 6. Hairlines, labels de seção, respiro ------------------------------------ */
+
+.hairline {
+  border: 0;
+  height: 1px;
+  margin: 0;
+  background: var(--hairline);
+}
+
+.secao-rotulo {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: clamp(40px, 6vh, 72px);
+}
+
+.secao-rotulo .traco {
+  flex: 1;
+  height: 1px;
+  background: var(--hairline);
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+.respiro {
+  padding-top: var(--respiro);
+}
+
+/* 7. CTA CIRCULAR: o padrão único de ação do SOLACE ---------------------------
+   label uppercase com tracking .28em ao lado de um círculo hairline com a
+   seta dentro (stroke fino). Hover: o círculo preenche com ink, a seta troca
+   para a cor do fundo e desliza 2 a 3px. Nada de retângulos preenchidos.
+   .botao-linha e .botao-circular implementam o MESMO padrão (call-sites
+   históricos intactos); o circular usa um aro maior. */
+
+.botao-linha,
+.botao-circular {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.95rem;
+  min-height: 44px;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  font-family: var(--hanken);
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  line-height: 1.4;
+  white-space: nowrap;
+  color: var(--ink);
+}
+
+.botao-linha svg,
+.botao-circular svg {
+  flex: none;
+  box-sizing: border-box;
+  width: 2.9rem;
+  height: 2.9rem;
+  padding: 0.92rem;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  color: var(--ink);
+  stroke-width: 1.3;
+  transition: background 0.45s var(--ease), color 0.45s var(--ease),
+    border-color 0.45s var(--ease), transform 0.45s var(--ease);
+}
+
+.botao-linha:hover svg,
+.botao-linha:focus-visible svg,
+.botao-circular:hover svg,
+.botao-circular:focus-visible svg {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--bg);
+  transform: translateX(2.5px);
+}
+
+/* primário e cheio: o círculo já nasce preenchido com ink */
+
+.botao-linha--primario svg,
+.botao-circular--cheio svg {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--bg);
+}
+
+.botao-linha--compacto svg {
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0.78rem;
+}
+
+.botao-linha--compacto {
+  font-size: 0.62rem;
+}
+
+/* o circular é o mesmo padrão com aro maior (portais e coda) */
+
+.botao-circular svg {
+  width: 3.4rem;
+  height: 3.4rem;
+  padding: 1.1rem;
+}
+
+.botao-circular--compacto svg {
+  width: 2.9rem;
+  height: 2.9rem;
+  padding: 0.92rem;
+}
+
+/* 8. Campos de linha hairline com label flutuante ---------------------------- */
+
+.campo {
+  position: relative;
+  padding-top: 18px;
+}
+
+.campo input,
+.campo select,
+.campo textarea {
+  width: 100%;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--hairline);
+  border-radius: 0;
+  padding: 10px 0 12px;
+  font: inherit;
+  font-size: 16px;
+  color: var(--text);
+  transition: border-color 0.45s var(--ease);
+}
+
+.campo input:focus-visible,
+.campo textarea:focus-visible {
+  outline: none;
+  border-bottom-color: var(--accent);
+}
+
+.campo label {
+  position: absolute;
+  left: 0;
+  top: 28px;
+  font-size: 16px;
+  color: var(--muted);
+  pointer-events: none;
+  transform-origin: left top;
+  transition: transform 0.45s var(--ease), color 0.45s var(--ease);
+}
+
+.campo input:focus ~ label,
+.campo input:not(:placeholder-shown) ~ label,
+.campo textarea:focus ~ label,
+.campo textarea:not(:placeholder-shown) ~ label {
+  transform: translateY(-26px) scale(0.68);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.campo-check {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  font-size: 14px;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.campo-check input {
+  appearance: none;
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin-top: 3px;
+  border: 1px solid var(--hairline);
+  border-radius: 50%;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: border-color 0.45s var(--ease);
+}
+
+.campo-check input::after {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  transform: scale(0);
+  transition: transform 0.45s var(--ease);
+}
+
+.campo-check input:checked {
+  border-color: var(--accent);
+}
+
+.campo-check input:checked::after {
+  transform: scale(1);
+}
+
+/* 9. Media: imagens com grade por tema, lavagem dourada, vinheta ------------- */
+
+.media {
+  position: relative;
+  overflow: hidden;
+  background: var(--bg-2);
+}
+
+.media img {
+  object-fit: cover;
+}
+
+[data-theme="dark"] .media img {
+  filter: grayscale(1) contrast(1.08) brightness(0.9);
+}
+
+[data-theme="light"] .media img {
+  filter: grayscale(0.9) sepia(0.12) contrast(1.03);
+}
+
+.media::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: var(--accent);
+  mix-blend-mode: soft-light;
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+[data-theme="light"] .media::before {
+  opacity: 0.18;
+}
+
+.media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: radial-gradient(120% 120% at 50% 40%, transparent 55%, oklch(0 0 0 / 0.22));
+  pointer-events: none;
+}
+
+/* 10. Cursor custom (desktop) ------------------------------------------------ */
+
+.cursor {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 500;
+  display: none;
+  pointer-events: none;
+}
+
+.cursor-ponto {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  margin: -32px 0 0 -32px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--accent-ink);
+  transform: scale(0.1);
+  transition: transform 0.45s var(--ease);
+}
+
+.cursor.ativo .cursor-ponto {
+  transform: scale(1);
+}
+
+.cursor-rotulo {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  opacity: 0;
+  transition: opacity 0.45s var(--ease);
+}
+
+.cursor.ativo .cursor-rotulo {
+  opacity: 1;
+}
+
+/* mesmo padrão do ponto: o GSAP move o nó externo (transform x/y é dele);
+   o CSS só escala o filho interno, nunca os dois no mesmo nó */
+.cursor-anel {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 499;
+  display: none;
+  width: 38px;
+  height: 38px;
+  margin: -19px 0 0 -19px;
+  pointer-events: none;
+}
+
+.cursor-anel-inner {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 1px solid color-mix(in oklab, var(--accent) 50%, transparent);
+  transition: transform 0.45s var(--ease), border-color 0.45s var(--ease);
+}
+
+.cursor-anel.ativo .cursor-anel-inner {
+  transform: scale(1.6);
+  border-color: var(--accent);
+}
+
+@media (pointer: fine) {
+  [data-cursor] {
+    cursor: none;
+  }
+}
+
+/* hairline de progresso de leitura */
+
+.progresso-leitura {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 115;
+  height: 1px;
+  pointer-events: none;
+}
+
+.progresso-leitura span {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+body:has([data-demo="true"]) .progresso-leitura,
+body:has([data-demo="true"]) .cursor-anel {
+  display: none !important;
+}
+
+/* 11. TOPBAR fixa e mínima: marca + MENU sobre véu de gradiente --------------- */
+
+.cab {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 110;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: clamp(18px, 2.5vh, 28px) var(--margem);
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    color-mix(in oklab, var(--bg) 88%, transparent),
+    transparent
+  );
+}
+
+.cab > * {
+  pointer-events: auto;
+}
+
+.cab-wordmark {
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.5em;
+  text-transform: uppercase;
+}
+
+.cab-acoes {
+  display: flex;
+  align-items: center;
+  gap: clamp(14px, 2vw, 26px);
+}
+
+.cab-menu {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+}
+
+/* duas linhas desiguais de 1.5px que viram X quando o menu abre */
+
+.cab-menu-tracos {
+  display: grid;
+  gap: 6px;
+  width: 24px;
+}
+
+.cab-menu-tracos span {
+  height: 1.5px;
+  background: currentColor;
+  transition: transform 0.45s var(--ease), width 0.45s var(--ease);
+}
+
+.cab-menu-tracos span:last-child {
+  width: 62%;
+  justify-self: end;
+}
+
+.cab-menu:hover .cab-menu-tracos span:last-child {
+  width: 100%;
+}
+
+.cab-menu[aria-expanded="true"] .cab-menu-tracos span:first-child {
+  transform: translateY(3.75px) rotate(45deg);
+}
+
+.cab-menu[aria-expanded="true"] .cab-menu-tracos span:last-child {
+  width: 100%;
+  transform: translateY(-3.75px) rotate(-45deg);
+}
+
+/* 12. Toggle de tema ----------------------------------------------------------- */
+
+.toggle-tema {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid var(--hairline);
+  transition: border-color 0.45s var(--ease);
+}
+
+.toggle-tema:hover {
+  border-color: var(--accent);
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+  z-index: 1;
+}
+
+::view-transition-new(root) {
+  z-index: 2;
+}
+
+/* 13. MENU OVERLAY: cobertura única, links serif gigantes, aside hairline ------ */
+
+.menu {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  visibility: hidden;
+  background: var(--cobertura);
+  clip-path: inset(0 0 100% 0);
+}
+
+.menu.aberto {
+  visibility: visible;
+}
+
+.menu-esq {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 64%;
+  padding: clamp(20px, 3.2vh, 36px) clamp(24px, 4vw, 64px);
+}
+
+.menu-dir {
+  display: flex;
+  flex-direction: column;
+  width: 36%;
+  padding: clamp(20px, 3.2vh, 36px) clamp(24px, 3vw, 48px);
+  border-left: 1px solid var(--line-soft);
+}
+
+.menu-topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.menu-fechar {
+  position: relative;
+  width: 38px;
+  height: 38px;
+}
+
+.menu-fechar span {
+  position: absolute;
+  left: 6px;
+  right: 6px;
+  top: 50%;
+  height: 1px;
+  background: var(--text);
+  transition: transform 0.45s var(--ease);
+}
+
+.menu-fechar span:first-child {
+  transform: rotate(45deg);
+}
+
+.menu-fechar span:last-child {
+  transform: rotate(-45deg);
+}
+
+.menu-fechar:hover span {
+  transform: rotate(0deg);
+}
+
+.menu-lista {
+  margin-block: auto;
+}
+
+.menu-item {
+  border-top: 1px solid var(--hairline);
+  transition: opacity 0.45s var(--ease);
+}
+
+.menu-item:last-child {
+  border-bottom: 1px solid var(--hairline);
+}
+
+.menu-lista:hover .menu-item:not(:hover) {
+  opacity: 0.4;
+}
+
+.menu-item a {
+  display: flex;
+  align-items: baseline;
+  gap: clamp(18px, 2.5vw, 36px);
+  padding: clamp(10px, 1.6vh, 18px) 0;
+}
+
+.mi-inner {
+  display: flex;
+  align-items: baseline;
+  gap: inherit;
+  width: 100%;
+}
+
+.mi-num {
+  font-size: 0.68rem;
+  color: var(--faint);
+  letter-spacing: 0.1em;
+  font-variant-numeric: tabular-nums;
+}
+
+.mi-rotulo {
+  font-family: var(--serif);
+  font-size: clamp(2.6rem, 6vw, 4.6rem);
+  font-weight: 300;
+  line-height: 1.08;
+  color: var(--muted);
+  transition: transform 0.45s var(--ease), color 0.45s var(--ease);
+}
+
+.menu-item a:hover .mi-rotulo,
+.menu-item a:focus-visible .mi-rotulo {
+  transform: translateX(12px);
+  color: var(--ink);
+}
+
+.menu-rodape {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.circulo-hairline {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 1px solid var(--hairline);
+  color: var(--text);
+  transition: border-color 0.45s var(--ease), color 0.45s var(--ease);
+}
+
+.circulo-hairline:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* aside lateral: endereço, contato e redes, separados por hairline */
+
+.menu-aside {
+  flex: 1;
+  display: grid;
+  align-content: center;
+  gap: clamp(24px, 4.5vh, 40px);
+}
+
+.menu-aside-bloco {
+  display: grid;
+  gap: 10px;
+  justify-items: start;
+}
+
+.menu-aside-bloco .label {
+  /* AA inegociável em texto visível */
+  color: var(--muted);
+}
+
+.menu-aside-bloco p {
+  font-size: 0.88rem;
+  line-height: 1.7;
+}
+
+.menu-aside-bloco a {
+  position: relative;
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  color: var(--muted);
+  transition: color 0.45s var(--ease);
+}
+
+.menu-aside-bloco a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 1px;
+  background: var(--ink);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.45s var(--ease);
+}
+
+.menu-aside-bloco a:hover,
+.menu-aside-bloco a:focus-visible {
+  color: var(--ink);
+}
+
+.menu-aside-bloco a:hover::after,
+.menu-aside-bloco a:focus-visible::after {
+  transform: scaleX(1);
+}
+
+.menu-dir-rodape {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.monograma {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid var(--hairline);
+  font-family: var(--serif);
+  font-size: 15px;
+}
+
+@media (max-width: 860px) {
+  .menu {
+    flex-direction: column;
+    overflow-y: auto;
+  }
+
+  .menu-esq,
+  .menu-dir {
+    width: 100%;
+  }
+
+  .menu-esq {
+    flex: 1;
+  }
+
+  .menu-dir {
+    border-left: 0;
+    border-top: 1px solid var(--line-soft);
+  }
+
+  .menu-aside {
+    padding-block: 20px;
+  }
+}
+
+
+/* 15. Toast, tooltip, accordion ------------------------------------------------------ */
+
+.toasts {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 350;
+  display: grid;
+  gap: 8px;
+  justify-items: center;
+}
+
+/* a entrada/saída do toast é do Motion; o CSS só desenha a caixa e a
+   hairline âmbar de tempo restante (escoa em sincronia com o timeout) */
+.toast {
+  position: relative;
+  overflow: hidden;
+  padding: 13px 22px;
+  background: var(--bg-2);
+  border: 1px solid var(--hairline);
+  font-size: 13px;
+  letter-spacing: 0.02em;
+}
+
+.toast-tempo {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: var(--warm);
+  transform-origin: left center;
+  animation: toast-tempo 3.4s linear forwards;
+}
+
+@keyframes toast-tempo {
+  to {
+    transform: scaleX(0);
+  }
+}
+
+[data-tooltip] {
+  position: relative;
+}
+
+[data-tooltip]:hover::after,
+[data-tooltip]:focus-visible::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  padding: 7px 12px;
+  background: var(--bg-deep);
+  border: 1px solid var(--hairline);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text);
+  pointer-events: none;
+  z-index: 60;
+}
+
+/* accordion editorial: linhas hairline, número mudo, mais nada */
+
+.acc-item {
+  border-top: 1px solid var(--hairline);
+}
+
+.acc-item:last-child {
+  border-bottom: 1px solid var(--hairline);
+}
+
+.acc-botao {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: clamp(18px, 2.6vh, 26px) 0;
+  text-align: left;
+  font-size: clamp(1.02rem, 1.5vw, 1.2rem);
+}
+
+/* o ícone é morfado pelo GSAP (MorphSVG) e a altura do painel é do Motion:
+   o CSS não transiciona transform nem altura aqui (um dono por propriedade) */
+.acc-botao svg {
+  flex: none;
+  color: var(--muted);
+  transition: color 0.45s var(--ease);
+}
+
+.acc-botao:hover svg {
+  color: var(--text);
+}
+
+.acc-botao[aria-expanded="true"] svg {
+  color: var(--accent);
+}
+
+.acc-painel {
+  overflow: hidden;
+}
+
+.acc-painel p {
+  padding-bottom: 26px;
+  color: var(--muted);
+}
+
+/* 6b. Materiais editoriais: placa hairline, eyebrow muda, ícone em caixa ------
+
+   Placa editorial: transparente, borda hairline de 1px, cantos retos,
+   sem sombra. O conteúdo é o protagonista; a placa só o emoldura. */
+
+.cartao {
+  position: relative;
+  background: transparent;
+  border: 1px solid var(--hairline);
+  border-radius: 0;
+  transition: border-color 0.45s var(--ease);
+}
+
+.cartao--hover:hover {
+  border-color: var(--hairline-forte);
+}
+
+/* EYEBROW: índice apagado + traço de 2.6rem (span, jamais caractere) + label */
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.eyebrow-num {
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  font-variant-numeric: tabular-nums;
+  color: var(--faint);
+}
+
+.eyebrow-num::after {
+  content: "";
+  display: inline-block;
+  width: 2.6rem;
+  height: 1px;
+  margin-left: 14px;
+  vertical-align: middle;
+  background: var(--line);
+}
+
+.eyebrow-rotulo {
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ícone em caixa: quadrado hairline, ícone na cor do texto */
+
+.icone-caixa {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--hairline);
+  border-radius: 0;
+  color: currentColor;
+  flex: none;
+}
+
+/* feixes e vinhetas de halo ancorados nas bordas das seções */
+
+.feixe-topo {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(58% 42% at 50% 0%, var(--glow), transparent 70%);
+}
+
+.feixe-base {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(58% 42% at 50% 100%, var(--glow), transparent 70%);
+}
+
+/* 16b. RAIL LATERAL: linha vertical de 1px, dot por seção + índice ------------- */
+
+.rail {
+  position: fixed;
+  right: clamp(14px, 2vw, 30px);
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 95;
+  display: grid;
+  gap: 18px;
+  justify-items: center;
+  padding-block: 18px;
+}
+
+.rail::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 1px;
+  background: var(--line-soft);
+}
+
+.rail button {
+  position: relative;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  border: 1px solid var(--faint);
+  background: var(--bg);
+  transition: background 0.45s var(--ease), border-color 0.45s var(--ease),
+    transform 0.45s var(--ease);
+}
+
+.rail button::after {
+  content: attr(data-num);
+  position: absolute;
+  right: calc(100% + 12px);
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  color: var(--faint);
+  font-variant-numeric: tabular-nums;
+  transition: color 0.45s var(--ease);
+}
+
+.rail button[aria-current="true"] {
+  background: var(--ink);
+  border-color: var(--ink);
+  transform: scale(1.25);
+}
+
+.rail button[aria-current="true"]::after {
+  color: var(--ink);
+}
+
+@media (max-width: 900px), (pointer: coarse) {
+  .rail {
+    display: none;
+  }
+}
+
+/* grade extra dessaturada (retrato do estúdio) */
+
+[data-theme="dark"] .media--dessaturada img {
+  filter: grayscale(1) contrast(1.02) brightness(0.8);
+}
+
+[data-theme="light"] .media--dessaturada img {
+  filter: grayscale(1) sepia(0.08) contrast(1.0) brightness(1.02);
+}
+
+/* 16b2. Demos: identidade totalmente própria. O grain e o cursor do estúdio
+   não vazam para dentro dos modelos. ------------------------------------------------------- */
+
+body:has([data-demo="true"])::after {
+  display: none;
+}
+
+body:has([data-demo="true"]) .cursor {
+  display: none !important;
+}
+
+/* 16c1. Linha mascarada, utilitário global --------------------------------------------------
+   Títulos entram por linha: o pai mascara, o filho sobe de 112%. O respiro
+   de .12em evita decapitar acentos e ascendentes da serif. */
+
+.linha {
+  display: block;
+  overflow: hidden;
+  padding-top: 0.12em;
+  margin-top: -0.12em;
+}
+
+[data-linha] {
+  display: block;
+}
+
+/* 16c2. Varredura de luz fria, utilitário global ----------------------------------------
+   Banda diagonal em soft-light, uma única vez por entrada, animada por
+   transform pelo controlador de cada página. JAMAIS gradiente como
+   preenchimento de texto. */
+
+.varredura {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+}
+
+.varredura-luz {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  mix-blend-mode: soft-light;
+  background: linear-gradient(
+    105deg,
+    transparent 30%,
+    oklch(95% 0.006 240 / 0.85) 50%,
+    transparent 70%
+  );
+  transform: translateX(-130%);
+}
+
+/* 16c3. ORNAMENTOS SOLACE: arco fino com dot pousado e faixas de névoa --------
+
+   O arco é um círculo hairline de 1px com um dot de 4px sobre a linha;
+   as névoas são gradientes frios que derivam em 45 a 65s, alternados. */
+
+.arco {
+  position: absolute;
+  pointer-events: none;
+  aspect-ratio: 1;
+  border: 1px solid var(--line-soft);
+  border-radius: 50%;
+}
+
+.arco::after {
+  content: "";
+  position: absolute;
+  top: -2.5px;
+  left: 50%;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--ink);
+}
+
+.arco--lento {
+  animation: arco-gira 65s linear infinite;
+}
+
+@keyframes arco-gira {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.nevoa {
+  position: absolute;
+  inset: -20%;
+  pointer-events: none;
+  background:
+    radial-gradient(42% 36% at 28% 30%, var(--glow), transparent 70%),
+    radial-gradient(36% 30% at 74% 68%, var(--glow), transparent 70%);
+  animation: nevoa-deriva 52s var(--ease) infinite alternate;
+}
+
+.nevoa--lenta {
+  animation-duration: 65s;
+}
+
+.nevoa--rapida {
+  animation-duration: 45s;
+}
+
+@keyframes nevoa-deriva {
+  from {
+    transform: translate3d(-2.5%, -2%, 0) scale(1);
+  }
+  to {
+    transform: translate3d(2.5%, 2%, 0) scale(1.06);
+  }
+}
+
+/* 16d. Cena: gate de revelação à prova de falha + modo de inspeção ------------------------ */
+
+/* Nenhum flash de conteúdo sem animação: [data-reveal] nasce invisível e a
+   classe cena-pronta (posta pelo provider no instante dos sets iniciais, ou
+   pelo timeout de 1.5s do layout) libera tudo. Sem JS, o media query abaixo
+   mostra o conteúdo do mesmo jeito. */
+
+[data-reveal] {
+  visibility: hidden;
+}
+
+html.cena-pronta [data-reveal] {
+  visibility: visible;
+}
+
+@media (scripting: none) {
+  [data-reveal] {
+    visibility: visible;
+  }
+}
+
+html[data-debug] [data-reveal] {
+  outline: 1px solid oklch(0.65 0.2 30 / 0.85);
+  outline-offset: -1px;
+}
+
+.fps-medidor {
+  position: fixed;
+  left: 12px;
+  bottom: 12px;
+  z-index: 600;
+  font-family: monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  padding: 6px 10px;
+  background: oklch(0 0 0 / 0.72);
+  color: oklch(0.8 0.11 88);
+  pointer-events: none;
+}
+
+/* fallback elegante do <Media/>: plate em gradiente da paleta + grain herdado */
+
+.media-fallback {
+  position: absolute;
+  inset: 0;
+  display: block;
+  background:
+    radial-gradient(110% 90% at 70% 20%, var(--glow), transparent 60%),
+    linear-gradient(160deg, var(--bg-2), var(--bg-deep));
+}
+
+/* 16c. Impressão: nada decorativo vai para o papel ---------------------------------------- */
+
+@media print {
+  body::after,
+  .cursor,
+  .toasts,
+  .rail,
+  .skip-link {
+    display: none !important;
+  }
+}
+
+/* 17. Movimento reduzido ---------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* 18. Utilitários de composição ----------------------------------------------------------- */
+
+.envoltura {
+  padding-inline: var(--margem);
+}
+
+.grade-12 {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  column-gap: clamp(12px, 1.8vw, 28px);
+}
+
+.visualmente-oculto {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* 16e. FIGURA: fotografia editorial com véu, legenda e ganchos de coreografia --
+   O clip-path e os transforms são do GSAP (controlador Figuras): NENHUMA
+   transition CSS nessas propriedades aqui (lição da casa). Hover no wrapper. */
+
+.figura {
+  margin: 0;
+}
+
+.figura-clip {
+  position: relative;
+  overflow: hidden;
+}
+
+.figura-inner {
+  position: absolute;
+  inset: -7% 0;
+  height: 114%;
+  will-change: transform;
+}
+
+.figura-inner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.figura-veu {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.figura-veu[data-veu="lateral"] {
+  background: linear-gradient(
+    to right,
+    color-mix(in oklab, var(--bg) calc(var(--veu-alpha) * 100%), transparent),
+    transparent 62%
+  );
+}
+
+.figura-veu[data-veu="vertical"] {
+  background: linear-gradient(
+    to top,
+    color-mix(in oklab, var(--bg) calc(var(--veu-alpha) * 100%), transparent),
+    transparent 58%
+  );
+}
+
+.figura-legenda {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  border-top: 1px solid var(--line-soft);
+  margin-top: 12px;
+  padding-top: 10px;
+}
+
+.figura-regua {
+  width: 2.6rem;
+  height: 1px;
+  background: var(--line);
+  align-self: center;
+  flex: none;
+}
+
+.figura-credito {
+  margin-left: auto;
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* hover premium: a foto respira; tudo no wrapper, nada no nó animado */
+
+@media (pointer: fine) {
+  .figura-clip:hover .figura-inner img {
+    transition: transform 0.45s var(--ease);
+    transform: scale(1.04);
+  }
+}
+
+/* respiro fotográfico entre capítulos: faixa baixa full-bleed */
+
+.respiro-foto {
+  position: relative;
+  height: clamp(220px, 38vh, 420px);
+  overflow: hidden;
+}
+
+.respiro-foto .figura-clip {
+  position: absolute;
+  inset: 0;
+  aspect-ratio: auto !important;
+}
+
+/* 18b. Véu de transição de rota ------------------------------------------------ */
+
+.veu-rotas {
+  position: fixed;
+  inset: 0;
+  z-index: 270;
+  display: grid;
+  place-items: center;
+  background: var(--bg-deep);
+  clip-path: inset(100% 0 0 0);
+  pointer-events: none;
+}
+
+/* 19. Estúdio ao vivo: faixa hairline com ponto pulsante e hora de Sumaré ----- */
+
+.aovivo {
+  display: flex;
+  align-items: center;
+  gap: 12px 22px;
+  flex-wrap: wrap;
+  border-top: 1px solid var(--hairline);
+  border-bottom: 1px solid var(--hairline);
+  padding-block: 16px;
+  font-size: 13px;
+  color: var(--muted);
+  max-width: none;
+}
+
+.aovivo-ponto {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  /* a luz âmbar pontual do SOLACE */
+  background: var(--warm);
+  animation: aovivo-pulsa 1.6s var(--ease) infinite alternate;
+  flex: none;
+}
+
+.aovivo-celula:empty {
+  display: none;
+}
+
+.aovivo-celula:not(:last-child)::after {
+  content: "·";
+  margin-left: 22px;
+  opacity: 0.5;
+}
+
+@keyframes aovivo-pulsa {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aovivo-ponto {
+    animation: none;
+  }
+}
+
+/* 20. Paleta de comandos (Ctrl K / cmd K) ------------------------------------- */
+
+.paleta {
+  position: fixed;
+  inset: 0;
+  z-index: 260;
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  padding-top: clamp(80px, 16vh, 160px);
+}
+
+.paleta-veu {
+  position: absolute;
+  inset: 0;
+  background: color-mix(in oklab, var(--bg-deep) 72%, transparent);
+  backdrop-filter: blur(6px);
+}
+
+.paleta-painel {
+  position: relative;
+  width: min(560px, calc(100vw - 2 * var(--margem)));
+  background: var(--bg-2);
+  border: 1px solid var(--hairline-forte);
+  box-shadow: var(--sombra);
+  display: grid;
+}
+
+.paleta-campo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid var(--hairline);
+  padding: 16px 18px;
+}
+
+.paleta-campo input {
+  flex: 1;
+  background: transparent;
+  border: 0;
+  font: inherit;
+  font-size: 15px;
+  color: var(--text);
+}
+
+.paleta-campo input:focus-visible {
+  outline: none;
+}
+
+.paleta-campo kbd {
+  font-family: var(--hanken);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  border: 1px solid var(--hairline);
+  padding: 3px 7px;
+}
+
+.paleta-lista {
+  max-height: min(380px, 48vh);
+  overflow-y: auto;
+  padding-block: 8px;
+}
+
+.paleta-grupo {
+  padding: 10px 18px 4px;
+}
+
+.paleta-item {
+  position: relative;
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 11px 18px;
+  text-align: left;
+  font-size: 14px;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.paleta-item[aria-selected="true"] {
+  color: var(--text);
+  background: var(--bg);
+}
+
+/* magic line: o marcador do item ativo desliza entre opções (layoutId) */
+.paleta-marcador {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--accent);
+}
+
+.paleta-item .atalho {
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+}
+
+.paleta-vazia {
+  padding: 24px 18px;
+  font-size: 14px;
+  color: var(--muted);
+}

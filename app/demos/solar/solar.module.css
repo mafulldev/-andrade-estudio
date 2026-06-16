@@ -1,0 +1,514 @@
+/* SOLAR — areia, oliva e bronze. Marcellus + Figtree.
+   Grade quente de fim de tarde. Cores apenas dos tokens desta rota. */
+
+.pagina {
+  --areia: oklch(0.93 0.012 85);
+  --areia-2: oklch(0.89 0.014 85);
+  --oliva: oklch(0.35 0.06 130);
+  --bronze: oklch(0.62 0.1 80);
+  --mudo: oklch(0.35 0.06 130 / 0.64);
+  --linha: oklch(0.35 0.06 130 / 0.18);
+  --serif: var(--fonte-solar-titulo), Georgia, serif;
+  --sans: var(--fonte-solar-corpo), system-ui, sans-serif;
+
+  background: var(--areia);
+  color: var(--oliva);
+  font-family: var(--sans);
+  font-size: 1.04rem;
+  line-height: 1.68;
+  min-height: 100svh;
+  padding-bottom: 44px;
+  overflow-x: clip;
+}
+
+.pagina ::selection {
+  background: var(--bronze);
+  color: var(--areia);
+}
+
+.rotulo {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--bronze);
+}
+
+.titulo {
+  font-family: var(--serif);
+  font-weight: 400;
+  line-height: 1.08;
+  margin: 0;
+  text-wrap: balance;
+}
+
+.secao {
+  padding: clamp(90px, 14vh, 150px) clamp(20px, 5vw, 72px) 0;
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+.cabecaSecao {
+  display: grid;
+  gap: 14px;
+  margin-bottom: clamp(36px, 6vh, 60px);
+}
+
+.foto {
+  position: relative;
+  overflow: hidden;
+  background: var(--areia-2);
+}
+
+.foto img {
+  object-fit: cover;
+  filter: sepia(0.24) saturate(1.08) contrast(1.02);
+}
+
+/* 1. HERO com imóvel destaque em plate e parallax */
+
+.hero {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(24px, 4vw, 60px);
+  align-items: center;
+  padding: clamp(80px, 12vh, 120px) clamp(20px, 5vw, 72px) clamp(40px, 7vh, 80px);
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.heroTopo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: clamp(18px, 3vh, 30px) clamp(20px, 5vw, 72px);
+}
+
+.wordmark {
+  font-family: var(--serif);
+  font-size: 1.2rem;
+  letter-spacing: 0.4em;
+}
+
+.heroMiolo {
+  display: grid;
+  gap: 22px;
+  justify-items: start;
+}
+
+.heroTitulo {
+  font-size: clamp(2.5rem, 5.8vw, 4.8rem);
+}
+
+.heroTitulo em {
+  font-style: italic;
+  font-family: Georgia, serif;
+  color: var(--bronze);
+}
+
+.heroSub {
+  color: var(--mudo);
+  max-width: 44ch;
+  margin: 0;
+}
+
+.heroDestaque {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  max-height: 74vh;
+  overflow: hidden;
+  align-self: stretch;
+}
+
+.heroFicha {
+  position: absolute;
+  left: 14px;
+  bottom: 14px;
+  z-index: 2;
+  background: var(--areia);
+  padding: 12px 16px;
+  display: grid;
+  gap: 2px;
+}
+
+.heroFichaNome {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+}
+
+.heroFichaMeta {
+  font-size: 11.5px;
+  letter-spacing: 0.08em;
+  color: var(--mudo);
+}
+
+.botaoSolar {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid var(--oliva);
+  background: var(--oliva);
+  color: var(--areia);
+  padding: 15px 30px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.4s ease, color 0.4s ease;
+}
+
+.botaoSolar:hover {
+  background: transparent;
+  color: var(--oliva);
+}
+
+/* 2. COLEÇÃO — lista editorial com microgaleria (assinatura) */
+
+.imovel {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: clamp(16px, 2.5vw, 36px);
+  border-top: 1px solid var(--linha);
+  padding-block: clamp(36px, 6vh, 64px);
+  align-items: center;
+}
+
+.imovel:last-of-type {
+  border-bottom: 1px solid var(--linha);
+}
+
+.imovelGaleria {
+  grid-column: 1 / 8;
+}
+
+.imovel:nth-of-type(even) .imovelGaleria {
+  order: 2;
+  grid-column: 6 / 13;
+}
+
+.imovelTexto {
+  grid-column: 8 / 13;
+  display: grid;
+  gap: 14px;
+}
+
+.imovel:nth-of-type(even) .imovelTexto {
+  grid-column: 1 / 6;
+}
+
+.imovelNome {
+  font-family: var(--serif);
+  font-size: clamp(1.6rem, 3vw, 2.3rem);
+}
+
+.imovelDesc {
+  color: var(--mudo);
+  font-size: 15px;
+  margin: 0;
+}
+
+.ficha {
+  display: grid;
+}
+
+.ficha li {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  border-top: 1px solid var(--linha);
+  padding-block: 9px;
+  font-size: 13.5px;
+}
+
+.ficha li:last-child {
+  border-bottom: 1px solid var(--linha);
+}
+
+.ficha li span:first-child {
+  color: var(--mudo);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  align-self: center;
+}
+
+/* microgaleria por clip-path com dots hairline */
+
+.galeria {
+  display: grid;
+  gap: 12px;
+}
+
+.galeriaQuadro {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background: var(--areia-2);
+}
+
+.galeriaImg {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  clip-path: inset(0 0 0 100%);
+  transition: clip-path 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.galeriaImgAnterior {
+  clip-path: inset(0 0 0 0);
+}
+
+.galeriaImgAtiva {
+  z-index: 2;
+  clip-path: inset(0 0 0 0);
+}
+
+.galeriaDots {
+  display: flex;
+  gap: 10px;
+}
+
+.galeriaDots button {
+  width: 10px;
+  height: 10px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid var(--mudo);
+  background: transparent;
+  cursor: pointer;
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+.galeriaDots button[aria-current="true"] {
+  background: var(--bronze);
+  border-color: var(--bronze);
+}
+
+/* 3. A IMOBILIÁRIA */
+
+.sobre {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: clamp(16px, 2.5vw, 36px);
+  align-items: start;
+}
+
+.sobreTexto {
+  grid-column: 1 / 7;
+  display: grid;
+  gap: 18px;
+}
+
+.sobreTexto p {
+  margin: 0;
+  color: var(--mudo);
+}
+
+.sobreFoto {
+  grid-column: 8 / 13;
+  aspect-ratio: 4 / 5;
+}
+
+/* 4. AGENDAR VISITA */
+
+.visita {
+  background: var(--oliva);
+  color: var(--areia);
+  padding-bottom: clamp(90px, 14vh, 150px);
+}
+
+.visitaGrid {
+  max-width: 1180px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  gap: clamp(24px, 4vw, 64px);
+  align-items: start;
+}
+
+.visitaInfo {
+  display: grid;
+  gap: 16px;
+}
+
+.visitaInfo .rotulo {
+  color: oklch(0.62 0.1 80 / 0.9);
+}
+
+.visitaInfo p {
+  margin: 0;
+  color: oklch(0.93 0.012 85 / 0.75);
+}
+
+.visitaForm {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.campoSolar {
+  display: grid;
+  gap: 7px;
+}
+
+.campoSolar span {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: oklch(0.93 0.012 85 / 0.62);
+}
+
+.campoSolar input,
+.campoSolar select {
+  background: transparent;
+  border: 1px solid oklch(0.93 0.012 85 / 0.32);
+  border-radius: 0;
+  padding: 13px 14px;
+  font: inherit;
+  font-size: 15px;
+  color: var(--areia);
+  color-scheme: dark;
+  transition: border-color 0.3s ease;
+}
+
+.campoSolar input:focus-visible,
+.campoSolar select:focus-visible {
+  outline: none;
+  border-color: var(--bronze);
+}
+
+.campoSolar select option {
+  background: var(--oliva);
+}
+
+.campoLargo {
+  grid-column: 1 / -1;
+}
+
+.botaoSolarClaro {
+  background: var(--areia);
+  color: var(--oliva);
+  border-color: var(--areia);
+}
+
+.botaoSolarClaro:hover {
+  background: transparent;
+  color: var(--areia);
+}
+
+/* 5. REGIÕES E CONTATO */
+
+.regioes {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: clamp(20px, 3vw, 44px);
+  align-items: start;
+}
+
+.regioesLista {
+  grid-column: 1 / 7;
+  display: grid;
+}
+
+.regioesLista li {
+  border-top: 1px solid var(--linha);
+  padding-block: 13px;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  font-size: 15px;
+}
+
+.regioesLista li:last-child {
+  border-bottom: 1px solid var(--linha);
+}
+
+.regioesLista li span:last-child {
+  color: var(--mudo);
+  font-size: 13.5px;
+}
+
+.contatoBloco {
+  grid-column: 8 / 13;
+  display: grid;
+  gap: 14px;
+  align-content: start;
+}
+
+.contatoBloco p {
+  margin: 0;
+  color: var(--mudo);
+  font-size: 15px;
+}
+
+.contatoBloco strong {
+  color: var(--oliva);
+}
+
+/* rodapé */
+
+.rodape {
+  margin-top: clamp(90px, 14vh, 150px);
+  border-top: 1px solid var(--linha);
+  padding: 28px clamp(20px, 5vw, 72px) 36px;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+  flex-wrap: wrap;
+  font-size: 13px;
+  color: var(--mudo);
+}
+
+/* responsivo */
+
+@media (max-width: 860px) {
+  .hero {
+    grid-template-columns: 1fr;
+    align-content: start;
+    gap: 26px;
+    padding-top: 96px;
+  }
+
+  .heroDestaque {
+    aspect-ratio: 16 / 10;
+    max-height: 30vh;
+    align-self: auto;
+    width: 100%;
+  }
+
+  .imovel,
+  .sobre,
+  .visitaGrid,
+  .regioes {
+    grid-template-columns: 1fr;
+  }
+
+  .imovelGaleria,
+  .imovelTexto,
+  .sobreTexto,
+  .sobreFoto,
+  .regioesLista,
+  .contatoBloco {
+    grid-column: 1 / -1 !important;
+  }
+
+  .imovel:nth-of-type(even) .imovelGaleria {
+    order: 0;
+  }
+
+  .visitaForm {
+    grid-template-columns: 1fr;
+    margin-top: 20px;
+  }
+}

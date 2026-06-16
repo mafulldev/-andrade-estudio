@@ -1,0 +1,1257 @@
+/* HOME — SOLACE
+   Capítulos sobre o fluido fixo: 01 abertura pinned, 02 dois caminhos com o
+   comparador, 03 trilho horizontal dos modelos, 04+ em fluxo editorial.
+   Grafite frio, hairlines, Cormorant protagonista; o âmbar é pontual. */
+
+.palco {
+  position: relative;
+  z-index: 1;
+}
+
+.cap {
+  position: relative;
+}
+
+/* última seção: clipa a névoa (inset -20%) e o figura com parallax para
+   nada transbordar abaixo do rodapé — o site termina no footer */
+.codaFim {
+  overflow: clip;
+}
+
+.miolo {
+  max-width: 1480px;
+  margin: 0 auto;
+  padding-inline: var(--margem);
+}
+
+.eyebrowCap {
+  margin-bottom: clamp(20px, 3.5vh, 36px);
+}
+
+/* ============ CAP 01 · ABERTURA — A LINHA QUE ASSINA ============ */
+
+.hero {
+  position: relative;
+  min-height: 100svh;
+  overflow: clip;
+}
+
+/* hero em duas colunas: bloco editorial à esquerda, a assinatura "Andrade" à
+   direita em coluna PRÓPRIA (nunca sobre texto/botões). data-reveal segura
+   tudo até a cena-pronta (sem flash); o desenho do fio É a abertura. */
+.heroLinhaWrap {
+  position: relative;
+  min-height: 100svh;
+  max-width: 1540px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 0.86fr) minmax(0, 1.14fr);
+  align-items: center;
+  gap: clamp(24px, 4vw, 80px);
+  padding: clamp(100px, 15vh, 184px) var(--margem) clamp(72px, 11vh, 140px);
+}
+
+/* a assinatura caligráfica vive na coluna direita, centrada */
+.heroPalcoLinha {
+  position: relative;
+  z-index: 1;
+  justify-self: center;
+  width: 100%;
+  min-height: clamp(150px, 24vh, 280px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  will-change: transform;
+}
+
+.heroAssinaturaSvg {
+  width: 100%;
+  max-width: clamp(380px, 54vw, 760px);
+  height: auto;
+  overflow: visible;
+  color: var(--ink);
+}
+
+/* a ponta âmbar: a luz que percorre a assinatura (posição em px via JS) */
+.heroPonta {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--warm);
+  box-shadow: 0 0 16px 3px var(--warm), 0 0 5px 1px var(--warm);
+  will-change: transform;
+}
+
+/* bloco editorial à esquerda */
+.heroTexto {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  justify-items: start;
+  gap: clamp(18px, 2.6vh, 32px);
+  max-width: 40rem;
+}
+
+.heroEyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--ink);
+  opacity: 0.82;
+}
+
+.heroEyebrowPonto {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--warm);
+  flex: none;
+}
+
+.heroTitulo {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(2.8rem, 6.4vw, 6rem);
+  line-height: 1;
+  letter-spacing: 0.004em;
+  color: var(--ink);
+  max-width: 15ch;
+  text-wrap: balance;
+}
+
+.heroTitulo em {
+  font-style: italic;
+  color: var(--ink);
+}
+
+.heroApoio {
+  font-size: clamp(0.98rem, 1.1vw, 1.12rem);
+  line-height: 1.7;
+  color: var(--muted);
+  max-width: 40ch;
+}
+
+.heroAcoes {
+  display: flex;
+  align-items: center;
+  gap: clamp(18px, 2.4vw, 34px);
+  margin-top: clamp(8px, 1.6vh, 20px);
+  flex-wrap: wrap;
+}
+
+.heroAcaoPrincipal {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  padding: 15px 26px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-family: var(--hanken);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink);
+  transition: border-color 0.45s var(--ease), background 0.45s var(--ease);
+}
+
+.heroAcaoPrincipal:hover,
+.heroAcaoPrincipal:focus-visible {
+  border-color: var(--ink);
+  background: color-mix(in oklab, var(--ink) 7%, transparent);
+}
+
+.heroAcaoVer {
+  font-family: var(--hanken);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--line);
+  transition: color 0.45s var(--ease), border-color 0.45s var(--ease);
+}
+
+.heroAcaoVer:hover,
+.heroAcaoVer:focus-visible {
+  color: var(--ink);
+  border-color: var(--ink);
+}
+
+.heroAssinatura {
+  margin-top: clamp(6px, 1.2vh, 14px);
+  font-family: var(--hanken);
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+.heroScroll {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(20px, 4vh, 40px);
+  transform: translateX(-50%);
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  z-index: 2;
+}
+
+.heroScrollLinha {
+  width: 1px;
+  height: 44px;
+  background: var(--hairline-forte);
+}
+
+/* tablet/mobile: empilha — a assinatura vai ABAIXO do texto, nunca sobreposta */
+@media (max-width: 980px) {
+  .heroLinhaWrap {
+    grid-template-columns: 1fr;
+    gap: clamp(30px, 6vh, 56px);
+  }
+
+  .heroPalcoLinha {
+    max-width: min(88vw, 540px);
+    justify-self: start;
+  }
+
+  .heroTexto {
+    max-width: 100%;
+  }
+}
+
+/* mobile: texto menor, scroll alinhado à esquerda */
+@media (max-width: 860px) {
+  .heroLinhaWrap {
+    padding-top: clamp(96px, 14vh, 150px);
+  }
+
+  .heroTitulo {
+    font-size: clamp(2.5rem, 11vw, 3.6rem);
+  }
+
+  .heroApoio {
+    max-width: 100%;
+  }
+
+  .heroScroll {
+    left: var(--margem);
+    transform: none;
+    justify-items: start;
+  }
+}
+
+/* reduced-motion: a linha já nasce desenhada (estática), sem a ponta viajante */
+@media (prefers-reduced-motion: reduce) {
+  .heroPonta {
+    display: none;
+  }
+}
+
+/* ============ CAP 02 · DOIS CAMINHOS ============ */
+
+.caminhos {
+  min-height: 100svh;
+  display: grid;
+  align-content: center;
+  padding-block: clamp(48px, 8vh, 96px);
+  overflow: clip;
+}
+
+.caminhosCabeca {
+  display: grid;
+  justify-items: center;
+  text-align: center;
+  margin-bottom: clamp(28px, 5vh, 56px);
+}
+
+.caminhosTitulo {
+  font-size: clamp(2.4rem, 4.6vw, 4.2rem);
+}
+
+.caminhosLinha {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.caminhosRodape {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 24px 48px;
+  flex-wrap: wrap;
+  margin-top: clamp(24px, 4vh, 44px);
+}
+
+.caminhosNota {
+  max-width: 52ch;
+  font-size: 14.5px;
+  color: var(--muted);
+}
+
+/* ============ CAP 03 · OS CINCO MODELOS ============ */
+
+.modelos {
+  overflow: clip;
+}
+
+.modelosPalco {
+  height: 100svh;
+  min-height: 600px;
+  display: flex;
+  align-items: center;
+  overflow: clip;
+}
+
+.trilho {
+  display: flex;
+  align-items: center;
+  gap: clamp(24px, 4vw, 64px);
+  width: max-content;
+  padding-inline: var(--margem);
+  will-change: transform;
+}
+
+.plateIntro {
+  width: clamp(300px, 34vw, 520px);
+  flex: none;
+  display: grid;
+  gap: clamp(14px, 2.4vh, 24px);
+}
+
+.plateIntroTitulo {
+  font-size: clamp(2rem, 3.6vw, 3.4rem);
+}
+
+.plateIntroDica {
+  color: var(--muted);
+  font-size: 14.5px;
+  max-width: 34ch;
+}
+
+/* mobile E reduced-motion: trilho vertical. Sem o pin horizontal do GSAP
+   (que não roda em reduce), o trilho largo ficaria cortado pelo overflow:
+   clip e 4 dos 5 modelos seriam inalcançáveis; a pilha é o fallback. */
+
+@media (max-width: 860px), (prefers-reduced-motion: reduce) {
+  .modelosPalco {
+    height: auto;
+    min-height: 0;
+    display: block;
+  }
+
+  .trilho {
+    flex-direction: column;
+    align-items: stretch;
+    width: auto;
+    gap: clamp(40px, 8vh, 72px);
+    padding-block: clamp(40px, 8vh, 72px);
+  }
+
+  .plateIntro {
+    width: auto;
+  }
+}
+
+/* ====== Projeto real: NeuroCode AI, o fecho do capítulo Projetos ====== */
+
+.projetoReal {
+  border: 1px solid var(--hairline);
+  padding: clamp(28px, 4.5vw, 64px);
+  display: grid;
+  gap: clamp(32px, 5vh, 56px);
+}
+
+.projetoCabeca {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  gap: clamp(28px, 4vw, 64px);
+  align-items: center;
+}
+
+.projetoNome {
+  font-size: clamp(2.4rem, 5vw, 4.4rem);
+  letter-spacing: 0.04em;
+  margin: 14px 0 18px;
+}
+
+.projetoResumo {
+  color: var(--muted);
+  max-width: 56ch;
+}
+
+.projetoArte {
+  color: var(--muted);
+  justify-self: center;
+  width: min(100%, 380px);
+}
+
+.projetoArteSvg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* grade de fatos com juntas hairline (gap de 1px sobre a linha) */
+
+.projetoFatos {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--hairline);
+  border: 1px solid var(--hairline);
+}
+
+.projetoFatos li {
+  background: var(--bg);
+  padding: clamp(18px, 2.6vw, 28px);
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 14px;
+  align-items: start;
+}
+
+.projetoIcone {
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+.projetoFatoTitulo {
+  font-family: var(--hanken);
+  font-size: 14.5px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  margin: 0 0 6px;
+}
+
+.projetoFatoTexto {
+  color: var(--muted);
+  font-size: 14px;
+  margin: 0;
+}
+
+.projetoCta {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 1100px) {
+  .projetoFatos {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .projetoCabeca {
+    grid-template-columns: 1fr;
+  }
+
+  .projetoArte {
+    justify-self: start;
+    width: min(100%, 300px);
+  }
+
+  .projetoFatos {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ============ Provisórios (caps 04 a 06 + coda), fluxo editorial ============ */
+
+.secao {
+  padding-block: var(--respiro) clamp(56px, 9vh, 110px);
+}
+
+.tituloCap {
+  font-size: clamp(2.4rem, 4.6vw, 4.2rem);
+  max-width: 16ch;
+}
+
+.subCap {
+  margin-top: clamp(14px, 2.4vh, 24px);
+  max-width: var(--coluna-estreita);
+  color: var(--muted);
+}
+
+/* portal do diagnóstico */
+
+.portalPalco {
+  min-height: 100svh;
+  display: grid;
+  align-content: center;
+  gap: clamp(24px, 4vh, 44px);
+}
+
+.anelAcao {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  padding-left: 26px;
+  min-height: calc(3.4rem + 52px);
+}
+
+/* o anel desenhável abraça só o aro do CTA (primeiro filho direto) */
+.anelAcao > svg {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: calc(3.4rem + 52px);
+  height: calc(3.4rem + 52px);
+  transform: translateY(-50%) rotate(-90deg);
+  pointer-events: none;
+}
+
+.portal {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: clamp(32px, 5vw, 80px);
+  align-items: center;
+  margin-top: clamp(32px, 5vh, 56px);
+}
+
+.portalAcao {
+  display: grid;
+  justify-items: center;
+  gap: 18px;
+}
+
+.portalPerguntas {
+  display: grid;
+}
+
+.portalPerguntas li {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  border-top: 1px solid var(--hairline);
+  padding-block: clamp(12px, 1.8vh, 17px);
+  font-family: var(--serif);
+  font-size: clamp(1.05rem, 1.6vw, 1.3rem);
+}
+
+.portalPerguntas li:last-child {
+  border-bottom: 1px solid var(--hairline);
+}
+
+.portalPerguntas .num {
+  font-family: var(--hanken);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* processo */
+
+.passos {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: clamp(20px, 3vw, 44px);
+  margin-top: clamp(36px, 6vh, 64px);
+}
+
+.passosSvg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  pointer-events: none;
+}
+
+.passo {
+  display: grid;
+  align-content: start;
+  gap: 12px;
+  padding-top: 18px;
+}
+
+.passoCabeca {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 6px;
+}
+
+.passoNum {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: 1.5rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.passoPicto {
+  color: var(--muted);
+}
+
+.passoTitulo {
+  font-size: 1.1rem;
+}
+
+.passoTexto {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.passoEntregaveis {
+  display: grid;
+  margin-top: 4px;
+}
+
+.passoEntregaveis li {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  border-top: 1px solid var(--line-soft);
+  padding-block: 9px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.passoEntregaveis svg {
+  flex: none;
+  transform: translateY(2px);
+}
+
+/* fatos do estúdio */
+
+.fatos {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border-top: 1px solid var(--hairline);
+  border-left: 1px solid var(--hairline);
+  margin-top: clamp(32px, 5vh, 56px);
+}
+
+.fato {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  padding: clamp(20px, 3vh, 32px) clamp(18px, 2vw, 28px);
+  border-right: 1px solid var(--hairline);
+  border-bottom: 1px solid var(--hairline);
+}
+
+.fatoNumero {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(2rem, 3.6vw, 3.2rem);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.fatoRotulo {
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+/* princípios */
+
+.principios {
+  display: grid;
+  gap: clamp(32px, 6vh, 64px);
+  margin-top: clamp(36px, 6vh, 64px);
+  max-width: 880px;
+}
+
+.principio {
+  display: grid;
+  gap: 16px;
+}
+
+.principio blockquote {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: clamp(1.5rem, 3vw, 2.4rem);
+  line-height: 1.25;
+  text-wrap: balance;
+}
+
+.principioAssinatura {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+.rubrica {
+  width: 140px;
+  height: 2px;
+  display: block;
+}
+
+.principios + :global(.aovivo) {
+  margin-top: clamp(40px, 7vh, 80px);
+}
+
+/* planos como linhas editoriais */
+
+.planos {
+  display: grid;
+  margin-top: clamp(32px, 5vh, 56px);
+}
+
+.plano {
+  border-top: 1px solid var(--hairline);
+  padding-block: clamp(22px, 3.4vh, 36px);
+  display: grid;
+  grid-template-columns: minmax(140px, 0.8fr) minmax(0, 1.6fr) minmax(0, 2fr) auto;
+  gap: 14px 32px;
+  align-items: baseline;
+}
+
+.plano:last-of-type {
+  border-bottom: 1px solid var(--hairline);
+}
+
+.planoNome {
+  font-family: var(--serif);
+  font-size: clamp(1.4rem, 2.4vw, 2rem);
+}
+
+.planoPreco {
+  display: grid;
+  gap: 2px;
+}
+
+.planoValor {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(1.6rem, 2.8vw, 2.4rem);
+  font-variant-numeric: tabular-nums;
+}
+
+.planoPrazo {
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+.planoItens {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.planosNota {
+  margin-top: 18px;
+  font-size: 13.5px;
+  color: var(--muted);
+}
+
+/* FAQ */
+
+.faq {
+  max-width: 880px;
+  margin-top: clamp(32px, 5vh, 56px);
+}
+
+/* ============ CAP 07 · BASTIDORES ============ */
+
+.bastidores {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: clamp(28px, 4vw, 64px);
+  margin-top: clamp(32px, 5vh, 56px);
+  align-items: start;
+}
+
+.bastidoresFiguras {
+  display: grid;
+  gap: clamp(18px, 2.5vh, 28px);
+}
+
+.bastidoresLista {
+  display: grid;
+}
+
+.bastidoresLista li {
+  display: flex;
+  gap: 16px;
+  border-top: 1px solid var(--line-soft);
+  padding-block: clamp(14px, 2.2vh, 20px);
+}
+
+.bastidoresIcone {
+  flex: none;
+  color: var(--muted);
+  transform: translateY(2px);
+}
+
+.bastidoresTitulo {
+  font-family: var(--hanken);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.bastidoresTexto {
+  margin-top: 4px;
+  font-size: 13.5px;
+  color: var(--muted);
+}
+
+/* ficha técnica: medido, não prometido */
+
+.ficha {
+  position: relative;
+  margin-top: clamp(48px, 8vh, 96px);
+  padding-left: clamp(20px, 2.5vw, 36px);
+}
+
+.fichaSvg {
+  position: absolute;
+  left: 0;
+  top: 6px;
+  bottom: 6px;
+  width: 2px;
+  pointer-events: none;
+}
+
+.fichaTitulo {
+  font-size: clamp(1.6rem, 2.8vw, 2.4rem);
+  margin-bottom: clamp(18px, 3vh, 30px);
+}
+
+.fichaLinhas {
+  display: grid;
+  margin: 0;
+}
+
+.fichaLinha {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(110px, 0.6fr) minmax(0, 1.8fr);
+  gap: 8px 28px;
+  align-items: baseline;
+  border-top: 1px solid var(--line-soft);
+  padding-block: clamp(12px, 2vh, 18px);
+}
+
+.fichaLinha:last-of-type {
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.fichaRotulo {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  font-size: 14px;
+}
+
+.fichaIcone {
+  flex: none;
+  color: var(--muted);
+  transform: translateY(3px);
+}
+
+.fichaValor {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(1.4rem, 2.4vw, 2rem);
+  font-variant-numeric: tabular-nums;
+}
+
+.fichaDetalhe {
+  margin: 0;
+  font-size: 13px;
+  color: var(--muted);
+  display: grid;
+  gap: 2px;
+}
+
+.fichaData {
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.fichaNota {
+  margin-top: 16px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* garantias: incluso em todo projeto */
+
+.garantias {
+  margin-top: clamp(48px, 8vh, 88px);
+}
+
+.garantiasCabeca {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: clamp(20px, 3.5vh, 32px);
+}
+
+.garantiasSelo {
+  flex: none;
+  color: var(--muted);
+}
+
+.garantiasTitulo {
+  font-size: clamp(1.6rem, 2.8vw, 2.4rem);
+}
+
+.garantiasGrade {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-top: 1px solid var(--line-soft);
+  border-left: 1px solid var(--line-soft);
+}
+
+.garantiasGrade li {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  padding: clamp(16px, 2.4vh, 26px) clamp(14px, 1.8vw, 24px);
+  border-right: 1px solid var(--line-soft);
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.garantiaIcone {
+  color: var(--muted);
+}
+
+.garantiaTitulo {
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.garantiaDetalhe {
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+@media (max-width: 1100px) {
+  .bastidores {
+    grid-template-columns: 1fr;
+  }
+
+  .garantiasGrade {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .fichaLinha {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+
+  .garantiasGrade {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ============ CODA ============ */
+
+.coda {
+  position: relative;
+  z-index: 1;
+  min-height: 90svh;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  text-align: center;
+  gap: clamp(24px, 4vh, 40px);
+  padding-block: var(--respiro) clamp(56px, 9vh, 110px);
+}
+
+/* horizonte fotográfico atrás da coda inteira */
+
+.codaFoto {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.codaFoto :global(.figura-clip) {
+  position: absolute;
+  inset: 0;
+  aspect-ratio: auto !important;
+}
+
+.estudioFaixa {
+  margin-top: clamp(36px, 6vh, 64px);
+}
+
+.codaTitulo {
+  font-size: clamp(3.4rem, 7.8vw, 7.4rem);
+  max-width: 14ch;
+}
+
+.codaAcoes {
+  display: grid;
+  justify-items: center;
+  gap: 24px;
+}
+
+.codaAoVivo {
+  justify-content: center;
+  border-bottom: 0;
+  max-width: min(720px, 90vw);
+}
+
+.rodapeAtalho {
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.rodapeBaseDir {
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* footer */
+
+.rodape {
+  position: relative;
+  z-index: 1;
+  border-top: 1px solid var(--hairline-forte);
+  padding: clamp(40px, 7vh, 72px) var(--margem) 28px;
+  /* fundo sutil que assenta sobre o skyline: garante o contraste dos
+     textos (mais escuro embaixo, onde mora o texto miúdo) sem apagar a
+     atmosfera da foto no topo */
+  background: linear-gradient(
+    to bottom,
+    color-mix(in oklab, var(--bg-deep) 64%, transparent),
+    color-mix(in oklab, var(--bg-deep) 92%, transparent)
+  );
+}
+
+.rodapeGrid {
+  max-width: 1480px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr 1.2fr;
+  gap: 40px 32px;
+}
+
+.rodapeMarca {
+  display: grid;
+  align-content: start;
+  justify-items: start;
+  gap: 14px;
+}
+
+.rodapeMarca .cab-wordmark {
+  color: var(--ink);
+}
+
+.rodapeTagline {
+  font-size: 16.5px;
+  line-height: 1.55;
+  color: var(--ink);
+  max-width: 32ch;
+}
+
+.rodapeCol {
+  display: grid;
+  align-content: start;
+  justify-items: start;
+  gap: 13px;
+  font-size: 15px;
+}
+
+/* links do footer: serif com sublinhado de 1px que ATRAVESSA
+   (entra pela esquerda, sai pela direita ao soltar o ponteiro) */
+
+.rodapeCol a {
+  position: relative;
+  font-family: var(--serif);
+  font-size: 1.24rem;
+  color: var(--ink);
+  transition: color 0.45s var(--ease);
+}
+
+.rodapeCol a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 1px;
+  background: var(--ink);
+  transform: scaleX(0);
+  transform-origin: right center;
+  transition: transform 0.45s var(--ease);
+}
+
+.rodapeCol a:hover,
+.rodapeCol a:focus-visible {
+  color: var(--ink);
+}
+
+.rodapeCol a:hover::after,
+.rodapeCol a:focus-visible::after {
+  transform: scaleX(1);
+  transform-origin: left center;
+}
+
+.rodapeTituloCol {
+  /* títulos de coluna destacados: ink sobre o fundo do rodapé */
+  margin-bottom: 10px;
+  font-size: 0.75rem;
+  color: var(--ink);
+  opacity: 1;
+}
+
+/* linha direta: pill de contato com aro circular de seta (adaptação honesta
+   do padrão de newsletter: sem backend de lista, o destino é o e-mail real) */
+
+.rodapePill {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 6px 6px 6px 18px;
+  font-family: var(--hanken);
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  transition: color 0.45s var(--ease), border-color 0.45s var(--ease);
+}
+
+.rodapePillAro {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  color: var(--ink);
+  transition: background 0.45s var(--ease), color 0.45s var(--ease);
+}
+
+.rodapePillAro svg {
+  width: 13px;
+  height: 13px;
+}
+
+.rodapePill:hover,
+.rodapePill:focus-visible {
+  color: var(--ink);
+  border-color: var(--ink);
+}
+
+.rodapePill:hover .rodapePillAro,
+.rodapePill:focus-visible .rodapePillAro {
+  background: var(--ink);
+  color: var(--bg);
+}
+
+.rodapeLocal {
+  font-size: 14px;
+  color: var(--ink);
+  opacity: 0.92;
+  max-width: 28ch;
+}
+
+.rodapeWordmark {
+  max-width: 1480px;
+  margin: clamp(40px, 8vh, 80px) auto 0;
+  overflow: hidden;
+}
+
+.rodapeWordmark span {
+  display: block;
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(3.4rem, 11.5vw, 11rem);
+  line-height: 0.95;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  color: var(--ink);
+  opacity: 0.32;
+}
+
+.rodapeBase {
+  max-width: 1480px;
+  margin: 28px auto 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  border-top: 1px solid var(--hairline);
+  padding-top: 18px;
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+.rodapeBase a {
+  color: var(--ink);
+  border-bottom: 1px solid var(--hairline-forte);
+  transition: color 0.45s var(--ease), border-color 0.45s var(--ease);
+}
+
+.rodapeBase a:hover {
+  color: var(--warm);
+  border-color: var(--warm);
+}
+
+/* copyright e atalho: subir do label muted para um cinza claro legível */
+.rodapeBase > .label {
+  color: var(--ink);
+  opacity: 0.7;
+}
+
+.rodapeAtalho {
+  color: var(--ink);
+  opacity: 0.6;
+}
+
+/* ============ responsivo ============ */
+
+@media (max-width: 1100px) {
+  .portal {
+    grid-template-columns: 1fr;
+  }
+
+  .passos {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .rodapeGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .fatos {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .passos {
+    grid-template-columns: 1fr;
+  }
+
+  .plano {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .rodapeGrid {
+    grid-template-columns: 1fr;
+  }
+}

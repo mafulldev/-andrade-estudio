@@ -1,0 +1,30 @@
+CRÉDITOS DE FOTOGRAFIA · ANDRADE, Estúdio digital
+Licença Unsplash (https://unsplash.com/license): uso comercial livre,
+sem necessidade de atribuição. Créditos registrados por princípio da casa.
+
+hero-noite.avif
+  Albert Stoynov · https://unsplash.com/photos/sV9buaOKUQI
+processo-01.avif
+  Trey Gibson · https://unsplash.com/photos/LxphooAHzvc
+processo-02.avif
+  Daniel McCullough · https://unsplash.com/photos/-FPFq_trr2Y
+processo-03.avif
+  Nubelson Fernandes · https://unsplash.com/photos/Y376h7VN27c
+processo-04.avif
+  Decry.Yae · https://unsplash.com/photos/ylKxh_Bw6KM
+estudio-faixa.avif
+  Haewon Oh · https://unsplash.com/photos/qxmw0791V5Y
+coda-horizonte.avif
+  Rina Kemppainen · https://unsplash.com/photos/MBfKkA2V4PI
+textura-agua.avif
+  Christina · https://unsplash.com/photos/xXHeXHK4Z3Q
+bastidores-codigo.avif
+  Pankaj Patel · https://unsplash.com/photos/u2Ru4QBXA5Q
+privacidade-arquivo.avif
+  Nik Shuliahin · https://unsplash.com/photos/C0re10PHPfQ
+quatrocentos.avif
+  De an Sun · https://unsplash.com/photos/yHW9EJV3nT0
+
+selftest-terminal.svg
+  Autoral do estúdio: saída real de `npm run selftest` desenhada em SVG.
+O respiro mineral usa /img/estudio-noite.svg, arte vetorial autoral.
