@@ -34,6 +34,9 @@ export const metadata: Metadata = {
   },
   description:
     "Arquitetura digital sob assinatura. Sites e plataformas projetados por Matheus de Andrade em Sumaré, SP, remoto para o Brasil inteiro.",
+  verification: {
+    google: "QQskuAf14P1LXIG-aFkRRG06CMcXQvBINlgTG8Mh0Cg",
+  },
 };
 
 // Sem cookie: o SSR assume escuro e este script honra prefers-color-scheme
