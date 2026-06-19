@@ -10,9 +10,9 @@ import { Resend } from "resend";
 import { faixaPorExtenso, ROTULO_CAMINHO } from "@/lib/rotulos";
 import type { Caminho } from "@/lib/motor";
 
-// Sem domínio próprio, a Resend envia do domínio sandbox dela.
-// Com domínio verificado, troque aqui e configure o DNS (ver README).
-const REMETENTE = "ANDRADE, Estúdio digital <onboarding@resend.dev>";
+// Remetente no domínio verificado do estúdio (Resend). As respostas do
+// cliente vão para o ADMIN_EMAIL via replyTo, pois o domínio só envia.
+const REMETENTE = "ANDRADE, Estúdio digital <contato@andradestudio.dev.br>";
 
 function resend(): Resend | null {
   const chave = process.env.RESEND_API_KEY;
@@ -87,6 +87,7 @@ export async function enviarEstimativaLead(d: DadosEstimativa): Promise<void> {
 
   const { error } = await cliente.emails.send({
     from: REMETENTE,
+    replyTo: process.env.ADMIN_EMAIL,
     to: d.para,
     subject: titulo,
     html,
@@ -125,6 +126,7 @@ export async function enviarFollowUpLead(d: DadosFollowUp): Promise<boolean> {
 
   const { error } = await cliente.emails.send({
     from: REMETENTE,
+    replyTo: process.env.ADMIN_EMAIL,
     to: d.para,
     subject: titulo,
     html,
