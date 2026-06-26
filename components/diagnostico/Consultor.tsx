@@ -87,13 +87,19 @@ const PERGUNTAS: (PerguntaSimples | PerguntaMulti)[] = [
     tipo: "simples",
     chave: "segmento",
     titulo: "Qual é o seu segmento?",
-    opcoes: Object.entries(ROTULO_SEGMENTO).map(([valor, rotulo]) => ({ valor, rotulo })),
+    opcoes: Object.entries(ROTULO_SEGMENTO).map(([valor, rotulo]) => ({
+      valor,
+      rotulo,
+    })),
   },
   {
     tipo: "simples",
     chave: "objetivo",
     titulo: "Qual é o objetivo principal?",
-    opcoes: Object.entries(ROTULO_OBJETIVO).map(([valor, rotulo]) => ({ valor, rotulo })),
+    opcoes: Object.entries(ROTULO_OBJETIVO).map(([valor, rotulo]) => ({
+      valor,
+      rotulo,
+    })),
   },
   {
     tipo: "multi",
@@ -108,13 +114,19 @@ const PERGUNTAS: (PerguntaSimples | PerguntaMulti)[] = [
     tipo: "simples",
     chave: "prazo",
     titulo: "Para quando?",
-    opcoes: Object.entries(ROTULO_PRAZO).map(([valor, rotulo]) => ({ valor, rotulo })),
+    opcoes: Object.entries(ROTULO_PRAZO).map(([valor, rotulo]) => ({
+      valor,
+      rotulo,
+    })),
   },
   {
     tipo: "simples",
     chave: "invest",
     titulo: "Quanto pretende investir?",
-    opcoes: Object.entries(ROTULO_INVEST).map(([valor, rotulo]) => ({ valor, rotulo })),
+    opcoes: Object.entries(ROTULO_INVEST).map(([valor, rotulo]) => ({
+      valor,
+      rotulo,
+    })),
   },
 ];
 
@@ -134,14 +146,21 @@ type Resultado = {
   emailEnviado: boolean;
 };
 
-const CUSTOM_FUNCS: Funcionalidade[] = ["pagamentos", "membros", "integracoes", "admin"];
+const CUSTOM_FUNCS: Funcionalidade[] = [
+  "pagamentos",
+  "membros",
+  "integracoes",
+  "admin",
+];
 
 function justificar(r: Respostas, aval: Avaliacao): string[] {
   const j: string[] = [];
   if (aval.caminho === "sobmedida") {
     const custom = r.func.filter((f) => CUSTOM_FUNCS.includes(f));
     if (r.objetivo === "sistema") {
-      j.push("Um sistema interno nasce melhor desenhado do zero, com arquitetura própria.");
+      j.push(
+        "Um sistema interno nasce melhor desenhado do zero, com arquitetura própria.",
+      );
     }
     if (custom.length > 0) {
       j.push(
@@ -151,23 +170,35 @@ function justificar(r: Respostas, aval: Avaliacao): string[] {
       );
     }
     if (r.prazo === "urgente") {
-      j.push("A urgência entra no cálculo: construção dedicada com prazo comprimido.");
+      j.push(
+        "A urgência entra no cálculo: construção dedicada com prazo comprimido.",
+      );
     }
     if (j.length < 2) {
-      j.push("O objetivo declarado pede mais que presença: estrutura desenhada para o negócio.");
+      j.push(
+        "O objetivo declarado pede mais que presença: estrutura desenhada para o negócio.",
+      );
     }
   } else {
     if (r.prazo === "urgente") {
-      j.push("Seu prazo pede velocidade: o modelo pronto entra no ar em até um dia útil.");
+      j.push(
+        "Seu prazo pede velocidade: o modelo pronto entra no ar em até um dia útil.",
+      );
     }
     if (r.invest === "ate2500") {
-      j.push("O investimento indicado cabe no caminho pronto sem abrir mão de acabamento.");
+      j.push(
+        "O investimento indicado cabe no caminho pronto sem abrir mão de acabamento.",
+      );
     }
     if (r.objetivo === "presenca") {
-      j.push("Para credibilidade imediata, o modelo refinado resolve com elegância.");
+      j.push(
+        "Para credibilidade imediata, o modelo refinado resolve com elegância.",
+      );
     }
     if (j.length < 2) {
-      j.push("Sem funcionalidades de engenharia própria, o pronto entrega mais valor por real investido.");
+      j.push(
+        "Sem funcionalidades de engenharia própria, o pronto entrega mais valor por real investido.",
+      );
     }
   }
   return j.slice(0, 3);
@@ -225,7 +256,8 @@ function useTurnstile() {
     }
     const script = document.createElement("script");
     script.id = "turnstile-api";
-    script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+    script.src =
+      "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
     script.async = true;
     script.onload = montar;
     document.head.appendChild(script);
@@ -261,7 +293,9 @@ export default function Consultor() {
   const [respostas, setRespostas] = useState<EstadoRespostas>({ func: [] });
   const [selecionada, setSelecionada] = useState<string | null>(null);
   const [nome, setNome] = useState("");
-  const [contatoTipo, setContatoTipo] = useState<"whatsapp" | "email">("whatsapp");
+  const [contatoTipo, setContatoTipo] = useState<"whatsapp" | "email">(
+    "whatsapp",
+  );
   const [contato, setContato] = useState("");
   const [consentimento, setConsentimento] = useState(false);
   const [hp, setHp] = useState("");
@@ -283,7 +317,10 @@ export default function Consultor() {
   // eventos de chegada e assinatura do estúdio no console
   useEffect(() => {
     trackEvento("diagnostico_iniciado");
-    console.log(`%c${ASSINATURA}`, "color: oklch(0.8 0.11 88); font-family: monospace;");
+    console.log(
+      `%c${ASSINATURA}`,
+      "color: oklch(0.8 0.11 88); font-family: monospace;",
+    );
   }, []);
 
   // abertura própria de 1.2s, no padrão useGSAP com cleanup automático
@@ -300,8 +337,16 @@ export default function Consultor() {
         { opacity: 1, y: 0, duration: 0.5, ease: "andrade" },
         0,
       )
-        .to("[data-abertura-traco]", { scaleX: 1, duration: 0.6, ease: "andrade" }, 0.15)
-        .to("[data-abertura]", { clipPath: "inset(0 0 100% 0)", duration: 0.45, ease: "andrade" }, 0.75);
+        .to(
+          "[data-abertura-traco]",
+          { scaleX: 1, duration: 0.6, ease: "andrade" },
+          0.15,
+        )
+        .to(
+          "[data-abertura]",
+          { clipPath: "inset(0 0 100% 0)", duration: 0.45, ease: "andrade" },
+          0.75,
+        );
     },
     { scope: paginaRef },
   );
@@ -416,16 +461,24 @@ export default function Consultor() {
         mostrarToast("Informe um contato ou escolha ver sem contato.");
         return;
       }
-      if (contatoTipo === "email" && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(contato.trim())) {
+      if (
+        contatoTipo === "email" &&
+        !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(contato.trim())
+      ) {
         mostrarToast("Confira o e-mail informado.");
         return;
       }
-      if (contatoTipo === "whatsapp" && contato.replace(/\D/g, "").length < 10) {
+      if (
+        contatoTipo === "whatsapp" &&
+        contato.replace(/\D/g, "").length < 10
+      ) {
         mostrarToast("Confira o número de WhatsApp, com DDD.");
         return;
       }
       if (!consentimento) {
-        mostrarToast("Marque o consentimento para receber o contato do estúdio.");
+        mostrarToast(
+          "Marque o consentimento para receber o contato do estúdio.",
+        );
         return;
       }
     }
@@ -491,7 +544,11 @@ export default function Consultor() {
     setEnviando(false);
     trackEvento(
       "resultado_gerado",
-      { caminho: res.aval.caminho, faixaMin: res.aval.faixaMin, faixaMax: res.aval.faixaMax },
+      {
+        caminho: res.aval.caminho,
+        faixaMin: res.aval.faixaMin,
+        faixaMax: res.aval.faixaMax,
+      },
       res.id ?? undefined,
     );
     irPara(6);
@@ -521,20 +578,24 @@ export default function Consultor() {
       return;
     }
     trackEvento("email_click", { origem: "resultado" }, resultado.id);
-    const resposta = await fetch("/api/lead", {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({
-        acao: "email",
-        id: resultado.id,
-        email: emailExtra.trim(),
-        consentimento: consentExtra,
-      }),
-    });
-    if (resposta.ok) {
-      mostrarToast("Estimativa enviada para o seu e-mail.");
-      setMostraFormEmail(false);
-    } else {
+    try {
+      const resposta = await fetch("/api/lead", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          acao: "email",
+          id: resultado.id,
+          email: emailExtra.trim(),
+          consentimento: consentExtra,
+        }),
+      });
+      if (resposta.ok) {
+        mostrarToast("Estimativa enviada para o seu e-mail.");
+        setMostraFormEmail(false);
+      } else {
+        mostrarToast("Não foi possível enviar agora. Tente de novo.");
+      }
+    } catch {
       mostrarToast("Não foi possível enviar agora. Tente de novo.");
     }
   };
@@ -574,9 +635,17 @@ export default function Consultor() {
   // rail de briefing: o documento vivo
   const briefing: { rotulo: string; valor: string; etapaIdx: number }[] = [];
   if (respostas.segmento)
-    briefing.push({ rotulo: "Segmento", valor: ROTULO_SEGMENTO[respostas.segmento], etapaIdx: 0 });
+    briefing.push({
+      rotulo: "Segmento",
+      valor: ROTULO_SEGMENTO[respostas.segmento],
+      etapaIdx: 0,
+    });
   if (respostas.objetivo)
-    briefing.push({ rotulo: "Objetivo", valor: ROTULO_OBJETIVO[respostas.objetivo], etapaIdx: 1 });
+    briefing.push({
+      rotulo: "Objetivo",
+      valor: ROTULO_OBJETIVO[respostas.objetivo],
+      etapaIdx: 1,
+    });
   if (etapa > 2)
     briefing.push({
       rotulo: "Funcionalidades",
@@ -586,9 +655,17 @@ export default function Consultor() {
       etapaIdx: 2,
     });
   if (respostas.prazo)
-    briefing.push({ rotulo: "Prazo", valor: ROTULO_PRAZO[respostas.prazo], etapaIdx: 3 });
+    briefing.push({
+      rotulo: "Prazo",
+      valor: ROTULO_PRAZO[respostas.prazo],
+      etapaIdx: 3,
+    });
   if (respostas.invest)
-    briefing.push({ rotulo: "Investimento", valor: ROTULO_INVEST[respostas.invest], etapaIdx: 4 });
+    briefing.push({
+      rotulo: "Investimento",
+      valor: ROTULO_INVEST[respostas.invest],
+      etapaIdx: 4,
+    });
 
   const progresso = Math.min(etapa, 6) / 6;
   const pergunta = etapa < 5 ? PERGUNTAS[etapa] : null;
@@ -624,7 +701,9 @@ export default function Consultor() {
             {etapa < 6 ? `0${etapa + 1} / 06` : "06 / 06"}
           </span>
           <div className={s.progressoLinha}>
-            <span style={{ transform: `scaleX(${Math.max(progresso, 0.02)})` }} />
+            <span
+              style={{ transform: `scaleX(${Math.max(progresso, 0.02)})` }}
+            />
           </div>
         </div>
 
@@ -633,7 +712,9 @@ export default function Consultor() {
           {pergunta && (
             <>
               <h1 className={s.pergunta}>{pergunta.titulo}</h1>
-              {pergunta.tipo === "multi" && <p className={s.dica}>{pergunta.dica}</p>}
+              {pergunta.tipo === "multi" && (
+                <p className={s.dica}>{pergunta.dica}</p>
+              )}
               <div
                 className={s.opcoes}
                 role="group"
@@ -650,7 +731,9 @@ export default function Consultor() {
                       type="button"
                       data-opcao
                       className={`${s.opcao} ${selecionada === o.valor ? s.opcaoSelecionada : ""} ${marcada ? s.opcaoMarcada : ""}`}
-                      aria-pressed={pergunta.tipo === "multi" ? marcada : undefined}
+                      aria-pressed={
+                        pergunta.tipo === "multi" ? marcada : undefined
+                      }
                       onClick={() =>
                         pergunta.tipo === "multi"
                           ? alternarFunc(o.valor as Funcionalidade)
@@ -663,14 +746,22 @@ export default function Consultor() {
                         </span>
                         {o.rotulo}
                       </span>
-                      {marcada ? <IcoCheckCircular size={17} /> : <IcoSetaDireita size={15} />}
+                      {marcada ? (
+                        <IcoCheckCircular size={17} />
+                      ) : (
+                        <IcoSetaDireita size={15} />
+                      )}
                     </button>
                   );
                 })}
               </div>
               <div className={s.acoesEtapa}>
                 {etapa > 0 && (
-                  <button type="button" className={s.voltar} onClick={() => irPara(etapa - 1)}>
+                  <button
+                    type="button"
+                    className={s.voltar}
+                    onClick={() => irPara(etapa - 1)}
+                  >
                     Voltar
                   </button>
                 )}
@@ -696,7 +787,11 @@ export default function Consultor() {
                   onChange={(e) => setNome(e.target.value)}
                   autoComplete="name"
                 />
-                <div className={s.tipoContato} role="group" aria-label="Tipo de contato">
+                <div
+                  className={s.tipoContato}
+                  role="group"
+                  aria-label="Tipo de contato"
+                >
                   <button
                     type="button"
                     className={`${s.pill} ${contatoTipo === "whatsapp" ? s.pillAtiva : ""}`}
@@ -715,7 +810,11 @@ export default function Consultor() {
                   </button>
                 </div>
                 <CampoLinha
-                  rotulo={contatoTipo === "whatsapp" ? "WhatsApp com DDD" : "Seu e-mail"}
+                  rotulo={
+                    contatoTipo === "whatsapp"
+                      ? "WhatsApp com DDD"
+                      : "Seu e-mail"
+                  }
                   type={contatoTipo === "whatsapp" ? "tel" : "email"}
                   inputMode={contatoTipo === "whatsapp" ? "tel" : "email"}
                   value={contato}
@@ -758,7 +857,11 @@ export default function Consultor() {
                     Ver sem deixar contato
                   </button>
                 </div>
-                <button type="button" className={s.voltar} onClick={() => irPara(4)}>
+                <button
+                  type="button"
+                  className={s.voltar}
+                  onClick={() => irPara(4)}
+                >
                   Voltar
                 </button>
               </div>
@@ -783,38 +886,49 @@ export default function Consultor() {
                   <h1 className={s.resCaminho}>
                     {ROTULO_CAMINHO[resultado.aval.caminho]}
                   </h1>
-                  <span className="varredura-luz" data-varrer-resultado aria-hidden="true" />
+                  <span
+                    className="varredura-luz"
+                    data-varrer-resultado
+                    aria-hidden="true"
+                  />
                 </div>
               </div>
 
               <div className={s.resBloco}>
                 <span className="label">Por quê</span>
                 <ul className={s.resLista}>
-                  {justificar(respostas as Respostas, resultado.aval).map((t) => (
-                    <li key={t}>
-                      <IcoLosango size={10} />
-                      {t}
-                    </li>
-                  ))}
+                  {justificar(respostas as Respostas, resultado.aval).map(
+                    (t) => (
+                      <li key={t}>
+                        <IcoLosango size={10} />
+                        {t}
+                      </li>
+                    ),
+                  )}
                 </ul>
               </div>
 
               <div className={s.resBloco}>
                 <span className="label">Escopo estimado</span>
                 <ul className={s.resLista}>
-                  {montarEscopo(respostas as Respostas, resultado.aval).map((t) => (
-                    <li key={t}>
-                      <IcoCheckCircular size={14} />
-                      {t}
-                    </li>
-                  ))}
+                  {montarEscopo(respostas as Respostas, resultado.aval).map(
+                    (t) => (
+                      <li key={t}>
+                        <IcoCheckCircular size={14} />
+                        {t}
+                      </li>
+                    ),
+                  )}
                 </ul>
               </div>
 
               <div className={s.resBloco}>
                 <span className="label">Investimento estimado</span>
                 <p className={s.resFaixa}>
-                  {faixaPorExtenso(resultado.aval.faixaMin, resultado.aval.faixaMax)}
+                  {faixaPorExtenso(
+                    resultado.aval.faixaMin,
+                    resultado.aval.faixaMax,
+                  )}
                 </p>
                 <p className={s.resDisclaimer}>{DISCLAIMER}</p>
               </div>
@@ -832,7 +946,11 @@ export default function Consultor() {
                   rel="noopener noreferrer"
                   data-cursor="ABRIR"
                   onClick={() =>
-                    trackEvento("whatsapp_click", { origem: "resultado" }, resultado.id ?? undefined)
+                    trackEvento(
+                      "whatsapp_click",
+                      { origem: "resultado" },
+                      resultado.id ?? undefined,
+                    )
                   }
                 >
                   <span>Receber proposta no WhatsApp</span>
@@ -843,7 +961,9 @@ export default function Consultor() {
                   className="botao-linha"
                   onClick={() => {
                     if (resultado.emailEnviado) {
-                      mostrarToast("A estimativa já foi enviada para o seu e-mail.");
+                      mostrarToast(
+                        "A estimativa já foi enviada para o seu e-mail.",
+                      );
                     } else {
                       setMostraFormEmail((v) => !v);
                     }
@@ -863,7 +983,11 @@ export default function Consultor() {
                   <span>Salvar em PDF</span>
                   <IcoSetaDireita size={14} />
                 </button>
-                <button type="button" className="botao-linha" onClick={copiarLink}>
+                <button
+                  type="button"
+                  className="botao-linha"
+                  onClick={copiarLink}
+                >
                   <span>Copiar link</span>
                   <IcoSetaDireita size={14} />
                 </button>
@@ -886,7 +1010,9 @@ export default function Consultor() {
                     checked={consentExtra}
                     onChange={(e) => setConsentExtra(e.target.checked)}
                   />
-                  <BotaoLinha onClick={enviarEmailExtra}>Enviar estimativa</BotaoLinha>
+                  <BotaoLinha onClick={enviarEmailExtra}>
+                    Enviar estimativa
+                  </BotaoLinha>
                 </div>
               )}
             </div>

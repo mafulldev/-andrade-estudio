@@ -15,7 +15,8 @@
   --bg-deep: oklch(12.5% 0.006 242);
   --ink: oklch(93% 0.006 240);
   --muted: oklch(68% 0.009 240);
-  --faint: oklch(48% 0.009 240);
+  /* subido de 48% para passar contraste AA (4.5:1) em texto pequeno */
+  --faint: oklch(64% 0.009 240);
   --line: oklch(62% 0.008 240 / 0.26);
   --line-soft: oklch(62% 0.008 240 / 0.14);
   --warm: oklch(76% 0.09 62);
@@ -34,7 +35,8 @@
   --bg-deep: oklch(89.5% 0.006 240);
   --ink: oklch(21% 0.01 245);
   --muted: oklch(43% 0.01 240);
-  --faint: oklch(56% 0.01 240);
+  /* descido de 56% para passar contraste AA (4.5:1) em texto pequeno */
+  --faint: oklch(45% 0.01 240);
   --line: oklch(30% 0.008 240 / 0.26);
   --line-soft: oklch(30% 0.008 240 / 0.14);
   --warm: oklch(58% 0.1 62);

@@ -11,7 +11,12 @@ import { useAdmin } from "@/components/admin/useAdmin";
 import { mostrarToast } from "@/components/Toast";
 import { BotaoLinha } from "@/components/Botoes";
 import { IcoFechar, IcoSetaDiagonal } from "@/components/Icones";
-import { STATUS_LEAD, type EventoRegistro, type LeadRegistro, type StatusLead } from "@/lib/tipos";
+import {
+  STATUS_LEAD,
+  type EventoRegistro,
+  type LeadRegistro,
+  type StatusLead,
+} from "@/lib/tipos";
 import {
   faixaPorExtenso,
   ROTULO_CAMINHO,
@@ -24,7 +29,11 @@ import {
 import s from "@/app/admin/admin.module.css";
 
 const dataCurta = (iso: string) =>
-  new Date(iso).toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit", year: "2-digit" });
+  new Date(iso).toLocaleDateString("pt-BR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "2-digit",
+  });
 
 const horaCurta = (iso: string) =>
   new Date(iso).toLocaleString("pt-BR", {
@@ -46,10 +55,25 @@ function csvCelula(v: unknown): string {
 
 function exportarCsv(leads: LeadRegistro[]) {
   const colunas = [
-    "numero", "created_at", "nome", "contato_tipo", "contato", "segmento",
-    "objetivo", "funcionalidades", "prazo", "investimento", "caminho",
-    "faixa_min", "faixa_max", "score", "temperatura", "status",
-    "consentimento", "origem", "notas",
+    "numero",
+    "created_at",
+    "nome",
+    "contato_tipo",
+    "contato",
+    "segmento",
+    "objetivo",
+    "funcionalidades",
+    "prazo",
+    "investimento",
+    "caminho",
+    "faixa_min",
+    "faixa_max",
+    "score",
+    "temperatura",
+    "status",
+    "consentimento",
+    "origem",
+    "notas",
   ];
   const linhas = leads.map((l) =>
     colunas
@@ -136,25 +160,35 @@ export default function PaginaLeads() {
     );
   }, [leads, fStatus, fTemp, fSeg, busca, ordem]);
 
-  const atualizar = async (mudancas: { status?: StatusLead; notas?: string }) => {
+  const atualizar = async (mudancas: {
+    status?: StatusLead;
+    notas?: string;
+  }) => {
     if (!aberto || salvando) return;
     setSalvando(true);
-    const r = await fetch("/api/admin/leads", {
-      method: "PATCH",
-      headers: autorizado({ "content-type": "application/json" }),
-      body: JSON.stringify({ id: aberto.id, ...mudancas }),
-    });
-    setSalvando(false);
-    if (!r.ok) {
-      mostrarToast("Não foi possível salvar.");
-      return;
+    try {
+      const r = await fetch("/api/admin/leads", {
+        method: "PATCH",
+        headers: autorizado({ "content-type": "application/json" }),
+        body: JSON.stringify({ id: aberto.id, ...mudancas }),
+      });
+      if (!r.ok) {
+        mostrarToast("Não foi possível salvar.");
+        return;
+      }
+      const atualizadoParcial = mudancas;
+      setLeads((ls) =>
+        ls.map((l) =>
+          l.id === aberto.id ? { ...l, ...atualizadoParcial } : l,
+        ),
+      );
+      setAberto((a) => (a ? { ...a, ...atualizadoParcial } : a));
+      mostrarToast("Salvo.");
+    } catch {
+      mostrarToast("Falha de rede ao salvar.");
+    } finally {
+      setSalvando(false);
     }
-    const atualizadoParcial = mudancas;
-    setLeads((ls) =>
-      ls.map((l) => (l.id === aberto.id ? { ...l, ...atualizadoParcial } : l)),
-    );
-    setAberto((a) => (a ? { ...a, ...atualizadoParcial } : a));
-    mostrarToast("Salvo.");
   };
 
   const classeTemp = (t: string | null) =>
@@ -165,7 +199,9 @@ export default function PaginaLeads() {
       <AdminNav />
       <main id="conteudo" className={s.conteudo}>
         <div>
-          <span className="label">{filtrados.length} de {leads.length}</span>
+          <span className="label">
+            {filtrados.length} de {leads.length}
+          </span>
           <h1 className={s.tituloPagina}>Leads</h1>
         </div>
 
@@ -173,22 +209,41 @@ export default function PaginaLeads() {
         {erro && <p className="mudo">{erro}</p>}
 
         <div className={s.filtros}>
-          <select className={s.seletor} value={fStatus} onChange={(e) => setFStatus(e.target.value)} aria-label="Filtrar por status">
+          <select
+            className={s.seletor}
+            value={fStatus}
+            onChange={(e) => setFStatus(e.target.value)}
+            aria-label="Filtrar por status"
+          >
             <option value="todos">Todos os status</option>
             {STATUS_LEAD.map((st) => (
-              <option key={st} value={st}>{st}</option>
+              <option key={st} value={st}>
+                {st}
+              </option>
             ))}
           </select>
-          <select className={s.seletor} value={fTemp} onChange={(e) => setFTemp(e.target.value)} aria-label="Filtrar por temperatura">
+          <select
+            className={s.seletor}
+            value={fTemp}
+            onChange={(e) => setFTemp(e.target.value)}
+            aria-label="Filtrar por temperatura"
+          >
             <option value="todas">Todas as temperaturas</option>
             <option value="quente">quente</option>
             <option value="morno">morno</option>
             <option value="frio">frio</option>
           </select>
-          <select className={s.seletor} value={fSeg} onChange={(e) => setFSeg(e.target.value)} aria-label="Filtrar por segmento">
+          <select
+            className={s.seletor}
+            value={fSeg}
+            onChange={(e) => setFSeg(e.target.value)}
+            aria-label="Filtrar por segmento"
+          >
             <option value="todos">Todos os segmentos</option>
             {Object.entries(ROTULO_SEGMENTO).map(([v, r]) => (
-              <option key={v} value={v}>{r}</option>
+              <option key={v} value={v}>
+                {r}
+              </option>
             ))}
           </select>
           <input
@@ -199,7 +254,9 @@ export default function PaginaLeads() {
             onChange={(e) => setBusca(e.target.value)}
             aria-label="Buscar por nome"
           />
-          <BotaoLinha onClick={() => exportarCsv(filtrados)}>Exportar CSV</BotaoLinha>
+          <BotaoLinha onClick={() => exportarCsv(filtrados)}>
+            Exportar CSV
+          </BotaoLinha>
         </div>
 
         <div className={s.tabelaWrap}>
@@ -207,30 +264,54 @@ export default function PaginaLeads() {
             <thead>
               <tr>
                 <th>
-                  <button type="button" data-ativo={ordem === "data"} onClick={() => setOrdem("data")}>
+                  <button
+                    type="button"
+                    data-ativo={ordem === "data"}
+                    onClick={() => setOrdem("data")}
+                  >
                     Data
                   </button>
                 </th>
-                <th><span className="label">Lead</span></th>
-                <th><span className="label">Segmento</span></th>
-                <th><span className="label">Temperatura</span></th>
                 <th>
-                  <button type="button" data-ativo={ordem === "score"} onClick={() => setOrdem("score")}>
+                  <span className="label">Lead</span>
+                </th>
+                <th>
+                  <span className="label">Segmento</span>
+                </th>
+                <th>
+                  <span className="label">Temperatura</span>
+                </th>
+                <th>
+                  <button
+                    type="button"
+                    data-ativo={ordem === "score"}
+                    onClick={() => setOrdem("score")}
+                  >
                     Score
                   </button>
                 </th>
-                <th><span className="label">Faixa</span></th>
-                <th><span className="label">Status</span></th>
+                <th>
+                  <span className="label">Faixa</span>
+                </th>
+                <th>
+                  <span className="label">Status</span>
+                </th>
               </tr>
             </thead>
             <tbody>
               {filtrados.map((l) => (
-                <tr key={l.id} className={s.linhaLead} onClick={() => setAberto(l)}>
+                <tr
+                  key={l.id}
+                  className={s.linhaLead}
+                  onClick={() => setAberto(l)}
+                >
                   <td>{dataCurta(l.created_at)}</td>
                   <td>{l.nome ?? "Anônimo"}</td>
                   <td>{rotular(ROTULO_SEGMENTO, l.segmento)}</td>
                   <td>
-                    <span className={`${s.temperatura} ${classeTemp(l.temperatura)}`}>
+                    <span
+                      className={`${s.temperatura} ${classeTemp(l.temperatura)}`}
+                    >
                       <span className={s.tempDot} />
                       {l.temperatura ?? "frio"}
                     </span>
@@ -241,7 +322,9 @@ export default function PaginaLeads() {
                       ? faixaPorExtenso(l.faixa_min, l.faixa_max)
                       : "Sem faixa"}
                   </td>
-                  <td><span className={s.statusEtiqueta}>{l.status}</span></td>
+                  <td>
+                    <span className={s.statusEtiqueta}>{l.status}</span>
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -254,7 +337,11 @@ export default function PaginaLeads() {
 
       {aberto && (
         <>
-          <div className={s.painelFundo} onClick={() => setAberto(null)} aria-hidden="true" />
+          <div
+            className={s.painelFundo}
+            onClick={() => setAberto(null)}
+            aria-hidden="true"
+          />
           <aside
             className={s.painel}
             aria-label={`Detalhe do lead ${aberto.nome ?? "anônimo"}`}
@@ -268,34 +355,55 @@ export default function PaginaLeads() {
                 </span>
                 <p className={s.painelNome}>{aberto.nome ?? "Anônimo"}</p>
               </div>
-              <button type="button" onClick={() => setAberto(null)} aria-label="Fechar painel">
+              <button
+                type="button"
+                onClick={() => setAberto(null)}
+                aria-label="Fechar painel"
+              >
                 <IcoFechar size={18} />
               </button>
             </div>
 
             <div>
-              {([
-                ["Contato", aberto.contato ? `${aberto.contato} (${aberto.contato_tipo})` : "Não informado"],
-                ["Consentimento", aberto.consentimento ? "Sim" : "Não"],
-                ["Segmento", rotular(ROTULO_SEGMENTO, aberto.segmento)],
-                ["Objetivo", rotular(ROTULO_OBJETIVO, aberto.objetivo)],
+              {(
                 [
-                  "Funcionalidades",
-                  aberto.funcionalidades?.length
-                    ? aberto.funcionalidades.map((f) => ROTULO_FUNC[f as keyof typeof ROTULO_FUNC] ?? f).join(", ")
-                    : "Nenhuma específica",
-                ],
-                ["Prazo", rotular(ROTULO_PRAZO, aberto.prazo)],
-                ["Investimento", rotular(ROTULO_INVEST, aberto.investimento)],
-                ["Caminho", aberto.caminho ? ROTULO_CAMINHO[aberto.caminho] : "Não calculado"],
-                [
-                  "Faixa",
-                  aberto.faixa_min !== null && aberto.faixa_max !== null
-                    ? `${faixaPorExtenso(aberto.faixa_min, aberto.faixa_max)} · ${aberto.prazo_estimado ?? ""}`
-                    : "Sem faixa",
-                ],
-                ["Origem", aberto.origem ?? "Não informada"],
-              ] as [string, string][]).map(([r, v]) => (
+                  [
+                    "Contato",
+                    aberto.contato
+                      ? `${aberto.contato} (${aberto.contato_tipo})`
+                      : "Não informado",
+                  ],
+                  ["Consentimento", aberto.consentimento ? "Sim" : "Não"],
+                  ["Segmento", rotular(ROTULO_SEGMENTO, aberto.segmento)],
+                  ["Objetivo", rotular(ROTULO_OBJETIVO, aberto.objetivo)],
+                  [
+                    "Funcionalidades",
+                    aberto.funcionalidades?.length
+                      ? aberto.funcionalidades
+                          .map(
+                            (f) =>
+                              ROTULO_FUNC[f as keyof typeof ROTULO_FUNC] ?? f,
+                          )
+                          .join(", ")
+                      : "Nenhuma específica",
+                  ],
+                  ["Prazo", rotular(ROTULO_PRAZO, aberto.prazo)],
+                  ["Investimento", rotular(ROTULO_INVEST, aberto.investimento)],
+                  [
+                    "Caminho",
+                    aberto.caminho
+                      ? ROTULO_CAMINHO[aberto.caminho]
+                      : "Não calculado",
+                  ],
+                  [
+                    "Faixa",
+                    aberto.faixa_min !== null && aberto.faixa_max !== null
+                      ? `${faixaPorExtenso(aberto.faixa_min, aberto.faixa_max)} · ${aberto.prazo_estimado ?? ""}`
+                      : "Sem faixa",
+                  ],
+                  ["Origem", aberto.origem ?? "Não informada"],
+                ] as [string, string][]
+              ).map(([r, v]) => (
                 <div className={s.parDado} key={r}>
                   <span className="label">{r}</span>
                   <span>{v}</span>
@@ -304,21 +412,29 @@ export default function PaginaLeads() {
             </div>
 
             <div className={s.bloco}>
-              <label className="label" htmlFor="status-lead">Status</label>
+              <label className="label" htmlFor="status-lead">
+                Status
+              </label>
               <select
                 id="status-lead"
                 className={s.seletor}
                 value={aberto.status}
-                onChange={(e) => atualizar({ status: e.target.value as StatusLead })}
+                onChange={(e) =>
+                  atualizar({ status: e.target.value as StatusLead })
+                }
               >
                 {STATUS_LEAD.map((st) => (
-                  <option key={st} value={st}>{st}</option>
+                  <option key={st} value={st}>
+                    {st}
+                  </option>
                 ))}
               </select>
             </div>
 
             <div className={s.bloco}>
-              <label className="label" htmlFor="notas-lead">Notas</label>
+              <label className="label" htmlFor="notas-lead">
+                Notas
+              </label>
               <textarea
                 id="notas-lead"
                 className={s.notas}
@@ -342,7 +458,12 @@ export default function PaginaLeads() {
                   <IcoSetaDiagonal size={14} />
                 </a>
               )}
-              <a className="botao-linha" href={`/estimativa/${aberto.id}`} target="_blank" rel="noopener noreferrer">
+              <a
+                className="botao-linha"
+                href={`/estimativa/${aberto.id}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <span>Estimativa pública</span>
                 <IcoSetaDiagonal size={14} />
               </a>
@@ -357,7 +478,11 @@ export default function PaginaLeads() {
                     <span>{horaCurta(e.created_at)}</span>
                   </li>
                 ))}
-                {eventos.length === 0 && <li><span>Sem eventos vinculados.</span></li>}
+                {eventos.length === 0 && (
+                  <li>
+                    <span>Sem eventos vinculados.</span>
+                  </li>
+                )}
               </ul>
             </div>
           </aside>

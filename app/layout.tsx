@@ -27,13 +27,20 @@ const hanken = Hanken_Grotesk({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
+  ),
   title: {
     default: "ANDRADE, Estúdio digital",
     template: "%s · ANDRADE",
   },
   description:
     "Arquitetura digital sob assinatura. Sites e plataformas projetados por Matheus de Andrade em Sumaré, SP, remoto para o Brasil inteiro.",
+  openGraph: {
+    type: "website",
+    locale: "pt_BR",
+    siteName: "ANDRADE, Estúdio digital",
+  },
   verification: {
     google: "QQskuAf14P1LXIG-aFkRRG06CMcXQvBINlgTG8Mh0Cg",
   },
