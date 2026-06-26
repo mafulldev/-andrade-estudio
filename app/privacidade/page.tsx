@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     "O que o ANDRADE, Estúdio digital coleta, por quê, por quanto tempo e como pedir a exclusão dos seus dados.",
 };
 
-const EMAIL = "matheus.andrade.c.santos@gmail.com";
+const EMAIL = "contato@andradestudio.dev.br";
 
 const SECOES: { titulo: string; corpo: string[] }[] = [
   {
@@ -72,7 +72,8 @@ export default function PaginaPrivacidade() {
         style={{
           maxWidth: 720,
           margin: "0 auto",
-          padding: "clamp(110px, 16vh, 150px) var(--margem) clamp(56px, 9vh, 90px)",
+          padding:
+            "clamp(110px, 16vh, 150px) var(--margem) clamp(56px, 9vh, 90px)",
           display: "grid",
           gap: 28,
         }}
@@ -100,11 +101,21 @@ export default function PaginaPrivacidade() {
 
         {SECOES.map((sec) => (
           <section key={sec.titulo} style={{ display: "grid", gap: 10 }}>
-            <h2 style={{ fontSize: "1.25rem", borderTop: "1px solid var(--hairline)", paddingTop: 18 }}>
+            <h2
+              style={{
+                fontSize: "1.25rem",
+                borderTop: "1px solid var(--hairline)",
+                paddingTop: 18,
+              }}
+            >
               {sec.titulo}
             </h2>
             {sec.corpo.map((p) => (
-              <p key={p.slice(0, 40)} className="mudo" style={{ fontSize: 15.5 }}>
+              <p
+                key={p.slice(0, 40)}
+                className="mudo"
+                style={{ fontSize: 15.5 }}
+              >
                 {p}
               </p>
             ))}
@@ -112,7 +123,13 @@ export default function PaginaPrivacidade() {
         ))}
 
         <section style={{ display: "grid", gap: 10 }}>
-          <h2 style={{ fontSize: "1.25rem", borderTop: "1px solid var(--hairline)", paddingTop: 18 }}>
+          <h2
+            style={{
+              fontSize: "1.25rem",
+              borderTop: "1px solid var(--hairline)",
+              paddingTop: 18,
+            }}
+          >
             Contato do controlador
           </h2>
           <p className="mudo" style={{ fontSize: 15.5 }}>
@@ -121,7 +138,11 @@ export default function PaginaPrivacidade() {
           <a
             href={`mailto:${EMAIL}`}
             className="botao-linha botao-linha--compacto"
-            style={{ justifySelf: "start", textTransform: "none", letterSpacing: 0 }}
+            style={{
+              justifySelf: "start",
+              textTransform: "none",
+              letterSpacing: 0,
+            }}
           >
             <span>{EMAIL}</span>
           </a>

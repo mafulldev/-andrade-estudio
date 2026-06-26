@@ -35,7 +35,7 @@ function moldura(conteudo: string): string {
       ANDRADE, Estúdio digital. Matheus de Andrade.<br>
       Sumaré, SP. Remoto para o Brasil inteiro.<br>
       <a href="https://wa.me/5519971460099" style="color:#6b6557;">WhatsApp</a> ·
-      <a href="mailto:matheus.andrade.c.santos@gmail.com" style="color:#6b6557;">E-mail</a>
+      <a href="mailto:contato@andradestudio.dev.br" style="color:#6b6557;">E-mail</a>
     </p>
   </div>
 </body>
@@ -232,7 +232,8 @@ export async function enviarNotificacaoInterna(
   const cliente = resend();
   const destino = process.env.ADMIN_EMAIL;
   if (!cliente || !destino) {
-    if (!destino) console.log("[emails] ADMIN_EMAIL ausente: notificação pulada");
+    if (!destino)
+      console.log("[emails] ADMIN_EMAIL ausente: notificação pulada");
     return;
   }
 
@@ -265,5 +266,6 @@ export async function enviarNotificacaoInterna(
     subject: assunto,
     html,
   });
-  if (error) console.log("[emails] falha na notificação interna:", error.message);
+  if (error)
+    console.log("[emails] falha na notificação interna:", error.message);
 }

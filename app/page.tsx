@@ -25,7 +25,12 @@ import PassoProcesso from "@/components/home/PassoProcesso";
 import Bastidores from "@/components/home/Bastidores";
 import FichaTecnica from "@/components/home/FichaTecnica";
 import Garantias from "@/components/home/Garantias";
-import { PictoDesenho, PictoEntrega, PictoEscuta, PictoPrumo } from "@/components/Pictogramas";
+import {
+  PictoDesenho,
+  PictoEntrega,
+  PictoEscuta,
+  PictoPrumo,
+} from "@/components/Pictogramas";
 import Comparador from "@/components/home/Comparador";
 import ShowcaseModelos from "@/components/home/ShowcaseModelos";
 import Eyebrow from "@/components/Eyebrow";
@@ -38,7 +43,7 @@ import s from "./page.module.css";
 
 const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 const WHATSAPP = "https://wa.me/5519971460099";
-const EMAIL = "matheus.andrade.c.santos@gmail.com";
+const EMAIL = "contato@andradestudio.dev.br";
 
 const PERGUNTAS = [
   "Qual é o seu segmento?",
@@ -58,7 +63,10 @@ const PASSOS = [
       "Caminho recomendado pelo motor",
       "Link permanente no seu e-mail",
     ],
-    figura: { src: "/fotos/processo-01.avif", alt: "Pena de caneta tinteiro tocando o papel na penumbra" },
+    figura: {
+      src: "/fotos/processo-01.avif",
+      alt: "Pena de caneta tinteiro tocando o papel na penumbra",
+    },
   },
   {
     titulo: "Briefing e proposta",
@@ -68,7 +76,10 @@ const PASSOS = [
       "Proposta detalhada por escrito",
       "Escopo e rodadas definidos antes",
     ],
-    figura: { src: "/fotos/processo-02.avif", alt: "Mãos desenhando sobre prancheta com régua de escala" },
+    figura: {
+      src: "/fotos/processo-02.avif",
+      alt: "Mãos desenhando sobre prancheta com régua de escala",
+    },
   },
   {
     titulo: "Construção",
@@ -78,7 +89,10 @@ const PASSOS = [
       "Uma rodada inclusa nos prontos",
       "Rodadas por etapa no sob medida",
     ],
-    figura: { src: "/fotos/processo-03.avif", alt: "Mão sobre teclado escuro com duas teclas alaranjadas" },
+    figura: {
+      src: "/fotos/processo-03.avif",
+      alt: "Mão sobre teclado escuro com duas teclas alaranjadas",
+    },
   },
   {
     titulo: "Entrega e estreia",
@@ -88,7 +102,10 @@ const PASSOS = [
       "Treinamento de uso incluso",
       "Código entregue com repositório",
     ],
-    figura: { src: "/fotos/processo-04.avif", alt: "Mesa de trabalho à noite com luminária acesa e monitor" },
+    figura: {
+      src: "/fotos/processo-04.avif",
+      alt: "Mesa de trabalho à noite com luminária acesa e monitor",
+    },
   },
 ];
 
@@ -119,36 +136,79 @@ const PLANOS = [
     nome: "Pronto",
     valor: "R$ 1.200",
     prazo: "entrega em 1 dia útil",
-    itens: "Modelo refinado do nicho · identidade aplicada · 1 rodada de ajustes · domínio em seu nome · código entregue",
+    itens:
+      "Modelo refinado do nicho · identidade aplicada · 1 rodada de ajustes · domínio em seu nome · código entregue",
     cta: "diagnostico",
   },
   {
     nome: "Sob medida",
     valor: "R$ 2.800",
     prazo: "2 a 4 semanas",
-    itens: "Design exclusivo do zero · SEO técnico · animações e tema duplo · suporte de estreia · código entregue",
+    itens:
+      "Design exclusivo do zero · SEO técnico · animações e tema duplo · suporte de estreia · código entregue",
     cta: "diagnostico",
   },
   {
     nome: "Avançado",
     valor: "R$ 6.500",
     prazo: "e-commerce e sistemas · 4 a 12 semanas",
-    itens: "Pagamentos online · áreas de membros · painéis administrativos · integrações",
+    itens:
+      "Pagamentos online · áreas de membros · painéis administrativos · integrações",
     cta: "whatsapp",
   },
 ];
 
 const FAQ = [
-  { pergunta: "Em quanto tempo meu site fica no ar?", resposta: "Modelos prontos entram no ar em até 1 dia útil depois do envio do material. Projetos sob medida seguem o escopo: 2 a 4 semanas para institucionais, 4 a 8 para lojas online e 6 a 12 para sistemas." },
-  { pergunta: "O que preciso enviar para começar?", resposta: "Textos básicos, logotipo se houver, fotos e referências de que você gosta. O estúdio envia um roteiro simples de organização e orienta o que faltar." },
-  { pergunta: "Posso pedir ajustes depois da entrega?", resposta: "Os modelos prontos incluem uma rodada de ajustes. Nos projetos sob medida, as rodadas são definidas por etapa na proposta." },
-  { pergunta: "Domínio e hospedagem ficam em nome de quem?", resposta: "Sempre em nome do cliente. O estúdio configura tudo e entrega os acessos documentados." },
-  { pergunta: "O código do site é entregue?", resposta: "Sim. O código é entregue ao cliente ao final do projeto, com repositório e instruções de uso." },
-  { pergunta: "Existe suporte depois do lançamento?", resposta: "O lançamento acompanha suporte de estreia e treinamento de uso. Manutenção mensal é opcional e contratada à parte." },
-  { pergunta: "O estúdio atende fora de Sumaré?", resposta: "Sim. O atendimento é remoto para o Brasil inteiro, com comunicação por WhatsApp, e-mail e chamadas quando necessário." },
-  { pergunta: "Como funciona o processo do sob medida?", resposta: "Quatro etapas com aprovação: escuta do problema, arquitetura da solução, construção com design e código juntos, e entrega com publicação e treinamento." },
-  { pergunta: "A estimativa do Diagnóstico é um orçamento fechado?", resposta: "É uma estimativa preliminar. O valor final é definido após análise do briefing, sem compromisso." },
-  { pergunta: "Quais são os prazos típicos de um projeto sob medida?", resposta: "Institucionais levam de 2 a 4 semanas, lojas online de 4 a 8 e sistemas com painel de 6 a 12 semanas, conforme o escopo." },
+  {
+    pergunta: "Em quanto tempo meu site fica no ar?",
+    resposta:
+      "Modelos prontos entram no ar em até 1 dia útil depois do envio do material. Projetos sob medida seguem o escopo: 2 a 4 semanas para institucionais, 4 a 8 para lojas online e 6 a 12 para sistemas.",
+  },
+  {
+    pergunta: "O que preciso enviar para começar?",
+    resposta:
+      "Textos básicos, logotipo se houver, fotos e referências de que você gosta. O estúdio envia um roteiro simples de organização e orienta o que faltar.",
+  },
+  {
+    pergunta: "Posso pedir ajustes depois da entrega?",
+    resposta:
+      "Os modelos prontos incluem uma rodada de ajustes. Nos projetos sob medida, as rodadas são definidas por etapa na proposta.",
+  },
+  {
+    pergunta: "Domínio e hospedagem ficam em nome de quem?",
+    resposta:
+      "Sempre em nome do cliente. O estúdio configura tudo e entrega os acessos documentados.",
+  },
+  {
+    pergunta: "O código do site é entregue?",
+    resposta:
+      "Sim. O código é entregue ao cliente ao final do projeto, com repositório e instruções de uso.",
+  },
+  {
+    pergunta: "Existe suporte depois do lançamento?",
+    resposta:
+      "O lançamento acompanha suporte de estreia e treinamento de uso. Manutenção mensal é opcional e contratada à parte.",
+  },
+  {
+    pergunta: "O estúdio atende fora de Sumaré?",
+    resposta:
+      "Sim. O atendimento é remoto para o Brasil inteiro, com comunicação por WhatsApp, e-mail e chamadas quando necessário.",
+  },
+  {
+    pergunta: "Como funciona o processo do sob medida?",
+    resposta:
+      "Quatro etapas com aprovação: escuta do problema, arquitetura da solução, construção com design e código juntos, e entrega com publicação e treinamento.",
+  },
+  {
+    pergunta: "A estimativa do Diagnóstico é um orçamento fechado?",
+    resposta:
+      "É uma estimativa preliminar. O valor final é definido após análise do briefing, sem compromisso.",
+  },
+  {
+    pergunta: "Quais são os prazos típicos de um projeto sob medida?",
+    resposta:
+      "Institucionais levam de 2 a 4 semanas, lojas online de 4 a 8 e sistemas com painel de 6 a 12 semanas, conforme o escopo.",
+  },
 ];
 
 const MSG_AVANCADO =
@@ -220,8 +280,8 @@ export default function Home() {
                 Do briefing ao deploy, <em>na mesma mão.</em>
               </h1>
               <p className={s.heroApoio} data-hero-apoio>
-                Design, código e estratégia, do primeiro traço ao deploy. Sites e
-                plataformas feitos sob medida, sem template.
+                Design, código e estratégia, do primeiro traço ao deploy. Sites
+                e plataformas feitos sob medida, sem template.
               </p>
               <div className={s.heroAcoes} data-hero-acoes>
                 <Magnetico>
@@ -253,7 +313,11 @@ export default function Home() {
                 ponta da caneta. Coluna própria, nunca sobre o texto. */}
             <div className={s.heroPalcoLinha} data-hero-palco>
               <AssinaturaAndrade className={s.heroAssinaturaSvg} />
-              <span className={s.heroPonta} data-hero-ponta aria-hidden="true" />
+              <span
+                className={s.heroPonta}
+                data-hero-ponta
+                aria-hidden="true"
+              />
             </div>
 
             <div className={s.heroScroll} data-hero-scroll aria-hidden="true">
@@ -315,8 +379,8 @@ export default function Home() {
                   Cinco nichos. Cinco sites completos, navegáveis agora.
                 </h2>
                 <p className={s.plateIntroDica}>
-                  Arraste para percorrer. Cada modelo abre ao vivo, dentro
-                  desta página, sem print e sem maquete.
+                  Arraste para percorrer. Cada modelo abre ao vivo, dentro desta
+                  página, sem print e sem maquete.
                 </p>
               </div>
               <ShowcaseModelos />
@@ -339,7 +403,9 @@ export default function Home() {
                 <span className={s.eyebrowCap}>
                   <Eyebrow num="04">Diagnóstico</Eyebrow>
                 </span>
-                <h2 className={s.tituloCap}>Seis perguntas. Uma estimativa real.</h2>
+                <h2 className={s.tituloCap}>
+                  Seis perguntas. Uma estimativa real.
+                </h2>
                 <p className={s.subCap}>
                   O consultor do estúdio recomenda o caminho certo, calcula a
                   faixa de investimento e o prazo na hora, e envia tudo no seu
@@ -486,8 +552,8 @@ export default function Home() {
             </span>
             <h2 className={s.tituloCap}>Este site é o portfólio.</h2>
             <p className={s.subCap}>
-              Antes de vender um padrão, o estúdio aplicou o padrão em si
-              mesmo. O que você está navegando agora é a prova de engenharia.
+              Antes de vender um padrão, o estúdio aplicou o padrão em si mesmo.
+              O que você está navegando agora é a prova de engenharia.
             </p>
             <Bastidores />
             <FichaTecnica />
@@ -622,11 +688,19 @@ export default function Home() {
               </div>
               <div className={s.rodapeCol} data-rodape-bloco>
                 <span className={`label ${s.rodapeTituloCol}`}>Navegação</span>
-                <a href="#cap-abertura" data-rolar="#cap-abertura">Início</a>
-                <a href="#cap-caminhos" data-rolar="#cap-caminhos">Soluções</a>
-                <a href="#cap-modelos" data-rolar="#cap-modelos">Projetos</a>
+                <a href="#cap-abertura" data-rolar="#cap-abertura">
+                  Início
+                </a>
+                <a href="#cap-caminhos" data-rolar="#cap-caminhos">
+                  Soluções
+                </a>
+                <a href="#cap-modelos" data-rolar="#cap-modelos">
+                  Projetos
+                </a>
                 <Link href="/diagnostico">Diagnóstico</Link>
-                <a href="#cap-investimento" data-rolar="#cap-investimento">Investimento</a>
+                <a href="#cap-investimento" data-rolar="#cap-investimento">
+                  Investimento
+                </a>
               </div>
               <div className={s.rodapeCol} data-rodape-bloco>
                 <span className={`label ${s.rodapeTituloCol}`}>Modelos</span>
@@ -668,7 +742,11 @@ export default function Home() {
                 </span>
               </div>
             </div>
-            <div className={s.rodapeWordmark} data-rodape-wordmark aria-hidden="true">
+            <div
+              className={s.rodapeWordmark}
+              data-rodape-wordmark
+              aria-hidden="true"
+            >
               <span>ANDRADE,</span>
             </div>
             <div className={s.rodapeBase}>

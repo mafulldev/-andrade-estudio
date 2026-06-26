@@ -19,7 +19,7 @@ import { registrarMotion } from "@/lib/motion/registro";
 
 registrarMotion();
 
-const EMAIL = "matheus.andrade.c.santos@gmail.com";
+const EMAIL = "contato@andradestudio.dev.br";
 const WHATSAPP = "https://wa.me/5519971460099";
 
 type Comando = {
@@ -34,23 +34,103 @@ type Comando = {
 
 const COMANDOS: Comando[] = [
   { id: "inicio", grupo: "Navegar", rotulo: "Início", hash: "#cap-abertura" },
-  { id: "solucoes", grupo: "Navegar", rotulo: "Soluções, os dois caminhos", hash: "#cap-caminhos" },
-  { id: "projetos", grupo: "Navegar", rotulo: "Projetos, os cinco modelos", hash: "#cap-modelos" },
-  { id: "diagnostico", grupo: "Navegar", rotulo: "Iniciar diagnóstico", rota: "/diagnostico" },
-  { id: "estudio", grupo: "Navegar", rotulo: "O estúdio", hash: "#cap-estudio" },
-  { id: "bastidores", grupo: "Navegar", rotulo: "Bastidores, como este site foi feito", hash: "#cap-bastidores" },
-  { id: "investimento", grupo: "Navegar", rotulo: "Investimento e dúvidas", hash: "#cap-investimento" },
+  {
+    id: "solucoes",
+    grupo: "Navegar",
+    rotulo: "Soluções, os dois caminhos",
+    hash: "#cap-caminhos",
+  },
+  {
+    id: "projetos",
+    grupo: "Navegar",
+    rotulo: "Projetos, os cinco modelos",
+    hash: "#cap-modelos",
+  },
+  {
+    id: "diagnostico",
+    grupo: "Navegar",
+    rotulo: "Iniciar diagnóstico",
+    rota: "/diagnostico",
+  },
+  {
+    id: "estudio",
+    grupo: "Navegar",
+    rotulo: "O estúdio",
+    hash: "#cap-estudio",
+  },
+  {
+    id: "bastidores",
+    grupo: "Navegar",
+    rotulo: "Bastidores, como este site foi feito",
+    hash: "#cap-bastidores",
+  },
+  {
+    id: "investimento",
+    grupo: "Navegar",
+    rotulo: "Investimento e dúvidas",
+    hash: "#cap-investimento",
+  },
   { id: "contato", grupo: "Navegar", rotulo: "Contato", hash: "#cap-final" },
-  { id: "brasa", grupo: "Navegar", rotulo: "Modelo BRASA, restaurantes", rota: "/demos/brasa" },
-  { id: "vitta", grupo: "Navegar", rotulo: "Modelo VITTA, saúde", rota: "/demos/vitta" },
-  { id: "foro", grupo: "Navegar", rotulo: "Modelo FORO, advocacia", rota: "/demos/foro" },
-  { id: "prumo", grupo: "Navegar", rotulo: "Modelo PRUMO, serviços", rota: "/demos/prumo" },
-  { id: "solar", grupo: "Navegar", rotulo: "Modelo SOLAR, imobiliário", rota: "/demos/solar" },
-  { id: "neurocode", grupo: "Navegar", rotulo: "NeuroCode AI, sistema em produção", hash: "#projeto-real" },
-  { id: "privacidade", grupo: "Navegar", rotulo: "Política de privacidade", rota: "/privacidade" },
-  { id: "tema", grupo: "Ações", rotulo: "Alternar tema, noite e marfim", acao: "tema" },
-  { id: "email", grupo: "Ações", rotulo: "Copiar e-mail do estúdio", acao: "email" },
-  { id: "whatsapp", grupo: "Ações", rotulo: "Abrir conversa no WhatsApp", acao: "whatsapp" },
+  {
+    id: "brasa",
+    grupo: "Navegar",
+    rotulo: "Modelo BRASA, restaurantes",
+    rota: "/demos/brasa",
+  },
+  {
+    id: "vitta",
+    grupo: "Navegar",
+    rotulo: "Modelo VITTA, saúde",
+    rota: "/demos/vitta",
+  },
+  {
+    id: "foro",
+    grupo: "Navegar",
+    rotulo: "Modelo FORO, advocacia",
+    rota: "/demos/foro",
+  },
+  {
+    id: "prumo",
+    grupo: "Navegar",
+    rotulo: "Modelo PRUMO, serviços",
+    rota: "/demos/prumo",
+  },
+  {
+    id: "solar",
+    grupo: "Navegar",
+    rotulo: "Modelo SOLAR, imobiliário",
+    rota: "/demos/solar",
+  },
+  {
+    id: "neurocode",
+    grupo: "Navegar",
+    rotulo: "NeuroCode AI, sistema em produção",
+    hash: "#projeto-real",
+  },
+  {
+    id: "privacidade",
+    grupo: "Navegar",
+    rotulo: "Política de privacidade",
+    rota: "/privacidade",
+  },
+  {
+    id: "tema",
+    grupo: "Ações",
+    rotulo: "Alternar tema, noite e marfim",
+    acao: "tema",
+  },
+  {
+    id: "email",
+    grupo: "Ações",
+    rotulo: "Copiar e-mail do estúdio",
+    acao: "email",
+  },
+  {
+    id: "whatsapp",
+    grupo: "Ações",
+    rotulo: "Abrir conversa no WhatsApp",
+    acao: "whatsapp",
+  },
 ];
 
 const normalizar = (t: string) =>
@@ -190,7 +270,11 @@ export default function CommandPalette() {
       setAtivo((a) => (a + 1) % Math.max(filtrados.length, 1));
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
-      setAtivo((a) => (a - 1 + Math.max(filtrados.length, 1)) % Math.max(filtrados.length, 1));
+      setAtivo(
+        (a) =>
+          (a - 1 + Math.max(filtrados.length, 1)) %
+          Math.max(filtrados.length, 1),
+      );
     } else if (e.key === "Enter") {
       e.preventDefault();
       const c = filtrados[ativo];
@@ -203,105 +287,121 @@ export default function CommandPalette() {
   return (
     <AnimatePresence>
       {aberta && (
-    <div
-      className="paleta"
-      role="dialog"
-      aria-modal="true"
-      aria-label="Paleta de comandos"
-    >
-      <m.div
-        className="paleta-veu"
-        onClick={fechar}
-        aria-hidden="true"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-      />
-      <m.div
-        className="paleta-painel"
-        initial={{ clipPath: "inset(0 0 100% 0)", y: -8 }}
-        animate={{
-          clipPath: "inset(0 0 0% 0)",
-          y: 0,
-          transition: { type: "spring", visualDuration: 0.6, bounce: 0 },
-        }}
-        exit={{
-          clipPath: "inset(0 0 100% 0)",
-          opacity: 0,
-          transition: { duration: 0.3, ease: [0.16, 1, 0.3, 1] },
-        }}
-      >
-        <div className="paleta-campo">
-          <input
-            ref={inputRef}
-            role="combobox"
-            aria-expanded="true"
-            aria-controls="paleta-listbox"
-            aria-activedescendant={filtrados[ativo] ? `paleta-op-${filtrados[ativo].id}` : undefined}
-            aria-label="Buscar comando"
-            placeholder="Para onde vamos?"
-            value={query}
-            onChange={(e) => {
-              setQuery(e.target.value);
-              setAtivo(0);
-            }}
-            onKeyDown={aoTeclarInput}
-          />
-          <kbd>ESC</kbd>
-        </div>
-        {filtrados.length === 0 && (
-          <p className="paleta-vazia">Nada por esse nome. Tente "modelo" ou "tema".</p>
-        )}
         <div
-          className="paleta-lista"
-          id="paleta-listbox"
-          role="listbox"
-          aria-label="Comandos"
-          ref={listaRef}
-          data-lenis-prevent
+          className="paleta"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Paleta de comandos"
         >
-          {grupos.map((grupo) => {
-            const doGrupo = filtrados.filter((c) => c.grupo === grupo);
-            if (doGrupo.length === 0) return null;
-            return (
-              <div key={grupo} role="group" aria-label={grupo}>
-                <p className="label paleta-grupo" aria-hidden="true">
-                  {grupo}
-                </p>
-                {doGrupo.map((c) => {
-                  const idx = filtrados.indexOf(c);
-                  return (
-                    <m.div
-                      key={c.id}
-                      layout
-                      transition={{ type: "spring", visualDuration: 0.45, bounce: 0 }}
-                      id={`paleta-op-${c.id}`}
-                      className="paleta-item"
-                      role="option"
-                      aria-selected={idx === ativo}
-                      onPointerEnter={() => setAtivo(idx)}
-                      onClick={() => executar(c)}
-                    >
-                      {idx === ativo && (
-                        <m.span
-                          layoutId="paleta-marcador"
-                          className="paleta-marcador"
-                          transition={{ type: "spring", visualDuration: 0.45, bounce: 0 }}
-                          aria-hidden="true"
-                        />
-                      )}
-                      <span className="paleta-rotulo">{c.rotulo}</span>
-                      {c.atalho && <span className="atalho">{c.atalho}</span>}
-                    </m.div>
-                  );
-                })}
-              </div>
-            );
-          })}
+          <m.div
+            className="paleta-veu"
+            onClick={fechar}
+            aria-hidden="true"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+          />
+          <m.div
+            className="paleta-painel"
+            initial={{ clipPath: "inset(0 0 100% 0)", y: -8 }}
+            animate={{
+              clipPath: "inset(0 0 0% 0)",
+              y: 0,
+              transition: { type: "spring", visualDuration: 0.6, bounce: 0 },
+            }}
+            exit={{
+              clipPath: "inset(0 0 100% 0)",
+              opacity: 0,
+              transition: { duration: 0.3, ease: [0.16, 1, 0.3, 1] },
+            }}
+          >
+            <div className="paleta-campo">
+              <input
+                ref={inputRef}
+                role="combobox"
+                aria-expanded="true"
+                aria-controls="paleta-listbox"
+                aria-activedescendant={
+                  filtrados[ativo]
+                    ? `paleta-op-${filtrados[ativo].id}`
+                    : undefined
+                }
+                aria-label="Buscar comando"
+                placeholder="Para onde vamos?"
+                value={query}
+                onChange={(e) => {
+                  setQuery(e.target.value);
+                  setAtivo(0);
+                }}
+                onKeyDown={aoTeclarInput}
+              />
+              <kbd>ESC</kbd>
+            </div>
+            {filtrados.length === 0 && (
+              <p className="paleta-vazia">
+                Nada por esse nome. Tente "modelo" ou "tema".
+              </p>
+            )}
+            <div
+              className="paleta-lista"
+              id="paleta-listbox"
+              role="listbox"
+              aria-label="Comandos"
+              ref={listaRef}
+              data-lenis-prevent
+            >
+              {grupos.map((grupo) => {
+                const doGrupo = filtrados.filter((c) => c.grupo === grupo);
+                if (doGrupo.length === 0) return null;
+                return (
+                  <div key={grupo} role="group" aria-label={grupo}>
+                    <p className="label paleta-grupo" aria-hidden="true">
+                      {grupo}
+                    </p>
+                    {doGrupo.map((c) => {
+                      const idx = filtrados.indexOf(c);
+                      return (
+                        <m.div
+                          key={c.id}
+                          layout
+                          transition={{
+                            type: "spring",
+                            visualDuration: 0.45,
+                            bounce: 0,
+                          }}
+                          id={`paleta-op-${c.id}`}
+                          className="paleta-item"
+                          role="option"
+                          aria-selected={idx === ativo}
+                          onPointerEnter={() => setAtivo(idx)}
+                          onClick={() => executar(c)}
+                        >
+                          {idx === ativo && (
+                            <m.span
+                              layoutId="paleta-marcador"
+                              className="paleta-marcador"
+                              transition={{
+                                type: "spring",
+                                visualDuration: 0.45,
+                                bounce: 0,
+                              }}
+                              aria-hidden="true"
+                            />
+                          )}
+                          <span className="paleta-rotulo">{c.rotulo}</span>
+                          {c.atalho && (
+                            <span className="atalho">{c.atalho}</span>
+                          )}
+                        </m.div>
+                      );
+                    })}
+                  </div>
+                );
+              })}
+            </div>
+          </m.div>
         </div>
-      </m.div>
-    </div>
       )}
     </AnimatePresence>
   );
