@@ -97,12 +97,7 @@ export default function PaginaConceitos() {
       <ul className={s.grade}>
         {CONCEITOS.map((c) => (
           <li key={c.slug}>
-            <a
-              className={s.card}
-              href={`/trabalhos/${c.slug}/index.html`}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <a className={s.card} href={`/trabalhos/${c.slug}/index.html`}>
               <span className={s.thumbWrap}>
                 <Image
                   className={s.thumb}

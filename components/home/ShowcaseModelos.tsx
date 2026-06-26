@@ -19,11 +19,36 @@ import s from "./showcase.module.css";
 registrarMotion();
 
 export const MODELOS = [
-  { slug: "brasa", nome: "BRASA", nicho: "Restaurantes e food", assinatura: "Cardápio que acende em brasa ao toque do cursor." },
-  { slug: "vitta", nome: "VITTA", nicho: "Saúde e clínicas", assinatura: "Linha de pulso desenhando o cuidado." },
-  { slug: "foro", nome: "FORO", nicho: "Advocacia", assinatura: "Sublinhado caligráfico sob os termos-chave." },
-  { slug: "prumo", nome: "PRUMO", nicho: "Serviços locais", assinatura: "Antes e depois arrastável, no mouse e no toque." },
-  { slug: "solar", nome: "SOLAR", nicho: "Imobiliário", assinatura: "Microgaleria por dots com contra-parallax." },
+  {
+    slug: "brasa",
+    nome: "BRASA",
+    nicho: "Restaurantes e food",
+    assinatura: "Cardápio que acende em brasa ao toque do cursor.",
+  },
+  {
+    slug: "vitta",
+    nome: "VITTA",
+    nicho: "Saúde e clínicas",
+    assinatura: "Linha de pulso desenhando o cuidado.",
+  },
+  {
+    slug: "foro",
+    nome: "FORO",
+    nicho: "Advocacia",
+    assinatura: "Sublinhado caligráfico sob os termos-chave.",
+  },
+  {
+    slug: "prumo",
+    nome: "PRUMO",
+    nicho: "Serviços locais",
+    assinatura: "Antes e depois arrastável, no mouse e no toque.",
+  },
+  {
+    slug: "solar",
+    nome: "SOLAR",
+    nicho: "Imobiliário",
+    assinatura: "Microgaleria por dots com contra-parallax.",
+  },
 ];
 
 const INCLUSO = [
@@ -44,17 +69,23 @@ export default function ShowcaseModelos() {
   const abrirDetalhe = (i: number, origem: HTMLButtonElement) => {
     origemRef.current = origem;
     trackEvento("demo_view", { slug: MODELOS[i].slug, origem: "detalhe" });
-    window.dispatchEvent(new CustomEvent("modelos:detalhe", { detail: { aberto: true } }));
+    window.dispatchEvent(
+      new CustomEvent("modelos:detalhe", { detail: { aberto: true } }),
+    );
     setDetalhe(i);
   };
 
   const fecharDetalhe = () => {
     const el = detalheRef.current;
     const plate = detalhe !== null ? plateRefs.current[detalhe] : null;
-    const reduzido = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reduzido = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
     const encerrar = () => {
       setDetalhe(null);
-      window.dispatchEvent(new CustomEvent("modelos:detalhe", { detail: { aberto: false } }));
+      window.dispatchEvent(
+        new CustomEvent("modelos:detalhe", { detail: { aberto: false } }),
+      );
       origemRef.current?.focus();
     };
     if (!el || !plate || reduzido) {
@@ -85,7 +116,9 @@ export default function ShowcaseModelos() {
     if (detalhe === null) return;
     const el = detalheRef.current;
     const plate = plateRefs.current[detalhe];
-    const reduzido = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reduzido = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
 
     if (el && plate && !reduzido) {
       Flip.fit(el, plate, { scale: true });
@@ -121,9 +154,7 @@ export default function ShowcaseModelos() {
             <h3 className={s.plateNome} data-plate-nome>
               {m.nome}
             </h3>
-            <span className={s.plateIndice}>
-              0{i + 1} / 05
-            </span>
+            <span className={s.plateIndice}>0{i + 1} / 05</span>
           </div>
 
           <PreviewDemo
@@ -145,8 +176,20 @@ export default function ShowcaseModelos() {
                 onClick={(e) => abrirDetalhe(i, e.currentTarget)}
               >
                 <span>Detalhe</span>
-                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
-                  <path d="M7 17 17 7M9 7h8v8" strokeLinecap="round" strokeLinejoin="round" />
+                <svg
+                  viewBox="0 0 24 24"
+                  width="13"
+                  height="13"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M7 17 17 7M9 7h8v8"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
                 </svg>
               </button>
             </span>
@@ -171,8 +214,6 @@ export default function ShowcaseModelos() {
                 <a
                   className="botao-linha botao-linha--compacto"
                   href={`/demos/${mo.slug}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
                   data-evento="demo_view"
                 >
                   <span>Abrir o site completo</span>
@@ -206,7 +247,9 @@ export default function ShowcaseModelos() {
                   primario
                   href="/diagnostico"
                   cursor="INICIAR"
-                  onClick={() => trackEvento("demo_quero_click", { slug: mo.slug })}
+                  onClick={() =>
+                    trackEvento("demo_quero_click", { slug: mo.slug })
+                  }
                 >
                   Quero este modelo
                 </BotaoLinha>

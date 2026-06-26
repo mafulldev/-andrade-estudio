@@ -88,7 +88,13 @@ export default function PreviewDemo({
               }}
             >
               <span>Prévia interativa</span>
-              <svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor" aria-hidden="true">
+              <svg
+                viewBox="0 0 24 24"
+                width="13"
+                height="13"
+                fill="currentColor"
+                aria-hidden="true"
+              >
                 <path d="M8 5.5v13l11-6.5Z" />
               </svg>
             </button>
@@ -99,13 +105,9 @@ export default function PreviewDemo({
       {ativo && (
         <>
           <div className={s.barra}>
-            <span className={s.barraNome}>
-              {nome} · demonstração ao vivo
-            </span>
+            <span className={s.barraNome}>{nome} · demonstração ao vivo</span>
             <span className={s.barraAcoes}>
-              <a href={`/demos/${slug}`} target="_blank" rel="noopener noreferrer">
-                Abrir em nova aba
-              </a>
+              <a href={`/demos/${slug}`}>Abrir o site completo</a>
               <button type="button" onClick={aoFechar}>
                 Fechar prévia
               </button>
