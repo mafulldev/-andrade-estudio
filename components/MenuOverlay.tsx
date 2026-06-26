@@ -24,6 +24,7 @@ const ITENS: { num: string; rotulo: string; hash?: string; href?: string }[] = [
   { num: "06", rotulo: "Bastidores", hash: "#cap-bastidores" },
   { num: "07", rotulo: "Investimento", hash: "#cap-investimento" },
   { num: "08", rotulo: "Contato", hash: "#cap-final" },
+  { num: "09", rotulo: "Conceitos", href: "/conceitos" },
 ];
 
 const EMAIL = "matheus.andrade.c.santos@gmail.com";
@@ -45,7 +46,9 @@ export default function MenuOverlay({
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    const reduzido = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reduzido = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
     const q = gsap.utils.selector(el);
     let tl: gsap.core.Timeline | null = null;
 
@@ -64,7 +67,13 @@ export default function MenuOverlay({
         .fromTo(
           q(".mi-inner"),
           { yPercent: 70, opacity: 0 },
-          { yPercent: 0, opacity: 1, duration: 0.85, ease: "andrade", stagger: 0.08 },
+          {
+            yPercent: 0,
+            opacity: 1,
+            duration: 0.85,
+            ease: "andrade",
+            stagger: 0.08,
+          },
           0.25,
         )
         .fromTo(
@@ -80,7 +89,11 @@ export default function MenuOverlay({
       tl = gsap.timeline({
         onComplete: () => gsap.set(el, { visibility: "hidden" }),
       });
-      tl.to(el, { clipPath: "inset(0 0 100% 0)", duration: 0.55, ease: "cortina" });
+      tl.to(el, {
+        clipPath: "inset(0 0 100% 0)",
+        duration: 0.55,
+        ease: "cortina",
+      });
       if (reduzido) tl.progress(1);
     }
 
@@ -124,9 +137,13 @@ export default function MenuOverlay({
     const el = ref.current;
     if (!el) return;
     const anterior =
-      document.activeElement instanceof HTMLElement ? document.activeElement : null;
+      document.activeElement instanceof HTMLElement
+        ? document.activeElement
+        : null;
     const focaveis = () =>
-      Array.from(el.querySelectorAll<HTMLElement>("a[href], button:not([disabled])"));
+      Array.from(
+        el.querySelectorAll<HTMLElement>("a[href], button:not([disabled])"),
+      );
     focaveis()[0]?.focus();
 
     const aoTeclar = (e: KeyboardEvent) => {

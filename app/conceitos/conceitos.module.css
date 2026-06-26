@@ -1,0 +1,111 @@
+/* Galeria de conceitos: grade de cards sóbria, no sistema SOLACE.
+   Monocromático, hairlines, serif nos nomes; sem cor literal (tokens OKLCH). */
+
+.pagina {
+  min-height: 100svh;
+  max-width: 1340px;
+  margin: 0 auto;
+  padding: var(--respiro) var(--margem);
+}
+
+.cabeca {
+  display: grid;
+  gap: 16px;
+  justify-items: start;
+  max-width: var(--medida);
+  margin-bottom: clamp(48px, 8vh, 104px);
+}
+
+.cabeca .monograma {
+  margin-bottom: 14px;
+}
+
+.titulo {
+  font-size: clamp(2.4rem, 6vw, 4.4rem);
+}
+
+.grade {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 330px), 1fr));
+  gap: clamp(14px, 1.6vw, 24px);
+}
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 268px;
+  padding: clamp(26px, 3vw, 40px);
+  border: 1px solid var(--line-soft);
+  background: var(--bg-soft);
+  transition:
+    border-color 0.55s var(--ease),
+    transform 0.55s var(--ease),
+    background 0.55s var(--ease);
+}
+
+.card:hover,
+.card:focus-visible {
+  border-color: var(--line);
+  background: var(--bg);
+  transform: translateY(-3px);
+}
+
+.tag {
+  position: absolute;
+  top: clamp(26px, 3vw, 40px);
+  right: clamp(26px, 3vw, 40px);
+  font-size: 0.6rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+.nicho {
+  margin-top: 2px;
+}
+
+.nome {
+  margin-top: 2px;
+  font-size: clamp(1.55rem, 2.6vw, 2.1rem);
+}
+
+.desc {
+  max-width: 34ch;
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.72;
+}
+
+.stack {
+  margin-top: auto;
+  padding-top: 16px;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  color: var(--faint);
+}
+
+.ver {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+}
+
+.ver svg {
+  transition: transform 0.45s var(--ease);
+}
+
+.card:hover .ver svg,
+.card:focus-visible .ver svg {
+  transform: translate(2px, -2px);
+}
+
+.rodape {
+  margin-top: clamp(56px, 9vh, 120px);
+  padding-top: 28px;
+  border-top: 1px solid var(--line-soft);
+}

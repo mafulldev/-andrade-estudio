@@ -1,0 +1,1531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Precision Smile Atelier — Where Science Meets Artistry</title>
+<meta name="description" content="Precision Smile Atelier — a premium dentistry practice for implants and cosmetic dentistry. Digital planning, guided implants and same-day crowns engineered with the precision of an atelier." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --white:#F9FAFA;
+    --paper:#FFFFFF;
+    --blue:#071E3D;
+    --blue-700:#0C2A52;
+    --blue-600:#13386B;
+    --silver:#B8C2CC;
+    --silver-light:#DCE3E8;
+    --gold:#C9A96A;
+    --gold-soft:#E3D2B0;
+    --grey:#68717A;
+    --grey-light:#9AA2AA;
+    --line:#E4E9ED;
+    --ink:#0A1B33;
+
+    --serif:"Cormorant Garamond", Georgia, serif;
+    --sans:"Inter", "Manrope", system-ui, sans-serif;
+    --display:"Space Grotesk", "Inter", sans-serif;
+    --mono:"IBM Plex Mono", ui-monospace, monospace;
+
+    --s1:8px; --s2:16px; --s3:24px; --s4:40px; --s5:64px; --s6:96px; --s7:128px;
+    --maxw:1240px;
+    --r:14px;
+    --ease:cubic-bezier(.22,.61,.36,1);
+    --ease-mo:cubic-bezier(0.16,1,0.3,1); /* expoOut — used by the additive motion layer */
+    --shadow-sm:0 2px 10px rgba(7,30,61,.05);
+    --shadow:0 18px 50px -22px rgba(7,30,61,.28);
+    --shadow-lg:0 40px 90px -40px rgba(7,30,61,.45);
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto;}}
+  body{
+    font-family:var(--sans);
+    color:var(--blue);
+    background:var(--white);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  img{max-width:100%;display:block;}
+  a{color:inherit;text-decoration:none;}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;}
+  ul{list-style:none;}
+  :focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:4px;}
+
+  .wrap{width:100%;max-width:var(--maxw);margin:0 auto;padding:0 28px;}
+  .eyebrow{
+    font-family:var(--mono);
+    font-size:12px;letter-spacing:.32em;text-transform:uppercase;
+    color:var(--gold);display:inline-flex;align-items:center;gap:10px;
+  }
+  .eyebrow::before{content:"";width:26px;height:1px;background:var(--gold);display:inline-block;}
+  .eyebrow.center::before{display:none;}
+  .serif{font-family:var(--serif);font-style:italic;font-weight:500;}
+  .mono{font-family:var(--mono);}
+
+  h1,h2,h3{font-family:var(--display);font-weight:600;line-height:1.06;letter-spacing:-.02em;color:var(--blue);}
+  .section{padding:clamp(64px,9vw,128px) 0;}
+  .section-head{max-width:620px;margin-bottom:var(--s5);}
+  .section-head h2{font-size:clamp(2rem,4.2vw,3.2rem);margin:18px 0 16px;}
+  .section-head p{color:var(--grey);font-size:1.05rem;max-width:540px;}
+
+  /* ============ BUTTONS ============ */
+  .btn{
+    position:relative;display:inline-flex;align-items:center;gap:10px;
+    padding:15px 28px;border-radius:999px;font-size:.93rem;font-weight:600;
+    letter-spacing:.01em;transition:transform .4s var(--ease),box-shadow .4s var(--ease),background .3s,color .3s;
+    overflow:hidden;white-space:nowrap;
+  }
+  .btn svg{width:17px;height:17px;flex:none;}
+  .btn-primary{background:var(--blue);color:#fff;box-shadow:var(--shadow-sm);}
+  .btn-primary::after{
+    content:"";position:absolute;inset:0;border-radius:inherit;
+    background:linear-gradient(110deg,transparent 30%,rgba(201,169,106,.55) 50%,transparent 70%);
+    transform:translateX(-120%);transition:transform .7s var(--ease);
+  }
+  .btn-primary:hover{transform:translateY(-3px);box-shadow:var(--shadow);}
+  .btn-primary:hover::after{transform:translateX(120%);}
+  .btn-ghost{background:transparent;color:var(--blue);border:1px solid var(--silver);}
+  .btn-ghost:hover{border-color:var(--gold);color:var(--blue);transform:translateY(-3px);background:rgba(201,169,106,.06);}
+  .btn-gold{background:var(--gold);color:var(--blue);}
+  .btn-gold:hover{transform:translateY(-3px);box-shadow:0 18px 40px -16px rgba(201,169,106,.7);}
+  .btn-light{background:#fff;color:var(--blue);}
+  .btn-light:hover{transform:translateY(-3px);box-shadow:var(--shadow);}
+
+  /* ============ NAV ============ */
+  header.nav{
+    position:fixed;top:0;left:0;right:0;z-index:100;
+    transition:background .4s var(--ease),box-shadow .4s var(--ease),padding .4s var(--ease),backdrop-filter .4s;
+    padding:22px 0;
+  }
+  header.nav.scrolled{
+    background:rgba(249,250,250,.82);backdrop-filter:blur(16px) saturate(140%);
+    box-shadow:0 1px 0 var(--line);padding:13px 0;
+  }
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;gap:24px;}
+  .brand{display:flex;align-items:center;gap:12px;}
+  .brand .mark{width:38px;height:38px;flex:none;}
+  .brand .mark circle, .brand .mark path{transition:.4s;}
+  .brand-txt{display:flex;flex-direction:column;line-height:1;}
+  .brand-txt b{font-family:var(--display);font-weight:600;font-size:.92rem;letter-spacing:.16em;color:var(--blue);}
+  .brand-txt span{font-family:var(--mono);font-size:9px;letter-spacing:.34em;color:var(--gold);margin-top:4px;text-transform:uppercase;}
+  .nav-menu{display:flex;align-items:center;gap:34px;}
+  .nav-menu a{font-size:.9rem;font-weight:500;color:var(--blue);position:relative;padding:4px 0;}
+  .nav-menu a::after{content:"";position:absolute;left:0;bottom:0;height:1.5px;width:0;background:var(--gold);transition:width .35s var(--ease);}
+  .nav-menu a:hover::after{width:100%;}
+  .nav-cta{display:flex;align-items:center;gap:14px;}
+  .hamburger{display:none;width:44px;height:44px;border:1px solid var(--silver);border-radius:50%;align-items:center;justify-content:center;}
+  .hamburger span{position:relative;width:18px;height:1.6px;background:var(--blue);transition:.3s;}
+  .hamburger span::before,.hamburger span::after{content:"";position:absolute;left:0;width:18px;height:1.6px;background:var(--blue);transition:.3s;}
+  .hamburger span::before{top:-6px;}.hamburger span::after{top:6px;}
+  .hamburger[aria-expanded="true"] span{background:transparent;}
+  .hamburger[aria-expanded="true"] span::before{top:0;transform:rotate(45deg);}
+  .hamburger[aria-expanded="true"] span::after{top:0;transform:rotate(-45deg);}
+
+  .mobile-menu{
+    position:fixed;inset:0;z-index:99;background:var(--blue);
+    display:flex;flex-direction:column;justify-content:center;padding:40px 28px;
+    transform:translateY(-100%);transition:transform .55s var(--ease);
+  }
+  .mobile-menu.open{transform:translateY(0);}
+  .mobile-menu a{font-family:var(--display);font-size:2rem;color:#fff;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.1);transition:.3s;}
+  .mobile-menu a:hover{color:var(--gold);padding-left:14px;}
+  .mobile-menu .btn{margin-top:30px;align-self:flex-start;}
+
+  /* ============ HERO ============ */
+  .hero{position:relative;padding-top:148px;padding-bottom:40px;overflow:hidden;}
+  .hero-grid{display:grid;grid-template-columns:1.05fr 1fr;gap:50px;align-items:center;}
+  .hero-tag{margin-bottom:26px;}
+  .hero h1{font-size:clamp(2.7rem,6vw,5rem);line-height:1.02;letter-spacing:-.03em;}
+  .hero h1 .serif{display:block;font-family:var(--serif);font-weight:500;font-style:italic;color:var(--gold);letter-spacing:-.01em;}
+  .hero-sub{margin:26px 0 32px;font-size:1.12rem;color:var(--grey);max-width:460px;}
+  .hero-ctas{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:38px;}
+  .hero-stats{display:flex;gap:38px;flex-wrap:wrap;padding-top:30px;border-top:1px solid var(--line);}
+  .hero-stats .stat b{font-family:var(--display);font-size:2rem;font-weight:600;display:block;letter-spacing:-.02em;}
+  .hero-stats .stat span{font-size:.78rem;color:var(--grey);letter-spacing:.04em;}
+
+  .hero-media{position:relative;border-radius:24px;overflow:hidden;aspect-ratio:4/5;box-shadow:var(--shadow-lg);}
+  .hero-media img{width:100%;height:100%;object-fit:cover;}
+  .img-fallback{position:absolute;inset:0;display:none;align-items:flex-end;padding:24px;}
+  .img-fallback.smile{background:radial-gradient(120% 120% at 70% 20%,#f6f1e6 0%,#dfe6ec 40%,#0c2a52 120%);}
+  .img-fallback.smile2{background:radial-gradient(120% 120% at 30% 30%,#eef2f5 0%,#b8c2cc 50%,#071e3d 120%);}
+  .img-fallback .fb-label{font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:rgba(255,255,255,.85);text-transform:uppercase;}
+  /* guide lines overlay on hero photo */
+  .hero-guides{position:absolute;inset:0;pointer-events:none;mix-blend-mode:screen;opacity:.9;}
+  .hero-guides line,.hero-guides circle,.hero-guides rect{stroke:var(--gold);fill:none;stroke-width:.8;vector-effect:non-scaling-stroke;}
+  .hero-guides .gpath{stroke-dasharray:4 4;}
+  .hero-float{
+    position:absolute;left:18px;bottom:18px;background:rgba(7,30,61,.9);
+    border:1px solid rgba(201,169,106,.4);border-radius:14px;padding:14px 18px;display:flex;gap:14px;align-items:center;
+    color:#fff;
+  }
+  .hero-float .dot{width:9px;height:9px;border-radius:50%;background:#6fe0a0;box-shadow:0 0 0 4px rgba(111,224,160,.2);}
+  .hero-float b{font-family:var(--display);font-size:.85rem;display:block;}
+  .hero-float span{font-family:var(--mono);font-size:10px;color:var(--gold-soft);letter-spacing:.1em;}
+
+  /* ============ REVEAL ============ */
+  /* Native (no-JS / CDN-blocked) reveal fallback. Hidden states are ONLY applied
+     once GSAP confirms it is loaded, via the .gsap-on class on <html>. Without it
+     the page renders 100% visible — no stuck-invisible content, no LCP delay. */
+  .gsap-on:not(.reduced) .reveal{opacity:0;transform:translateY(28px);transition:opacity .9s var(--ease),transform .9s var(--ease);}
+  .reveal.in{opacity:1;transform:none;}
+  /* higher-specificity reveal-in: must win over the .gsap-on:not(.reduced) .reveal hidden rule
+     so class-revealed containers (e.g. .hero-copy) are not held invisible by specificity */
+  .gsap-on:not(.reduced) .reveal.in{opacity:1;transform:none;}
+  .gsap-on:not(.reduced) [data-stagger]>*{opacity:0;transform:translateY(26px);transition:opacity .8s var(--ease),transform .8s var(--ease);}
+  [data-stagger].in>*{opacity:1;transform:none;}
+  .gsap-on:not(.reduced) [data-stagger].in>*{opacity:1;transform:none;}
+  @media (prefers-reduced-motion:reduce){
+    .reveal,[data-stagger]>*{opacity:1!important;transform:none!important;transition:none!important;}
+  }
+
+  /* ============ SCROLL PROGRESS (brand gold) ============ */
+  .scroll-prog{
+    position:fixed;top:0;left:0;height:2px;width:100%;z-index:200;
+    transform:scaleX(0);transform-origin:0 50%;
+    background:linear-gradient(90deg,var(--gold-soft),var(--gold));
+    box-shadow:0 0 10px rgba(201,169,106,.5);
+    pointer-events:none;opacity:0;transition:opacity .4s var(--ease);
+  }
+  .gsap-on .scroll-prog{opacity:1;}
+  @media (prefers-reduced-motion:reduce){.scroll-prog{display:none;}}
+  /* will-change is toggled per-stage by JS via this helper class only */
+  .mo-active{will-change:transform;}
+
+  /* ============ TECH TRIO ============ */
+  .trio{display:grid;grid-template-columns:1.1fr 1.1fr .85fr;gap:24px;}
+  .panel{border-radius:var(--r);padding:34px;background:var(--paper);border:1px solid var(--line);box-shadow:var(--shadow-sm);}
+  .panel-blue{background:linear-gradient(160deg,var(--blue-700),var(--blue));color:#fff;border:none;position:relative;overflow:hidden;}
+  .panel-blue::before{content:"";position:absolute;top:-60px;right:-60px;width:200px;height:200px;border:1px solid rgba(201,169,106,.18);border-radius:50%;}
+  .panel-blue::after{content:"";position:absolute;top:-30px;right:-30px;width:140px;height:140px;border:1px solid rgba(201,169,106,.12);border-radius:50%;}
+  .panel-blue h3{color:#fff;}
+  .panel h3{font-size:1.35rem;margin-bottom:8px;}
+  .panel .p-eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.26em;text-transform:uppercase;color:var(--gold);margin-bottom:18px;display:block;}
+  .check-list{margin-top:22px;display:flex;flex-direction:column;gap:2px;}
+  .check-list li{display:flex;gap:14px;align-items:flex-start;padding:13px 0;border-top:1px solid rgba(255,255,255,.1);}
+  .panel:not(.panel-blue) .check-list li{border-top:1px solid var(--line);}
+  .check-list .ico{flex:none;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:rgba(201,169,106,.16);}
+  .check-list .ico svg{width:14px;height:14px;stroke:var(--gold);}
+  .check-list b{font-size:.95rem;font-weight:600;display:block;}
+  .check-list small{color:rgba(255,255,255,.6);font-size:.8rem;}
+  .panel:not(.panel-blue) .check-list small{color:var(--grey);}
+
+  /* comparison table */
+  .cmp{width:100%;border-collapse:collapse;margin-top:18px;font-size:.86rem;}
+  .cmp th,.cmp td{text-align:left;padding:13px 8px;border-bottom:1px solid var(--line);}
+  .cmp th{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--grey);font-weight:500;}
+  .cmp td:first-child{font-weight:600;}
+  .cmp .yes{color:var(--blue);}
+  .cmp .yes svg{width:15px;height:15px;stroke:var(--gold);vertical-align:-2px;}
+  .cmp .traditional{color:var(--grey-light);}
+  .cmp tr:last-child td{border-bottom:none;}
+  .info-card .big{font-family:var(--display);font-size:3rem;font-weight:600;color:var(--gold);letter-spacing:-.03em;}
+  .info-card p{color:var(--grey);font-size:.92rem;margin-top:8px;}
+  .info-card .divider{height:1px;background:var(--line);margin:22px 0;}
+
+  /* ============ DIGITAL PLANNING ============ */
+  .plan-grid{display:grid;grid-template-columns:1.25fr .9fr;gap:30px;align-items:stretch;}
+  .scan-card{background:linear-gradient(160deg,var(--blue-700),var(--blue));border-radius:var(--r);padding:40px;color:#fff;position:relative;overflow:hidden;display:flex;flex-direction:column;}
+  .scan-card .p-eyebrow{color:var(--gold);}
+  .scan-stage{position:relative;margin:18px 0 24px;border-radius:12px;background:rgba(255,255,255,.03);border:1px solid rgba(201,169,106,.18);padding:20px;}
+  .arch-svg{width:100%;height:auto;display:block;}
+  .arch-svg .tooth{fill:rgba(255,255,255,.06);stroke:var(--silver);stroke-width:1;transition:.3s;}
+  .arch-svg .tooth.lit{fill:rgba(201,169,106,.32);stroke:var(--gold);}
+  .arch-svg .grid-l{stroke:rgba(184,194,204,.16);stroke-width:.6;}
+  .scanline{stroke:var(--gold);stroke-width:2;filter:drop-shadow(0 0 6px rgba(201,169,106,.9));}
+  .scan-readout{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10px;letter-spacing:.12em;color:var(--gold-soft);text-transform:uppercase;}
+  .scan-card .check-list{margin-top:auto;}
+
+  .timeline-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:40px;box-shadow:var(--shadow-sm);}
+  .timeline{position:relative;margin-top:26px;padding-left:8px;}
+  .timeline .tl-line{position:absolute;left:19px;top:8px;bottom:8px;width:2px;background:var(--line);}
+  .timeline .tl-fill{position:absolute;left:19px;top:8px;width:2px;height:0;background:linear-gradient(var(--gold),var(--blue));transition:height 1.4s var(--ease);}
+  .timeline.in .tl-fill{height:calc(100% - 16px);}
+  .tl-step{position:relative;display:flex;gap:18px;padding:14px 0;}
+  .tl-step .num{flex:none;width:38px;height:38px;border-radius:50%;background:var(--white);border:1px solid var(--silver);display:grid;place-items:center;font-family:var(--mono);font-size:.8rem;color:var(--blue);z-index:1;transition:.4s;}
+  .timeline.in .tl-step .num{border-color:var(--gold);background:var(--blue);color:var(--gold);}
+  .tl-step b{font-size:1rem;font-family:var(--display);display:block;}
+  .tl-step small{color:var(--grey);font-size:.85rem;}
+
+  /* ============ TRANSFORMATIONS ============ */
+  .ba-row{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;}
+  .ba-card{border-radius:var(--r);overflow:hidden;background:var(--paper);border:1px solid var(--line);box-shadow:var(--shadow-sm);transition:transform .5s var(--ease),box-shadow .5s var(--ease);}
+  .ba-card:hover{transform:translateY(-6px);box-shadow:var(--shadow);}
+  .ba-frame{position:relative;aspect-ratio:1/1;overflow:hidden;cursor:ew-resize;}
+  .ba-frame img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
+  .ba-after{clip-path:inset(0 0 0 50%);}
+  .ba-divider{position:absolute;top:0;bottom:0;left:50%;width:2px;background:var(--gold);transform:translateX(-1px);box-shadow:0 0 8px rgba(201,169,106,.7);}
+  .ba-divider .knob{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:30px;height:30px;border-radius:50%;background:#fff;border:1px solid var(--gold);display:grid;place-items:center;box-shadow:var(--shadow-sm);}
+  .ba-divider .knob svg{width:14px;height:14px;stroke:var(--blue);}
+  .ba-tag{position:absolute;top:10px;font-family:var(--mono);font-size:9px;letter-spacing:.18em;text-transform:uppercase;padding:4px 9px;border-radius:6px;background:rgba(7,30,61,.82);color:#fff;}
+  .ba-tag.before{left:10px;}.ba-tag.after{right:10px;background:rgba(201,169,106,.85);color:var(--blue);}
+  .ba-meta{padding:16px 18px;}
+  .ba-meta b{font-family:var(--display);font-size:.98rem;display:block;}
+  .ba-meta small{color:var(--grey);font-size:.8rem;}
+
+  /* ============ FEATURE BAND ============ */
+  .band{background:linear-gradient(160deg,var(--blue-700),var(--blue));color:#fff;position:relative;overflow:hidden;}
+  .band::before{content:"";position:absolute;inset:0;background:radial-gradient(80% 120% at 85% 10%,rgba(201,169,106,.14),transparent 60%);}
+  .band .wrap{position:relative;}
+  .band-feats{display:grid;grid-template-columns:repeat(6,1fr);gap:20px;}
+  .feat{text-align:center;padding:14px;border-radius:12px;transition:background .4s;}
+  .feat:hover{background:rgba(255,255,255,.04);}
+  .feat .fico{width:54px;height:54px;margin:0 auto 16px;border-radius:50%;border:1px solid rgba(201,169,106,.4);display:grid;place-items:center;transition:.45s var(--ease);position:relative;overflow:hidden;}
+  .feat .fico svg{width:24px;height:24px;stroke:var(--gold);fill:none;}
+  .feat:hover .fico{border-color:var(--gold);transform:rotate(8deg) scale(1.05);box-shadow:0 0 0 6px rgba(201,169,106,.08);}
+  .feat .fico::after{content:"";position:absolute;inset:0;background:linear-gradient(120deg,transparent 40%,rgba(255,255,255,.5) 50%,transparent 60%);transform:translateX(-130%);transition:transform .7s var(--ease);}
+  .feat:hover .fico::after{transform:translateX(130%);}
+  .feat b{font-family:var(--display);font-size:1rem;display:block;margin-bottom:5px;}
+  .feat small{color:rgba(255,255,255,.6);font-size:.8rem;}
+
+  /* ============ SPECIALISTS ============ */
+  .spec-row{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;}
+  .spec-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow-sm);transition:transform .5s var(--ease),box-shadow .5s var(--ease);}
+  .spec-card:hover{transform:translateY(-7px);box-shadow:var(--shadow);}
+  .spec-photo{position:relative;aspect-ratio:3/4;overflow:hidden;}
+  .spec-photo img{width:100%;height:100%;object-fit:cover;transition:transform .8s var(--ease);filter:grayscale(.18);}
+  .spec-card:hover .spec-photo img{transform:scale(1.06);filter:grayscale(0);}
+  .spec-photo .img-fallback{background:linear-gradient(160deg,#dce3e8,#071e3d);}
+  .spec-body{padding:20px;}
+  .spec-body b{font-family:var(--display);font-size:1.05rem;display:block;}
+  .spec-body .role{color:var(--gold);font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;margin-top:4px;display:block;}
+  .spec-body p{color:var(--grey);font-size:.85rem;margin-top:12px;}
+
+  /* ============ COMMITMENT + FAQ ============ */
+  .cf-grid{display:grid;grid-template-columns:.95fr 1.1fr;gap:40px;align-items:start;}
+  .commit-card{background:linear-gradient(160deg,var(--blue-700),var(--blue));color:#fff;border-radius:var(--r);padding:42px;position:relative;overflow:hidden;}
+  .commit-card::before{content:"";position:absolute;bottom:-50px;left:-50px;width:180px;height:180px;border:1px solid rgba(201,169,106,.16);border-radius:50%;}
+  .commit-card h3{color:#fff;font-size:1.5rem;margin-bottom:8px;}
+  .commit-card .p-eyebrow{color:var(--gold);}
+
+  .faq{display:flex;flex-direction:column;gap:0;}
+  .faq-item{border-bottom:1px solid var(--line);}
+  .faq-q{width:100%;display:flex;align-items:center;justify-content:space-between;gap:18px;padding:24px 4px;text-align:left;font-family:var(--display);font-size:1.08rem;font-weight:500;color:var(--blue);}
+  .faq-q .pm{flex:none;width:30px;height:30px;border-radius:50%;border:1px solid var(--silver);display:grid;place-items:center;transition:.4s var(--ease);}
+  .faq-q .pm svg{width:14px;height:14px;stroke:var(--blue);transition:.4s;}
+  .faq-item.open .faq-q .pm{background:var(--gold);border-color:var(--gold);transform:rotate(90deg);}
+  .faq-a{max-height:0;overflow:hidden;transition:max-height .5s var(--ease);}
+  .faq-a-inner{padding:0 4px 24px;color:var(--grey);font-size:.95rem;max-width:90%;}
+
+  /* ============ FINAL CTA ============ */
+  .final{position:relative;overflow:hidden;text-align:center;color:#fff;background:linear-gradient(160deg,var(--blue-700),var(--blue));border-radius:28px;padding:clamp(56px,8vw,104px) 24px;}
+  .final::before{content:"";position:absolute;inset:0;background:radial-gradient(60% 90% at 50% 0%,rgba(201,169,106,.2),transparent 60%);}
+  .final-inner{position:relative;max-width:640px;margin:0 auto;}
+  .final h2{color:#fff;font-size:clamp(2.2rem,5vw,3.6rem);margin:18px 0 18px;}
+  .final h2 .serif{color:var(--gold);}
+  .final p{color:rgba(255,255,255,.75);font-size:1.08rem;margin-bottom:34px;}
+  .final .ctas{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
+  .final .eyebrow{color:var(--gold);}
+
+  /* ============ FOOTER ============ */
+  footer.foot{background:var(--blue);color:rgba(255,255,255,.7);padding:80px 0 36px;}
+  .foot-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr 1.2fr;gap:36px;padding-bottom:50px;border-bottom:1px solid rgba(255,255,255,.1);}
+  .foot .brand-txt b{color:#fff;}
+  .foot-about{max-width:280px;font-size:.9rem;margin-top:20px;color:rgba(255,255,255,.55);}
+  .foot-col h4{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:18px;font-weight:500;}
+  .foot-col a{display:block;padding:7px 0;font-size:.9rem;color:rgba(255,255,255,.65);transition:.3s;}
+  .foot-col a:hover{color:#fff;padding-left:6px;}
+  .foot-contact p{font-size:.9rem;margin-bottom:10px;color:rgba(255,255,255,.7);}
+  .foot-news{display:flex;margin-top:16px;border:1px solid rgba(255,255,255,.18);border-radius:999px;overflow:hidden;}
+  .foot-news input{flex:1;background:transparent;border:none;padding:12px 16px;color:#fff;font-family:inherit;font-size:.85rem;outline:none;}
+  .foot-news input::placeholder{color:rgba(255,255,255,.4);}
+  .foot-news button{background:var(--gold);color:var(--blue);padding:0 18px;display:grid;place-items:center;}
+  .foot-news button svg{width:16px;height:16px;stroke:var(--blue);}
+  .foot-bottom{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;padding-top:28px;font-size:.82rem;color:rgba(255,255,255,.45);}
+  .foot-social{display:flex;gap:12px;}
+  .foot-social a{width:38px;height:38px;border:1px solid rgba(255,255,255,.16);border-radius:50%;display:grid;place-items:center;transition:.35s;}
+  .foot-social a:hover{border-color:var(--gold);background:rgba(201,169,106,.12);transform:translateY(-3px);}
+  .foot-social svg{width:16px;height:16px;stroke:rgba(255,255,255,.7);}
+
+  /* ============ HERO ATMOSPHERE PHOTO ============ */
+  .hero-atmos{position:absolute;inset:0;z-index:-1;overflow:hidden;pointer-events:none;}
+  .hero-atmos img{width:100%;height:100%;object-fit:cover;opacity:.10;filter:grayscale(.3);}
+  .hero-atmos::after{content:"";position:absolute;inset:0;
+    background:linear-gradient(180deg,var(--white) 0%,rgba(249,250,250,.6) 40%,var(--white) 100%),
+    radial-gradient(70% 60% at 78% 30%,rgba(201,169,106,.10),transparent 70%);}
+  .hero-atmos.fb-on{background:radial-gradient(70% 60% at 78% 30%,rgba(201,169,106,.08),transparent 70%);}
+  /* hero trust micro-row */
+  .hero-trust{display:flex;flex-wrap:wrap;align-items:center;gap:18px;margin:-12px 0 30px;}
+  .hero-trust .ht{display:inline-flex;align-items:center;gap:8px;font-size:.8rem;color:var(--grey);}
+  .hero-trust svg{width:16px;height:16px;stroke:var(--gold);flex:none;}
+  .hero-trust .sep{width:1px;height:16px;background:var(--line);}
+
+  /* ============ LOGO / PROOF ROW ============ */
+  .proof-strip{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--paper);}
+  .proof-strip .wrap{display:flex;align-items:center;justify-content:center;gap:clamp(24px,5vw,64px);
+    flex-wrap:wrap;padding-top:30px;padding-bottom:30px;}
+  .proof-strip .pl-label{font-family:var(--mono);font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--grey-light);}
+  .proof-strip .wm{font-family:var(--display);font-weight:600;font-size:1.05rem;letter-spacing:.04em;color:var(--blue);
+    opacity:.55;transition:opacity .4s var(--ease),transform .4s var(--ease);}
+  .proof-strip .wm .serif{color:var(--gold);}
+  .proof-strip .wm:hover{opacity:1;transform:translateY(-2px);}
+
+  /* ============ CONFIDENCE / LIFESTYLE BAND ============ */
+  .confid{display:grid;grid-template-columns:1.05fr 1fr;gap:46px;align-items:center;}
+  .confid-media{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:14px;}
+  .confid-media .cm{position:relative;border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow-sm);
+    background:linear-gradient(160deg,#dce3e8,#071e3d);}
+  .confid-media .cm img{width:100%;height:100%;object-fit:cover;transition:transform .8s var(--ease);}
+  .confid-media .cm:hover img{transform:scale(1.05);}
+  .confid-media .cm.tall{grid-row:span 2;aspect-ratio:auto;}
+  .confid-media .cm:not(.tall){aspect-ratio:4/3;}
+  .confid-copy .ribbon{display:inline-flex;align-items:center;gap:10px;background:rgba(201,169,106,.12);
+    border:1px solid rgba(201,169,106,.3);border-radius:999px;padding:7px 16px;font-family:var(--mono);
+    font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--blue);margin-bottom:18px;}
+  .confid-copy h2{font-size:clamp(1.9rem,3.6vw,2.8rem);margin-bottom:16px;}
+  .confid-copy p{color:var(--grey);font-size:1.04rem;margin-bottom:22px;max-width:480px;}
+  .confid-list{display:grid;gap:14px;margin-bottom:28px;}
+  .confid-list li{display:flex;gap:12px;align-items:flex-start;font-size:.95rem;color:var(--blue);}
+  .confid-list .ico{flex:none;width:24px;height:24px;border-radius:50%;background:rgba(201,169,106,.16);display:grid;place-items:center;}
+  .confid-list .ico svg{width:13px;height:13px;stroke:var(--gold);}
+
+  /* ============ TESTIMONIALS ============ */
+  .tst-row{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+  .tst-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:32px;
+    box-shadow:var(--shadow-sm);transition:transform .5s var(--ease),box-shadow .5s var(--ease);display:flex;flex-direction:column;}
+  .tst-card:hover{transform:translateY(-6px);box-shadow:var(--shadow);}
+  .tst-stars{display:flex;gap:3px;margin-bottom:16px;}
+  .tst-stars svg{width:16px;height:16px;fill:var(--gold);stroke:none;}
+  .tst-card blockquote{font-family:var(--serif);font-style:italic;font-size:1.18rem;line-height:1.5;color:var(--blue);margin-bottom:22px;flex:1;}
+  .tst-who{display:flex;align-items:center;gap:14px;padding-top:18px;border-top:1px solid var(--line);}
+  .tst-who .av{width:48px;height:48px;border-radius:50%;overflow:hidden;flex:none;
+    background:linear-gradient(160deg,#dce3e8,#071e3d);position:relative;}
+  .tst-who .av img{width:100%;height:100%;object-fit:cover;}
+  .tst-who b{font-family:var(--display);font-size:.95rem;display:block;}
+  .tst-who span{color:var(--grey);font-size:.8rem;}
+
+  /* ============ TRUST MARKS STRIP ============ */
+  .trustmarks{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:40px;}
+  .tm{display:flex;align-items:center;gap:14px;padding:20px;border:1px solid var(--line);border-radius:var(--r);
+    background:var(--paper);transition:border-color .4s var(--ease),transform .4s var(--ease);}
+  .tm:hover{border-color:var(--gold);transform:translateY(-3px);}
+  .tm .tmi{flex:none;width:42px;height:42px;border-radius:50%;border:1px solid rgba(201,169,106,.4);display:grid;place-items:center;}
+  .tm .tmi svg{width:20px;height:20px;stroke:var(--gold);fill:none;}
+  .tm b{font-family:var(--display);font-size:.92rem;display:block;}
+  .tm small{color:var(--grey);font-size:.76rem;}
+
+  /* ============ FINAL CTA PHOTO ============ */
+  .final-photo{position:absolute;inset:0;z-index:0;overflow:hidden;border-radius:inherit;}
+  .final-photo img{width:100%;height:100%;object-fit:cover;opacity:.22;filter:grayscale(.2);}
+  .final-photo::after{content:"";position:absolute;inset:0;
+    background:linear-gradient(160deg,rgba(12,42,82,.82),rgba(7,30,61,.92));}
+  .final-trust{display:flex;justify-content:center;flex-wrap:wrap;gap:22px;margin-top:30px;
+    font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.6);}
+  .final-trust span{display:inline-flex;align-items:center;gap:8px;}
+  .final-trust svg{width:14px;height:14px;stroke:var(--gold);}
+
+  /* ============ RESPONSIVE ============ */
+  @media (max-width:1023px){
+    .nav-menu{display:none;}
+    .hamburger{display:flex;}
+    .trio{grid-template-columns:1fr 1fr;}
+    .trio .info-card{grid-column:1/-1;}
+    .ba-row{grid-template-columns:repeat(2,1fr);}
+    .band-feats{grid-template-columns:repeat(3,1fr);row-gap:30px;}
+    .spec-row{grid-template-columns:repeat(2,1fr);}
+    .foot-grid{grid-template-columns:1fr 1fr;}
+    .confid{grid-template-columns:1fr;gap:34px;}
+    .tst-row{grid-template-columns:1fr;}
+    .trustmarks{grid-template-columns:repeat(2,1fr);}
+  }
+  @media (max-width:767px){
+    .wrap{padding:0 20px;}
+    .hero-grid{grid-template-columns:1fr;gap:40px;}
+    .hero-media{aspect-ratio:1/1;}
+    .hero-stats{gap:24px;}
+    .trio{grid-template-columns:1fr;}
+    .plan-grid{grid-template-columns:1fr;}
+    .ba-row{grid-template-columns:1fr;}
+    .band-feats{grid-template-columns:repeat(2,1fr);}
+    .spec-row{grid-template-columns:1fr;}
+    .cf-grid{grid-template-columns:1fr;}
+    .foot-grid{grid-template-columns:1fr;gap:30px;}
+    .nav-cta .btn-text{display:none;}
+    .confid-media{grid-template-columns:1fr 1fr;}
+    .confid-media .cm.tall{grid-row:span 1;}
+    .confid-media .cm:not(.tall){aspect-ratio:1/1;}
+    .trustmarks{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+
+<div class="scroll-prog" id="scrollProg" aria-hidden="true"></div>
+
+<!-- ============ NAV ============ -->
+<header class="nav" id="nav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="#top" aria-label="Precision Smile Atelier home">
+      <svg class="mark" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+        <circle cx="20" cy="20" r="19" stroke="#C9A96A" stroke-width="1"/>
+        <path d="M13 13c2-2.4 5-2.4 7 0 2-2.4 5-2.4 7 0 1.6 1.9 1.2 5-.3 9-1 2.7-1.6 5-2.4 5-1 0-1.1-2.6-1.6-4.4-.4-1.4-.9-2-1.7-2s-1.3.6-1.7 2c-.5 1.8-.6 4.4-1.6 4.4-.8 0-1.4-2.3-2.4-5-1.5-4-1.9-7.1-.3-9Z" fill="#071E3D" stroke="#071E3D"/>
+        <path d="M13 13c2-2.4 5-2.4 7 0 2-2.4 5-2.4 7 0" stroke="#C9A96A" stroke-width="1" fill="none"/>
+      </svg>
+      <span class="brand-txt"><b>PRECISION SMILE ATELIER</b><span>Implants &amp; Cosmetic Dentistry</span></span>
+    </a>
+    <nav class="nav-menu" aria-label="Primary">
+      <a href="#technology">Technology</a>
+      <a href="#treatments">Treatments</a>
+      <a href="#results">Results</a>
+      <a href="#testimonials">Reviews</a>
+      <a href="#specialists">Specialists</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <div class="nav-cta">
+      <a href="#book" class="btn btn-primary"><span class="btn-text">Book Assessment</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+      <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu"><span></span></button>
+    </div>
+  </div>
+</header>
+
+<div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+  <a href="#technology">Technology</a>
+  <a href="#treatments">Treatments</a>
+  <a href="#results">Results</a>
+  <a href="#specialists">Specialists</a>
+  <a href="#faq">FAQ</a>
+  <a href="#book" class="btn btn-gold">Book Digital Assessment</a>
+</div>
+
+<main id="top">
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="hero-atmos" aria-hidden="true">
+    <img src="https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&w=1920&q=80"
+         alt="" loading="eager" decoding="async" width="1920" height="1080"
+         onerror="this.style.display='none';this.parentElement.classList.add('fb-on');" />
+  </div>
+  <div class="wrap hero-grid">
+    <div class="hero-copy reveal">
+      <span class="eyebrow hero-tag">The Atelier of Precision Dentistry</span>
+      <h1>Where Science<br>Meets <span class="serif">Artistry.</span></h1>
+      <p class="hero-sub">Implants, veneers and full-mouth restoration engineered with digital precision and finished by hand — the craft of a workshop, the rigour of an operating theatre.</p>
+      <div class="hero-ctas">
+        <a href="#book" class="btn btn-primary">Book Digital Assessment
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+        <a href="#treatments" class="btn btn-ghost">See Treatment Options</a>
+      </div>
+      <div class="hero-trust">
+        <span class="ht"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.7"><path d="M12 3l8 3v6c0 5-3.4 7.7-8 9-4.6-1.3-8-4-8-9V6l8-3Z"/><path d="M9 12l2 2 4-4"/></svg>GDC-registered specialists</span>
+        <span class="sep" aria-hidden="true"></span>
+        <span class="ht"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.7"><path d="M5 13l4 4L19 7"/></svg>10-year implant warranty</span>
+        <span class="sep" aria-hidden="true"></span>
+        <span class="ht"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.7"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/></svg>0% interest financing</span>
+      </div>
+      <div class="hero-stats" data-stagger>
+        <div class="stat"><b><span class="count" data-to="12">0</span>k+</b><span>Smiles restored</span></div>
+        <div class="stat"><b><span class="count" data-to="98">0</span>%</b><span>5-star reviews</span></div>
+        <div class="stat"><b><span class="count" data-to="22">0</span>+</b><span>Years of practice</span></div>
+        <div class="stat"><b><span class="count" data-to="10">0</span>yr</b><span>Implant warranty</span></div>
+      </div>
+    </div>
+
+    <div class="hero-media reveal">
+      <img src="https://images.unsplash.com/photo-1606811841689-23dfddce3e95?auto=format&fit=crop&w=1200&q=80"
+           alt="Close-up of a radiant, healthy smile" decoding="async" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+      <div class="img-fallback smile"><span class="fb-label">Precision · Smile Study 01</span></div>
+      <svg class="hero-guides" viewBox="0 0 100 125" preserveAspectRatio="none" aria-hidden="true">
+        <line x1="50" y1="0" x2="50" y2="125" class="gpath"/>
+        <line x1="0" y1="78" x2="100" y2="78" class="gpath"/>
+        <circle cx="50" cy="78" r="14"/>
+        <rect x="30" y="64" width="40" height="28" rx="3"/>
+        <line x1="30" y1="78" x2="22" y2="78"/>
+        <line x1="70" y1="78" x2="78" y2="78"/>
+      </svg>
+      <div class="hero-float">
+        <span class="dot" aria-hidden="true"></span>
+        <span><b>Digital Smile Design</b><span class="mono">SCAN · ALIGNED · 0.02MM</span></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SOCIAL PROOF / RECOGNITION STRIP ============ -->
+<section class="proof-strip reveal" aria-label="Accreditations and recognition">
+  <div class="wrap">
+    <span class="pl-label">Accredited &amp; recognised by</span>
+    <span class="wm">General <span class="serif">Dental</span> Council</span>
+    <span class="wm">Academy of <span class="serif">Esthetic</span> Dentistry</span>
+    <span class="wm">ITI <span class="serif">Implant</span> Network</span>
+    <span class="wm">Invisalign <span class="serif">Diamond</span></span>
+    <span class="wm">Digital <span class="serif">Dentistry</span> Society</span>
+  </div>
+</section>
+
+<!-- ============ 1. TECH TRIO ============ -->
+<section class="section" id="technology">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">The Technologies</span>
+      <h2>An operating theatre, calibrated like a laboratory.</h2>
+      <p>Every restoration begins as data. We measure, simulate and rehearse the outcome before a single instrument touches enamel.</p>
+    </div>
+
+    <div class="trio">
+      <article class="panel panel-blue reveal">
+        <span class="p-eyebrow">Core Stack</span>
+        <h3>The Technologies</h3>
+        <ul class="check-list">
+          <li><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.7"><path d="M5 13l4 4L19 7"/></svg></span><span><b>Intraoral 3D Scanner</b><small>Sub-millimetre digital impressions in minutes — no putty trays.</small></span></li>
+          <li><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.7"><path d="M5 13l4 4L19 7"/></svg></span><span><b>Digital Treatment Planning</b><small>Your case modelled in 3D and approved before we begin.</small></span></li>
+          <li><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.7"><path d="M5 13l4 4L19 7"/></svg></span><span><b>Guided Implant Surgery</b><small>Surgical guides place implants to a planned axis and depth.</small></span></li>
+          <li><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.7"><path d="M5 13l4 4L19 7"/></svg></span><span><b>Same-Day Ceramic Crowns</b><small>Milled chairside and seated in a single appointment.</small></span></li>
+        </ul>
+      </article>
+
+      <article class="panel reveal">
+        <span class="p-eyebrow">Treatment Comparison</span>
+        <h3>Atelier vs. Traditional</h3>
+        <table class="cmp">
+          <thead><tr><th>Step</th><th>Atelier</th><th>Traditional</th></tr></thead>
+          <tbody>
+            <tr><td>Impressions</td><td class="yes"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M5 13l4 4L19 7"/></svg> Digital scan</td><td class="traditional">Putty trays</td></tr>
+            <tr><td>Implant placement</td><td class="yes"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M5 13l4 4L19 7"/></svg> Guided</td><td class="traditional">Freehand</td></tr>
+            <tr><td>Crown delivery</td><td class="yes"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M5 13l4 4L19 7"/></svg> Same day</td><td class="traditional">2–3 weeks</td></tr>
+            <tr><td>Preview outcome</td><td class="yes"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M5 13l4 4L19 7"/></svg> 3D mockup</td><td class="traditional">None</td></tr>
+          </tbody>
+        </table>
+      </article>
+
+      <article class="panel info-card reveal">
+        <span class="p-eyebrow">Highlight</span>
+        <div class="big"><span class="count" data-to="0">0</span>.02mm</div>
+        <p>The tolerance to which our guided implant axis is planned and verified.</p>
+        <div class="divider"></div>
+        <div class="big"><span class="count" data-to="1">0</span> visit</div>
+        <p>From digital scan to a seated, hand-finished ceramic crown.</p>
+        <a href="#results" class="btn btn-ghost" style="margin-top:22px;">Plan My Smile</a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 2. DIGITAL PLANNING ============ -->
+<section class="section" id="treatments" style="padding-top:0;">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">Digital Planning</span>
+      <h2>We rehearse your smile before we create it.</h2>
+      <p>A live scan becomes a working model. You see the plan, approve the plan, then watch it executed to the millimetre.</p>
+    </div>
+
+    <div class="plan-grid">
+      <article class="scan-card reveal">
+        <span class="p-eyebrow">Live Scan · Maxillary Arch</span>
+        <div class="scan-stage">
+          <svg class="arch-svg" id="archSvg" viewBox="0 0 600 230" aria-label="Animated 3D dental arch scan">
+            <!-- background grid -->
+            <g id="archGrid"></g>
+            <!-- teeth generated by JS -->
+            <g id="archTeeth"></g>
+            <!-- scanning line -->
+            <line class="scanline" id="scanLine" x1="40" y1="10" x2="40" y2="220"/>
+          </svg>
+          <div class="scan-readout">
+            <span id="scanStatus">SCANNING…</span>
+            <span id="scanPct">0%</span>
+          </div>
+        </div>
+        <ul class="check-list">
+          <li><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.7"><path d="M5 13l4 4L19 7"/></svg></span><span><b>Full-arch capture</b><small>32 surfaces aligned into one digital model.</small></span></li>
+          <li><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.7"><path d="M5 13l4 4L19 7"/></svg></span><span><b>Bite &amp; occlusion mapping</b><small>Force distribution analysed before restoration.</small></span></li>
+        </ul>
+      </article>
+
+      <article class="timeline-card reveal">
+        <span class="p-eyebrow" style="color:var(--gold)">Patient Timeline</span>
+        <h3 style="font-size:1.4rem;">From scan to review.</h3>
+        <div class="timeline" id="timeline">
+          <div class="tl-line"></div><div class="tl-fill"></div>
+          <div class="tl-step"><span class="num">01</span><div><b>Scan</b><small>3D intraoral capture and facial photography.</small></div></div>
+          <div class="tl-step"><span class="num">02</span><div><b>Plan</b><small>Digital smile design you review and approve.</small></div></div>
+          <div class="tl-step"><span class="num">03</span><div><b>Place</b><small>Guided, minimally invasive implant surgery.</small></div></div>
+          <div class="tl-step"><span class="num">04</span><div><b>Restore</b><small>Hand-finished ceramics seated and refined.</small></div></div>
+          <div class="tl-step"><span class="num">05</span><div><b>Review</b><small>Follow-up, calibration and lifetime care plan.</small></div></div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 3. TRANSFORMATION STUDIES ============ -->
+<section class="section" id="results" style="padding-top:0;">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">Transformation Studies</span>
+      <h2>Drag to reveal the difference.</h2>
+      <p>Real outcomes from the atelier. Slide each study to compare the day-one record against the finished result.</p>
+    </div>
+
+    <div class="ba-row" data-stagger>
+      <article class="ba-card">
+        <div class="ba-frame" data-ba>
+          <img src="https://images.unsplash.com/photo-1606811841689-23dfddce3e95?auto=format&fit=crop&w=900&q=80" alt="Before — patient smile study" loading="lazy" decoding="async" onerror="this.parentElement.classList.add('fb-on');this.remove();" />
+          <img class="ba-after" src="https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?auto=format&fit=crop&w=900&q=80" alt="After — restored smile" loading="lazy" decoding="async" onerror="this.remove();" />
+          <span class="ba-tag before">Before</span><span class="ba-tag after">After</span>
+          <div class="ba-divider"><span class="knob"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M9 6l-4 6 4 6M15 6l4 6-4 6"/></svg></span></div>
+        </div>
+        <div class="ba-meta"><b>Full Veneer Restoration</b><small>10 units · porcelain · 2 visits</small></div>
+      </article>
+      <article class="ba-card">
+        <div class="ba-frame" data-ba>
+          <img src="https://images.unsplash.com/photo-1609840114035-3c981b782dfe?auto=format&fit=crop&w=900&q=80" alt="Before — patient smile study" loading="lazy" decoding="async" onerror="this.parentElement.classList.add('fb-on');this.remove();" />
+          <img class="ba-after" src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=900&q=80" alt="After — restored smile" loading="lazy" decoding="async" onerror="this.remove();" />
+          <span class="ba-tag before">Before</span><span class="ba-tag after">After</span>
+          <div class="ba-divider"><span class="knob"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M9 6l-4 6 4 6M15 6l4 6-4 6"/></svg></span></div>
+        </div>
+        <div class="ba-meta"><b>Single Implant &amp; Crown</b><small>Guided · same-day temporary</small></div>
+      </article>
+      <article class="ba-card">
+        <div class="ba-frame" data-ba>
+          <img src="https://images.unsplash.com/photo-1607990281513-2c110a25bd8c?auto=format&fit=crop&w=900&q=80" alt="Before — patient smile study" loading="lazy" decoding="async" onerror="this.parentElement.classList.add('fb-on');this.remove();" />
+          <img class="ba-after" src="https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=900&q=80" alt="After — restored smile" loading="lazy" decoding="async" onerror="this.remove();" />
+          <span class="ba-tag before">Before</span><span class="ba-tag after">After</span>
+          <div class="ba-divider"><span class="knob"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M9 6l-4 6 4 6M15 6l4 6-4 6"/></svg></span></div>
+        </div>
+        <div class="ba-meta"><b>Whitening &amp; Alignment</b><small>Clear aligners · 6 months</small></div>
+      </article>
+      <article class="ba-card">
+        <div class="ba-frame" data-ba>
+          <img src="https://images.unsplash.com/photo-1598256989800-fe5f95da9787?auto=format&fit=crop&w=900&q=80" alt="Before — patient smile study" loading="lazy" decoding="async" onerror="this.parentElement.classList.add('fb-on');this.remove();" />
+          <img class="ba-after" src="https://images.unsplash.com/photo-1610216705422-caa3fcb6d158?auto=format&fit=crop&w=900&q=80" alt="After — restored smile" loading="lazy" decoding="async" onerror="this.remove();" />
+          <span class="ba-tag before">Before</span><span class="ba-tag after">After</span>
+          <div class="ba-divider"><span class="knob"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M9 6l-4 6 4 6M15 6l4 6-4 6"/></svg></span></div>
+        </div>
+        <div class="ba-meta"><b>Full-Mouth Reconstruction</b><small>Implant-supported · 12 months</small></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONFIDENCE / LIFESTYLE BAND ============ -->
+<section class="section" id="confidence" style="padding-top:0;">
+  <div class="wrap confid">
+    <div class="confid-media reveal" data-stagger>
+      <div class="cm tall">
+        <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=1100&q=80"
+             alt="Confident patient smiling after treatment" loading="lazy" decoding="async" width="1100" height="1400"
+             onerror="this.style.display='none';" />
+      </div>
+      <div class="cm">
+        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=1100&q=80"
+             alt="Patient with a natural, healthy smile" loading="lazy" decoding="async" width="1100" height="825"
+             onerror="this.style.display='none';" />
+      </div>
+      <div class="cm">
+        <img src="https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&w=1100&q=80"
+             alt="Calm, modern treatment suite at the atelier" loading="lazy" decoding="async" width="1100" height="825"
+             onerror="this.style.display='none';" />
+      </div>
+    </div>
+    <div class="confid-copy reveal">
+      <span class="ribbon">The Confidence Dividend</span>
+      <h2>A smile you forget you're wearing.</h2>
+      <p>Beyond the engineering, the real outcome is quieter: you stop covering your mouth, you lead the meeting, you say yes to the photo. Precision is the method — confidence is the result.</p>
+      <ul class="confid-list">
+        <li><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M5 13l4 4L19 7"/></svg></span>Natural translucency matched to your face, not a template.</li>
+        <li><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M5 13l4 4L19 7"/></svg></span>Comfortable, sedation-supported visits — calm by design.</li>
+        <li><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M5 13l4 4L19 7"/></svg></span>Results engineered to last, backed in writing.</li>
+      </ul>
+      <a href="#book" class="btn btn-primary">Book Digital Assessment
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TESTIMONIALS ============ -->
+<section class="section" id="testimonials" style="padding-top:0;">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">Patient Words</span>
+      <h2>The smile is the science. The relief is the point.</h2>
+      <p>A few of the people who walked in nervous and walked out grinning.</p>
+    </div>
+    <div class="tst-row" data-stagger>
+      <article class="tst-card">
+        <div class="tst-stars" aria-label="5 out of 5 stars">
+          <svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.9.7-5.1 4.7 1.4 6.8L12 17.8 5.9 20.5l1.4-6.8L2.2 9l6.9-.7L12 2z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.9.7-5.1 4.7 1.4 6.8L12 17.8 5.9 20.5l1.4-6.8L2.2 9l6.9-.7L12 2z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.9.7-5.1 4.7 1.4 6.8L12 17.8 5.9 20.5l1.4-6.8L2.2 9l6.9-.7L12 2z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.9.7-5.1 4.7 1.4 6.8L12 17.8 5.9 20.5l1.4-6.8L2.2 9l6.9-.7L12 2z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.9.7-5.1 4.7 1.4 6.8L12 17.8 5.9 20.5l1.4-6.8L2.2 9l6.9-.7L12 2z"/></svg>
+        </div>
+        <blockquote>"I saw my new smile on screen before they touched a thing. No guessing, no surprises — just the exact result they'd promised."</blockquote>
+        <div class="tst-who">
+          <span class="av"><img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=200&q=80" alt="Portrait of Sophie L." loading="lazy" decoding="async" width="96" height="96" onerror="this.style.display='none';"></span>
+          <span><b>Sophie L.</b><span>Full veneer restoration</span></span>
+        </div>
+      </article>
+      <article class="tst-card">
+        <div class="tst-stars" aria-label="5 out of 5 stars">
+          <svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.9.7-5.1 4.7 1.4 6.8L12 17.8 5.9 20.5l1.4-6.8L2.2 9l6.9-.7L12 2z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.9.7-5.1 4.7 1.4 6.8L12 17.8 5.9 20.5l1.4-6.8L2.2 9l6.9-.7L12 2z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.9.7-5.1 4.7 1.4 6.8L12 17.8 5.9 20.5l1.4-6.8L2.2 9l6.9-.7L12 2z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.9.7-5.1 4.7 1.4 6.8L12 17.8 5.9 20.5l1.4-6.8L2.2 9l6.9-.7L12 2z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.9.7-5.1 4.7 1.4 6.8L12 17.8 5.9 20.5l1.4-6.8L2.2 9l6.9-.7L12 2z"/></svg>
+        </div>
+        <blockquote>"Twenty years of dreading dentists, gone. The sedation, the calm, the same-day crown — I walked out the same afternoon, smiling for real."</blockquote>
+        <div class="tst-who">
+          <span class="av"><img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80" alt="Portrait of James R." loading="lazy" decoding="async" width="96" height="96" onerror="this.style.display='none';"></span>
+          <span><b>James R.</b><span>Single implant &amp; same-day crown</span></span>
+        </div>
+      </article>
+      <article class="tst-card">
+        <div class="tst-stars" aria-label="5 out of 5 stars">
+          <svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.9.7-5.1 4.7 1.4 6.8L12 17.8 5.9 20.5l1.4-6.8L2.2 9l6.9-.7L12 2z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.9.7-5.1 4.7 1.4 6.8L12 17.8 5.9 20.5l1.4-6.8L2.2 9l6.9-.7L12 2z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.9.7-5.1 4.7 1.4 6.8L12 17.8 5.9 20.5l1.4-6.8L2.2 9l6.9-.7L12 2z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.9.7-5.1 4.7 1.4 6.8L12 17.8 5.9 20.5l1.4-6.8L2.2 9l6.9-.7L12 2z"/></svg>
+          <svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.9.7-5.1 4.7 1.4 6.8L12 17.8 5.9 20.5l1.4-6.8L2.2 9l6.9-.7L12 2z"/></svg>
+        </div>
+        <blockquote>"The fixed quote was honoured to the penny and the financing made it effortless. Best money I've spent on myself — and it shows every morning."</blockquote>
+        <div class="tst-who">
+          <span class="av"><img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=200&q=80" alt="Portrait of Amara K." loading="lazy" decoding="async" width="96" height="96" onerror="this.style.display='none';"></span>
+          <span><b>Amara K.</b><span>Full-mouth reconstruction</span></span>
+        </div>
+      </article>
+    </div>
+
+    <!-- trust marks -->
+    <div class="trustmarks reveal" data-stagger>
+      <div class="tm">
+        <span class="tmi"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M12 3l8 3v6c0 5-3.4 7.7-8 9-4.6-1.3-8-4-8-9V6l8-3Z"/><path d="M9 12l2 2 4-4"/></svg></span>
+        <span><b>GDC Registered</b><small>Every clinician accredited</small></span>
+      </div>
+      <div class="tm">
+        <span class="tmi"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><circle cx="12" cy="9" r="6"/><path d="M9 14l-1 7 4-2 4 2-1-7"/></svg></span>
+        <span><b>10-Year Warranty</b><small>Implants guaranteed in writing</small></span>
+      </div>
+      <div class="tm">
+        <span class="tmi"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><rect x="4" y="3" width="16" height="14" rx="2"/><path d="M9 21h6M12 17v4M8 8h8M8 11h5"/></svg></span>
+        <span><b>Fully Digital</b><small>Scan, plan, mill in-house</small></span>
+      </div>
+      <div class="tm">
+        <span class="tmi"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M7 15h4"/></svg></span>
+        <span><b>0% Financing</b><small>Spread over up to 24 months</small></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 4. FEATURE BAND ============ -->
+<section class="section band">
+  <div class="wrap">
+    <div class="section-head reveal" style="max-width:560px;">
+      <span class="eyebrow">Why The Atelier</span>
+      <h2 style="color:#fff;">Six promises behind every smile.</h2>
+    </div>
+    <div class="band-feats" data-stagger>
+      <div class="feat">
+        <div class="fico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></svg></div>
+        <b>Precision</b><small>Planned to 0.02mm.</small>
+      </div>
+      <div class="feat">
+        <div class="fico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M12 21s-7-4.6-9-9.5C1.6 7.7 4 5 7 5c2 0 3.4 1.2 5 3 1.6-1.8 3-3 5-3 3 0 5.4 2.7 4 6.5C19 16.4 12 21 12 21Z"/></svg></div>
+        <b>Comfort</b><small>Sedation &amp; calm care.</small>
+      </div>
+      <div class="feat">
+        <div class="fico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M12 3l8 3v6c0 5-3.4 7.7-8 9-4.6-1.3-8-4-8-9V6l8-3Z"/><path d="M9 12l2 2 4-4"/></svg></div>
+        <b>Warranty</b><small>10-year implant cover.</small>
+      </div>
+      <div class="feat">
+        <div class="fico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><rect x="4" y="3" width="16" height="14" rx="2"/><path d="M9 21h6M12 17v4M8 8h8M8 11h5"/></svg></div>
+        <b>Technology</b><small>Fully digital workflow.</small>
+      </div>
+      <div class="feat">
+        <div class="fico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M7 15h4"/></svg></div>
+        <b>Financing</b><small>0% plans available.</small>
+      </div>
+      <div class="feat">
+        <div class="fico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M12 15a4 4 0 100-8 4 4 0 000 8Z"/><path d="M12 2l2 3 3-1-1 3 3 2-3 2 1 3-3-1-2 3-2-3-3 1 1-3-3-2 3-2-1-3 3 1 2-3Z"/></svg></div>
+        <b>Experience</b><small>22+ years of mastery.</small>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 5. SPECIALISTS ============ -->
+<section class="section" id="specialists">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">Meet Our Specialists</span>
+      <h2>Hands trained in surgery, eyes trained in art.</h2>
+      <p>A small, accredited team — each a specialist in their discipline, all working from a single digital plan.</p>
+    </div>
+
+    <div class="spec-row" data-stagger>
+      <article class="spec-card">
+        <div class="spec-photo">
+          <img src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=700&q=80" alt="Dr. Elena Voss, implantologist" loading="lazy" decoding="async" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+          <div class="img-fallback"><span class="fb-label">Portrait</span></div>
+        </div>
+        <div class="spec-body"><b>Dr. Elena Voss</b><span class="role">Lead Implantologist</span><p>Guided full-arch reconstruction and immediate-load implants.</p></div>
+      </article>
+      <article class="spec-card">
+        <div class="spec-photo">
+          <img src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&w=700&q=80" alt="Dr. Marcus Reed, prosthodontist" loading="lazy" decoding="async" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+          <div class="img-fallback"><span class="fb-label">Portrait</span></div>
+        </div>
+        <div class="spec-body"><b>Dr. Marcus Reed</b><span class="role">Cosmetic Prosthodontist</span><p>Veneers, smile design and ceramic artistry.</p></div>
+      </article>
+      <article class="spec-card">
+        <div class="spec-photo">
+          <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=700&q=80" alt="Dr. Aisha Khan, orthodontist" loading="lazy" decoding="async" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+          <div class="img-fallback"><span class="fb-label">Portrait</span></div>
+        </div>
+        <div class="spec-body"><b>Dr. Aisha Khan</b><span class="role">Orthodontist</span><p>Clear-aligner alignment and bite correction.</p></div>
+      </article>
+      <article class="spec-card">
+        <div class="spec-photo">
+          <img src="https://images.unsplash.com/photo-1537368910025-700350fe46c7?auto=format&fit=crop&w=700&q=80" alt="Dr. Liam Carter, digital lab director" loading="lazy" decoding="async" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+          <div class="img-fallback"><span class="fb-label">Portrait</span></div>
+        </div>
+        <div class="spec-body"><b>Dr. Liam Carter</b><span class="role">Digital Lab Director</span><p>CAD/CAM milling and same-day restoration.</p></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 6. COMMITMENT + FAQ ============ -->
+<section class="section" id="faq" style="padding-top:0;">
+  <div class="wrap cf-grid">
+    <article class="commit-card reveal">
+      <span class="p-eyebrow">Our Commitment</span>
+      <h3>Your convenience, engineered in.</h3>
+      <ul class="check-list">
+        <li><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.7"><path d="M5 13l4 4L19 7"/></svg></span><span><b>Transparent fixed quotes</b><small>No surprises — your plan is priced before you commit.</small></span></li>
+        <li><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.7"><path d="M5 13l4 4L19 7"/></svg></span><span><b>Evening &amp; weekend slots</b><small>Appointments designed around your schedule.</small></span></li>
+        <li><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.7"><path d="M5 13l4 4L19 7"/></svg></span><span><b>0% interest financing</b><small>Spread treatment over up to 24 months.</small></span></li>
+        <li><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.7"><path d="M5 13l4 4L19 7"/></svg></span><span><b>Lifetime care programme</b><small>Calibration and check-ups for every restoration.</small></span></li>
+      </ul>
+      <a href="#book" class="btn btn-gold" style="margin-top:28px;">Book Digital Assessment</a>
+    </article>
+
+    <div class="reveal">
+      <span class="eyebrow">Frequently Asked Questions</span>
+      <h2 style="font-size:clamp(1.8rem,3.4vw,2.6rem);margin:16px 0 28px;">Answers, before you ask.</h2>
+      <div class="faq">
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false"><span>Is the digital assessment painful or invasive?</span><span class="pm"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M5 12h14M12 5v14"/></svg></span></button>
+          <div class="faq-a"><div class="faq-a-inner">Not at all. The assessment is a comfortable 3D scan and photographic session — no needles, no drilling. You leave with a clear, visual plan of what is possible.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false"><span>How long do same-day crowns actually last?</span><span class="pm"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M5 12h14M12 5v14"/></svg></span></button>
+          <div class="faq-a"><div class="faq-a-inner">Our milled ceramic crowns are engineered for 15+ years of function and are covered by our restoration guarantee, provided you maintain your lifetime care programme.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false"><span>Do you offer sedation for nervous patients?</span><span class="pm"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M5 12h14M12 5v14"/></svg></span></button>
+          <div class="faq-a"><div class="faq-a-inner">Yes. We offer inhalation and IV sedation administered by our in-house anaesthetist, so even complex surgery can feel calm and effortless.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false"><span>What does financing look like?</span><span class="pm"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M5 12h14M12 5v14"/></svg></span></button>
+          <div class="faq-a"><div class="faq-a-inner">Treatment can be spread interest-free over up to 24 months, with longer terms available. Your fixed quote includes everything — scans, surgery, ceramics and aftercare.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false"><span>Can I preview my smile before committing?</span><span class="pm"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M5 12h14M12 5v14"/></svg></span></button>
+          <div class="faq-a"><div class="faq-a-inner">Always. Digital Smile Design lets you see — and approve — a photorealistic mockup of your new smile before any treatment begins.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 7. FINAL CTA ============ -->
+<section class="section" id="book" style="padding-top:0;">
+  <div class="wrap">
+    <div class="final reveal">
+      <div class="final-photo" aria-hidden="true">
+        <img src="https://images.unsplash.com/photo-1568602471122-7832951cc4c5?auto=format&fit=crop&w=1920&q=80"
+             alt="" loading="lazy" decoding="async" width="1920" height="1080"
+             onerror="this.style.display='none';" />
+      </div>
+      <div class="final-inner">
+        <span class="eyebrow center">Begin Your Study</span>
+        <h2>Ready to design your <span class="serif">perfect smile?</span></h2>
+        <p>Book a digital assessment and leave the same day with a visual mockup of your new smile, a fixed all-inclusive quote and a clear, financeable plan — no obligation, no surprises.</p>
+        <div class="ctas">
+          <a href="#book" class="btn btn-gold">Book Digital Assessment
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+          <a href="#treatments" class="btn btn-light">Plan My Smile</a>
+        </div>
+        <div class="final-trust">
+          <span><svg viewBox="0 0 24 24" fill="none" stroke-width="1.7"><path d="M5 13l4 4L19 7"/></svg>Fixed quote, no surprises</span>
+          <span><svg viewBox="0 0 24 24" fill="none" stroke-width="1.7"><path d="M5 13l4 4L19 7"/></svg>0% interest financing</span>
+          <span><svg viewBox="0 0 24 24" fill="none" stroke-width="1.7"><path d="M5 13l4 4L19 7"/></svg>10-year implant warranty</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-col">
+        <div class="brand">
+          <svg class="mark" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+            <circle cx="20" cy="20" r="19" stroke="#C9A96A" stroke-width="1"/>
+            <path d="M13 13c2-2.4 5-2.4 7 0 2-2.4 5-2.4 7 0 1.6 1.9 1.2 5-.3 9-1 2.7-1.6 5-2.4 5-1 0-1.1-2.6-1.6-4.4-.4-1.4-.9-2-1.7-2s-1.3.6-1.7 2c-.5 1.8-.6 4.4-1.6 4.4-.8 0-1.4-2.3-2.4-5-1.5-4-1.9-7.1-.3-9Z" fill="#fff" stroke="#fff"/>
+          </svg>
+          <span class="brand-txt"><b>PRECISION SMILE ATELIER</b><span>Implants &amp; Cosmetic Dentistry</span></span>
+        </div>
+        <p class="foot-about">An atelier where dental science and craftsmanship meet — engineering health, restoring confidence, one precise smile at a time.</p>
+      </div>
+      <div class="foot-col">
+        <h4>Treatments</h4>
+        <a href="#treatments">Dental Implants</a>
+        <a href="#treatments">Porcelain Veneers</a>
+        <a href="#treatments">Same-Day Crowns</a>
+        <a href="#treatments">Clear Aligners</a>
+        <a href="#treatments">Full-Mouth Restoration</a>
+      </div>
+      <div class="foot-col">
+        <h4>The Atelier</h4>
+        <a href="#technology">Technology</a>
+        <a href="#specialists">Our Specialists</a>
+        <a href="#results">Transformation Studies</a>
+        <a href="#faq">FAQ</a>
+        <a href="#book">Book Assessment</a>
+      </div>
+      <div class="foot-col">
+        <h4>Patients</h4>
+        <a href="#book">Financing &amp; Plans</a>
+        <a href="#book">New Patient Form</a>
+        <a href="#faq">Sedation &amp; Comfort</a>
+        <a href="#book">Lifetime Care</a>
+        <a href="#book">Warranty</a>
+      </div>
+      <div class="foot-col foot-contact">
+        <h4>Visit Us</h4>
+        <p>14 Meridian Court<br>Marylebone, London W1G</p>
+        <p>+44 (0)20 7946 0102</p>
+        <p>hello@precisionsmile.co</p>
+        <form class="foot-news" onsubmit="return false;" aria-label="Newsletter signup">
+          <input type="email" placeholder="Your email" aria-label="Your email" />
+          <button type="submit" aria-label="Subscribe"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+        </form>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Precision Smile Atelier. All rights reserved. · GDC registered.</span>
+      <div class="foot-social">
+        <a href="#book" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></a>
+        <a href="#book" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M15 3h-3a4 4 0 00-4 4v3H5v4h3v7h4v-7h3l1-4h-4V7a1 1 0 011-1h3Z"/></svg></a>
+        <a href="#book" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M7 10v7M7 7v.01M11 17v-4a2 2 0 014 0v4M11 10v7"/></svg></a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .ba-frame.fb-on{background:linear-gradient(160deg,#dce3e8,#071e3d);}
+  .ba-frame.fb-on::after{content:"Study image";position:absolute;left:12px;bottom:12px;font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:rgba(255,255,255,.85);text-transform:uppercase;}
+</style>
+
+<!-- ============ MOTION LAYER (additive, CDN) ============ -->
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/CustomEase.min.js"></script>
+<!-- Lenis smooth-scroll removed: wheel hijacking caused scroll jank; native scroll is used instead. -->
+
+<script>
+(function(){
+  "use strict";
+  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ====================================================================
+     PERF: gated requestAnimationFrame helper.
+     Runs a per-frame callback ONLY while the host element is on screen and
+     the document is visible. Caps to ~targetFps (default 30) by skipping
+     frames via a timestamp delta — visually identical for slow ambient
+     motion at half the cost. cancelAnimationFrame on leave; resume on enter.
+     ==================================================================== */
+  window.__perfLoop = function(host, step, targetFps){
+    var rafId = null, last = 0, onScreen = false;
+    var interval = 1000 / (targetFps || 30);
+    function tick(ts){
+      if(!onScreen || document.hidden){ rafId = null; return; }
+      rafId = requestAnimationFrame(tick);
+      if(ts - last < interval) return;
+      last = ts;
+      step(ts);
+    }
+    function start(){ if(rafId == null){ last = 0; rafId = requestAnimationFrame(tick); } }
+    function stop(){ if(rafId != null){ cancelAnimationFrame(rafId); rafId = null; } }
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        onScreen = en.isIntersecting;
+        if(onScreen && !document.hidden) start(); else stop();
+      });
+    }, {threshold:0.01});
+    io.observe(host);
+    document.addEventListener("visibilitychange", function(){
+      if(document.hidden) stop();
+      else if(onScreen) start();
+    });
+    return { start:start, stop:stop };
+  };
+
+  /* ---- NAV scroll state ---- */
+  var nav = document.getElementById("nav");
+  function onScroll(){ nav.classList.toggle("scrolled", window.scrollY > 30); }
+  window.addEventListener("scroll", onScroll, {passive:true}); onScroll();
+
+  /* ---- Mobile menu ---- */
+  var burger = document.getElementById("hamburger");
+  var menu = document.getElementById("mobileMenu");
+  function setMenu(open){
+    burger.setAttribute("aria-expanded", open ? "true":"false");
+    menu.setAttribute("aria-hidden", open ? "false":"true");
+    menu.classList.toggle("open", open);
+    document.body.style.overflow = open ? "hidden":"";
+  }
+  burger.addEventListener("click", function(){ setMenu(!menu.classList.contains("open")); });
+  menu.querySelectorAll("a").forEach(function(a){ a.addEventListener("click", function(){ setMenu(false); }); });
+  document.addEventListener("keydown", function(e){ if(e.key==="Escape") setMenu(false); });
+
+  /* ====================================================================
+     MOTION TAKEOVER FLAG
+     The GSAP layer (defined further below) flips window.__GSAP_MOTION__ to
+     true the moment it confirms GSAP+ScrollTrigger are present. The native
+     IntersectionObserver reveal, the crude hero parallax and the native
+     counter/timeline triggers all check this flag so nothing fires twice.
+     Counters and timeline still expose hooks the GSAP layer can re-fire.
+     ==================================================================== */
+  function motionOwned(){ return !!window.__GSAP_MOTION__; }
+
+  /* ---- Hero parallax (native fallback only) ---- */
+  var heroMedia = document.querySelector(".hero-media");
+  if(heroMedia && !reduced){
+    window.addEventListener("scroll", function(){
+      if(motionOwned()) return;            /* GSAP drives parallax instead */
+      var y = window.scrollY;
+      if(y < 900) heroMedia.style.transform = "translateY(" + (y*0.06) + "px)";
+    }, {passive:true});
+  }
+
+  /* ---- Native reveal / stagger fallback ----
+     Only runs if the GSAP layer did NOT claim the motion. Because the GSAP
+     libs load via defer (after this inline script), the decision is deferred:
+     the GSAP bootstrap calls window.__startNativeFallback() if (and only if)
+     GSAP failed to load. */
+  window.__startNativeFallback = function(){
+    if(window.__nativeStarted || motionOwned()) return;
+    window.__nativeStarted = true;
+
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if(en.isIntersecting){ en.target.classList.add("in"); io.unobserve(en.target); }
+      });
+    }, {threshold:0.16, rootMargin:"0px 0px -8% 0px"});
+    document.querySelectorAll(".reveal,[data-stagger]").forEach(function(el){ io.observe(el); });
+
+    document.querySelectorAll("[data-stagger]").forEach(function(group){
+      Array.prototype.forEach.call(group.children, function(child,i){
+        child.style.transitionDelay = (i*0.09)+"s";
+      });
+    });
+
+    var cio = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if(en.isIntersecting){ en.target.__counted = true; animateCount(en.target); cio.unobserve(en.target); }
+      });
+    }, {threshold:0.6});
+    document.querySelectorAll(".count").forEach(function(el){ cio.observe(el); });
+
+    var tl = document.getElementById("timeline");
+    if(tl){
+      var tio = new IntersectionObserver(function(entries){
+        entries.forEach(function(en){ if(en.isIntersecting){ en.target.classList.add("in"); tio.unobserve(en.target); }});
+      }, {threshold:0.3});
+      tio.observe(tl);
+    }
+  };
+
+  /* ---- Counters ---- */
+  function animateCount(el){
+    var to = parseFloat(el.getAttribute("data-to"));
+    if(reduced){ el.textContent = to; return; }
+    var dur = 1500, start = null;
+    function step(ts){
+      if(!start) start = ts;
+      var p = Math.min((ts-start)/dur, 1);
+      var eased = 1 - Math.pow(1-p, 3);
+      var val = to * eased;
+      el.textContent = (to % 1 === 0) ? Math.round(val) : val.toFixed(0);
+      if(p<1) requestAnimationFrame(step);
+      else el.textContent = to;
+    }
+    requestAnimationFrame(step);
+  }
+  /* Expose so the GSAP layer can re-fire counters / timeline on its own ScrollTriggers. */
+  window.__fireCounters = function(scope){
+    (scope || document).querySelectorAll(".count").forEach(function(el){
+      if(!el.__counted){ el.__counted = true; animateCount(el); }
+    });
+  };
+  var timeline = document.getElementById("timeline");
+  window.__fireTimeline = function(){ if(timeline) timeline.classList.add("in"); };
+
+  /* ---- DENTAL ARCH + SCANNER (SVG generated + rAF) ---- */
+  (function(){
+    var svg = document.getElementById("archSvg");
+    if(!svg) return;
+    var teethG = document.getElementById("archTeeth");
+    var gridG = document.getElementById("archGrid");
+    var line = document.getElementById("scanLine");
+    var statusEl = document.getElementById("scanStatus");
+    var pctEl = document.getElementById("scanPct");
+    var W = 600, H = 230, N = 14;
+    // grid
+    for(var gx=0; gx<=W; gx+=40){ gridG.innerHTML += '<line class="grid-l" x1="'+gx+'" y1="0" x2="'+gx+'" y2="'+H+'"/>'; }
+    for(var gy=0; gy<=H; gy+=40){ gridG.innerHTML += '<line class="grid-l" x1="0" y1="'+gy+'" x2="'+W+'" y2="'+gy+'"/>'; }
+    // teeth along an arch curve
+    var teeth = [];
+    for(var i=0;i<N;i++){
+      var t = i/(N-1);
+      var x = 50 + t*500;
+      // parabola arch: lower in the middle
+      var arch = 70 + Math.pow((t-0.5)*2,2)*90;
+      var y = arch;
+      var w = 22 + Math.sin(t*Math.PI)*8;
+      var h = 30 + Math.sin(t*Math.PI)*16;
+      var rect = document.createElementNS("http://www.w3.org/2000/svg","path");
+      // simple molar/incisor-ish rounded shape
+      var x0=x-w/2, x1=x+w/2, y0=y-h/2, y1=y+h/2, r=6;
+      var d = "M"+(x0+r)+" "+y0+" Q"+x0+" "+y0+" "+x0+" "+(y0+r)+" L"+x0+" "+(y1-r)+" Q"+x0+" "+y1+" "+(x0+r)+" "+y1+
+              " L"+(x1-r)+" "+y1+" Q"+x1+" "+y1+" "+x1+" "+(y1-r)+" L"+x1+" "+(y0+r)+" Q"+x1+" "+y0+" "+(x1-r)+" "+y0+" Z";
+      rect.setAttribute("d", d);
+      rect.setAttribute("class","tooth");
+      teethG.appendChild(rect);
+      teeth.push({el:rect, x:x});
+    }
+
+    var pos = 40, dir = 1, litCount = 0;
+    /* 30fps-capped → double the per-frame step to preserve sweep speed. */
+    function frame(){
+      pos += dir * 6.4;
+      if(pos >= 560){ dir = -1; }
+      if(pos <= 40){ dir = 1; }
+      line.setAttribute("x1", pos); line.setAttribute("x2", pos);
+      // light teeth the scanner has passed
+      for(var i=0;i<teeth.length;i++){
+        var tt = teeth[i];
+        if(!tt.el.classList.contains("lit") && Math.abs(tt.x - pos) < 26){
+          tt.el.classList.add("lit"); litCount++;
+        }
+      }
+      var pct = Math.round(litCount/N*100);
+      if(pct > 100) pct = 100;
+      pctEl.textContent = pct + "%";
+      statusEl.textContent = pct >= 100 ? "MODEL ALIGNED ✓" : "SCANNING…";
+    }
+    if(reduced){
+      teeth.forEach(function(t){ t.el.classList.add("lit"); });
+      line.style.display="none"; pctEl.textContent="100%"; statusEl.textContent="MODEL ALIGNED ✓";
+    } else {
+      window.__perfLoop(svg, frame, 30);
+    }
+  })();
+
+  /* ---- BEFORE / AFTER sliders ---- */
+  var hasTouch = ('ontouchstart' in window);
+  document.querySelectorAll("[data-ba]").forEach(function(frame){
+    var after = frame.querySelector(".ba-after");
+    var divider = frame.querySelector(".ba-divider");
+    var pending = null, scheduled = false;
+    function apply(px){
+      var rect = frame.getBoundingClientRect();
+      var pct = Math.max(4, Math.min(96, (px-rect.left)/rect.width*100));
+      if(after) after.style.clipPath = "inset(0 0 0 "+pct+"%)";
+      divider.style.left = pct + "%";
+    }
+    /* rAF-throttle: at most one DOM write per frame */
+    function set(px){
+      pending = px;
+      if(scheduled) return;
+      scheduled = true;
+      requestAnimationFrame(function(){ scheduled = false; apply(pending); });
+    }
+    var active = false;
+    frame.addEventListener("mousedown", function(e){ active=true; set(e.clientX); });
+    window.addEventListener("mousemove", function(e){ if(active) set(e.clientX); }, {passive:true});
+    window.addEventListener("mouseup", function(){ active=false; }, {passive:true});
+    frame.addEventListener("mousemove", function(e){ if(!hasTouch) set(e.clientX); }, {passive:true});
+    frame.addEventListener("touchstart", function(e){ set(e.touches[0].clientX); }, {passive:true});
+    frame.addEventListener("touchmove", function(e){ set(e.touches[0].clientX); }, {passive:true});
+  });
+
+  /* ---- FAQ accordion ---- */
+  document.querySelectorAll(".faq-item").forEach(function(item){
+    var q = item.querySelector(".faq-q");
+    var a = item.querySelector(".faq-a");
+    q.addEventListener("click", function(){
+      var open = item.classList.contains("open");
+      document.querySelectorAll(".faq-item.open").forEach(function(o){
+        if(o!==item){ o.classList.remove("open"); o.querySelector(".faq-a").style.maxHeight=null; o.querySelector(".faq-q").setAttribute("aria-expanded","false"); }
+      });
+      item.classList.toggle("open", !open);
+      q.setAttribute("aria-expanded", !open ? "true":"false");
+      a.style.maxHeight = !open ? (a.scrollHeight+"px") : null;
+    });
+  });
+})();
+</script>
+
+<!-- ============ CINEMATIC MOTION LAYER (GSAP / ScrollTrigger / Lenis) ============
+     Purely additive. If any CDN fails or this errors, __startNativeFallback()
+     runs and the page behaves exactly as before. If even that never runs, a
+     1500ms failsafe force-clears every hidden state so nothing stays invisible. -->
+<script>
+(function(){
+  "use strict";
+
+  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var coarse  = window.matchMedia("(pointer: coarse)").matches;
+  var small   = window.matchMedia("(max-width: 767px)").matches;
+  var docEl   = document.documentElement;
+
+  /* ---- PERF TIER: detect weak / touch / reduced-motion hardware ----
+     On lowPower we skip ALL heavy continuous effects (Lenis, scrub parallax,
+     mouse-parallax). Reveals + hero intro still run (cheap opacity+transform). */
+  var lowPower = reduced
+    || coarse
+    || window.matchMedia("(max-width: 860px)").matches
+    || (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4)
+    || (navigator.deviceMemory && navigator.deviceMemory <= 4);
+
+  if(reduced) docEl.classList.add("reduced");
+
+  /* ---- HARD FAILSAFE: never leave content invisible ---- */
+  var failsafe = setTimeout(function(){
+    if(!window.__GSAP_MOTION__){
+      docEl.classList.remove("gsap-on");                 /* drop CSS hidden states */
+      document.querySelectorAll(".reveal,[data-stagger]").forEach(function(el){
+        el.classList.add("in");
+        el.style.opacity="";el.style.transform="";el.style.filter="";
+      });
+      if(typeof window.__startNativeFallback === "function") window.__startNativeFallback();
+    }
+  }, 1500);
+
+  /* ---- Wait for deferred CDN scripts, then decide ---- */
+  function boot(){
+    if(window.gsap && window.ScrollTrigger){
+      try { initMotion(); }
+      catch(err){
+        /* anything goes wrong: clear hidden states + hand back to native */
+        clearTimeout(failsafe);
+        docEl.classList.remove("gsap-on");
+        if(typeof window.__startNativeFallback === "function") window.__startNativeFallback();
+      }
+    } else {
+      /* CDN blocked / failed → native reveal system */
+      clearTimeout(failsafe);
+      if(typeof window.__startNativeFallback === "function") window.__startNativeFallback();
+    }
+  }
+  /* window 'load' guarantees deferred scripts have executed */
+  if(document.readyState === "complete") boot();
+  else window.addEventListener("load", boot);
+
+  /* ================================================================== */
+  function initMotion(){
+    window.__GSAP_MOTION__ = true;
+    clearTimeout(failsafe);
+
+    gsap.registerPlugin(ScrollTrigger, CustomEase);
+    CustomEase.create("expoOut","0.16,1,0.3,1");
+    var EASE = "expoOut";
+
+    /* Mark <html> so the CSS hidden states (reveal/stagger) become active.
+       Until this point everything was fully visible. */
+    docEl.classList.add("gsap-on");
+
+    var useParallax = !lowPower;     /* depth parallax: capable desktop only */
+
+    /* ---------- LENIS smooth scroll (capable devices only) ---------- */
+    var lenis = null;
+    var lenisTicker = null;
+    if(!lowPower && window.Lenis){
+      lenis = new Lenis({ duration:1.05, smoothWheel:true, wheelMultiplier:1, touchMultiplier:1.2 });
+      lenis.on("scroll", ScrollTrigger.update);
+      lenisTicker = function(t){ lenis.raf(t*1000); };
+      gsap.ticker.add(lenisTicker);
+      gsap.ticker.lagSmoothing(0);
+    }
+
+    /* ---------- REVEALS (replaces native IO) ---------- */
+    /* Set initial hidden state by JS (after load) so CSS never traps content. */
+    if(reduced){
+      /* reduced motion: show everything at final state, no animation */
+      gsap.set(".reveal, [data-stagger] > *", { clearProps:"all" });
+      docEl.classList.remove("gsap-on");
+    } else {
+      /* Hero .reveal blocks are handled by the intro timeline — exclude them. */
+      var revealEls = gsap.utils.toArray(".reveal").filter(function(el){
+        return !el.closest(".hero");
+      });
+      gsap.set(revealEls, { opacity:0, y:32 });
+      /* hero stats [data-stagger] is handled by the intro/own trigger; exclude hero groups below */
+      var staggerGroups = gsap.utils.toArray("[data-stagger]").filter(function(g){
+        return !g.closest(".hero");
+      });
+      staggerGroups.forEach(function(g){ gsap.set(g.children, { opacity:0, y:26 }); });
+
+      /* Standalone reveals — batched with subtle hierarchy + stagger. */
+      ScrollTrigger.batch(revealEls, {
+        start:"top 86%",
+        once:true,
+        onEnter:function(els){
+          gsap.to(els, {
+            opacity:1, y:0,
+            duration:1.0, ease:EASE, stagger:0.10, overwrite:"auto"
+          });
+        }
+      });
+
+      /* Staggered groups (before/after row, feature band, specialists). */
+      staggerGroups.forEach(function(group){
+        var kids = group.children;
+        ScrollTrigger.create({
+          trigger:group, start:"top 85%", once:true,
+          onEnter:function(){
+            gsap.to(kids, { opacity:1, y:0, duration:0.85, ease:EASE, stagger:0.085, overwrite:"auto" });
+          }
+        });
+      });
+    }
+
+    /* ---------- COUNTERS (re-fired through ScrollTrigger) ---------- */
+    /* One trigger per counter — fires it once when it scrolls into view. */
+    gsap.utils.toArray(".count").forEach(function(el){
+      ScrollTrigger.create({
+        trigger:el, start:"top 90%", once:true,
+        onEnter:function(){
+          if(!el.__counted && window.__fireCounters){ window.__fireCounters(el.parentNode); }
+        }
+      });
+    });
+
+    /* ---------- TIMELINE draw ---------- */
+    var tl = document.getElementById("timeline");
+    if(tl){
+      ScrollTrigger.create({
+        trigger:tl, start:"top 78%", once:true,
+        onEnter:function(){ if(window.__fireTimeline) window.__fireTimeline(); }
+      });
+    }
+
+    /* ---------- HERO INTRO (on LOAD, not scroll — LCP-safe) ---------- */
+    if(!reduced){
+      var heroCopy  = document.querySelector(".hero-copy");
+      var heroMedia = document.querySelector(".hero-media");
+      var introEls = [];
+      if(heroCopy){
+        introEls = heroCopy.querySelectorAll(".hero-tag, h1, .hero-sub, .hero-ctas, .hero-stats > .stat");
+        gsap.set(introEls, { opacity:0, y:30 });
+      }
+      if(heroMedia) gsap.set(heroMedia, { opacity:0, y:38, scale:1.015 });
+
+      var intro = gsap.timeline({ defaults:{ ease:EASE } });
+      if(introEls.length) intro.to(introEls, { opacity:1, y:0, duration:1.0, stagger:0.08 }, 0.05);
+      if(heroMedia) intro.to(heroMedia, { opacity:1, y:0, scale:1, duration:1.2 }, 0.15);
+      /* clear the .reveal hidden state on hero blocks the intro just handled */
+      if(heroCopy) heroCopy.classList.add("in");
+      if(heroMedia) heroMedia.classList.add("in");
+    }
+
+    /* ---------- DEPTH PARALLAX (transform only, inner layers) ---------- */
+    if(useParallax){
+      var heroMediaEl = document.querySelector(".hero-media");
+      var heroImg = heroMediaEl ? heroMediaEl.querySelector("img") : null;
+
+      /* hero photo inner depth — single transform-only scrub parallax kept */
+      if(heroImg){
+        gsap.to(heroImg, {
+          yPercent:8, ease:"none",
+          scrollTrigger:{ trigger:".hero", start:"top top", end:"bottom top", scrub:true }
+        });
+      }
+      /* (removed) hero-guides + feature-band scrub parallaxes — trimmed to keep
+         scrubbed ScrollTriggers at <=2 (this one + the scroll progress bar).
+         Elements stay static; visual composition unchanged. */
+
+      /* subtle desktop mouse-parallax on the hero (transform only) */
+      var hero = document.querySelector(".hero");
+      if(hero && heroMediaEl){
+        var qx = gsap.quickTo(heroMediaEl, "x", { duration:0.6, ease:EASE });
+        var qy = gsap.quickTo(heroMediaEl, "y", { duration:0.6, ease:EASE });
+        hero.addEventListener("mousemove", function(e){
+          var r = hero.getBoundingClientRect();
+          var dx = (e.clientX - (r.left + r.width/2)) / r.width;
+          var dy = (e.clientY - (r.top + r.height/2)) / r.height;
+          qx(dx * 14); qy(dy * 14);
+        });
+        hero.addEventListener("mouseleave", function(){ qx(0); qy(0); });
+      }
+    }
+
+    /* ---------- VELOCITY SKEW/SCALE on MEDIA only ---------- */
+    /* Applied to media elements that are NOT ancestors of any sticky element. */
+    if(!reduced && !small){
+      var velTargets = gsap.utils.toArray(".ba-frame img, .spec-photo img");
+      var skewSetters = velTargets.map(function(img){
+        return { el:img, set:gsap.quickSetter(img, "skewY", "deg") };
+      });
+      var clamp = gsap.utils.clamp(-4, 4);
+      var proxy = { v:0 };
+      ScrollTrigger.create({
+        onUpdate:function(self){
+          var v = clamp(self.getVelocity() / -380);
+          if(Math.abs(v) > Math.abs(proxy.v)) proxy.v = v;
+        }
+      });
+      /* linear decay back to 0 each tick */
+      gsap.ticker.add(function(){
+        proxy.v += (0 - proxy.v) * 0.12;
+        if(Math.abs(proxy.v) < 0.001) proxy.v = 0;
+        for(var i=0;i<skewSetters.length;i++){ skewSetters[i].set(proxy.v); }
+      });
+    }
+
+    /* ---------- SCROLL PROGRESS BAR (brand gold) ---------- */
+    var prog = document.getElementById("scrollProg");
+    if(prog && !reduced){
+      gsap.to(prog, {
+        scaleX:1, ease:"none",
+        scrollTrigger:{ start:0, end:"max", scrub:0.2 }
+      });
+    }
+
+    /* ---------- will-change toggling for the active hero stage ---------- */
+    var heroForWC = document.querySelector(".hero-media");
+    if(heroForWC && useParallax){
+      ScrollTrigger.create({
+        trigger:".hero", start:"top top", end:"bottom top",
+        onToggle:function(self){ heroForWC.classList.toggle("mo-active", self.isActive); }
+      });
+    }
+
+    /* keep ScrollTrigger in sync after late image loads / font swap */
+    window.addEventListener("load", function(){ ScrollTrigger.refresh(); });
+    ScrollTrigger.refresh();
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 560" fill="none">
+  <rect width="800" height="560" fill="#15130f" />
+  <!-- outer wall -->
+  <rect x="48" y="48" width="704" height="464" stroke="#9a9183" stroke-width="2.5" />
+  <!-- interior partitions -->
+  <line x1="340" y1="48" x2="340" y2="300" stroke="#9a9183" stroke-width="2" />
+  <line x1="48" y1="300" x2="340" y2="300" stroke="#9a9183" stroke-width="2" />
+  <line x1="340" y1="210" x2="752" y2="210" stroke="#9a9183" stroke-width="2" />
+  <line x1="556" y1="210" x2="556" y2="512" stroke="#9a9183" stroke-width="2" />
+  <line x1="340" y1="390" x2="556" y2="390" stroke="#9a9183" stroke-width="2" />
+  <!-- door gaps -->
+  <rect x="200" y="296" width="60" height="8" fill="#15130f" />
+  <rect x="336" y="120" width="8" height="56" fill="#15130f" />
+  <rect x="440" y="206" width="56" height="8" fill="#15130f" />
+  <!-- pool -->
+  <rect x="600" y="250" width="110" height="220" rx="14" stroke="#c8a15a" stroke-width="2" stroke-dasharray="4 6" />
+  <!-- labels -->
+  <g fill="#efe9dd" font-family="Georgia, 'Times New Roman', serif" font-size="19" text-anchor="middle">
+    <text x="194" y="180">Living</text>
+    <text x="194" y="415">Kitchen</text>
+    <text x="448" y="135">Master Suite</text>
+    <text x="448" y="310">Bedroom</text>
+    <text x="448" y="455">Bath</text>
+  </g>
+  <text x="655" y="365" fill="#c8a15a" font-family="Georgia, serif" font-size="15" text-anchor="middle" transform="rotate(90 655 365)">Pool</text>
+  <text x="64" y="540" fill="#9a9183" font-family="Georgia, serif" font-size="13">Ground floor · indicative</text>
+</svg>

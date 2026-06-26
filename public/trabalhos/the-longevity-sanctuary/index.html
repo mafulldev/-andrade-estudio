@@ -1,0 +1,1407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>The Longevity Sanctuary — A sanctuary for body, mind and lifespan</title>
+<meta name="description" content="The Longevity Sanctuary is a luxury wellness retreat where ancient wisdom meets modern science. Six rituals, longevity programs and world-class experts in a serene natural setting." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --green:#4D6B57;
+    --green-deep:#3A523F;
+    --green-mist:#5E7C68;
+    --sand:#D9C7A3;
+    --sand-soft:#E7DCC4;
+    --white:#FAF6EC;
+    --white-pure:#FFFDF8;
+    --gold:#C9A85E;
+    --gold-soft:#D9BE81;
+    --earth:#6C5845;
+    --earth-soft:#8A7560;
+    --ink:#2C3329;
+    --shadow:rgba(44,51,41,.14);
+    --r-lg:26px;
+    --r-md:18px;
+    --r-sm:12px;
+    --maxw:1240px;
+    --pad:clamp(1.25rem,5vw,4.5rem);
+    --s1:.5rem; --s2:1rem; --s3:1.5rem; --s4:2.5rem; --s5:4rem; --s6:6.5rem; --s7:9rem;
+    --ease:cubic-bezier(.2,.7,.2,1);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:"Inter",system-ui,sans-serif;
+    color:var(--ink);
+    background:var(--white);
+    line-height:1.6;
+    font-weight:300;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  h1,h2,h3,h4,.serif{font-family:"Cormorant Garamond",Georgia,serif;font-weight:500;line-height:1.04;letter-spacing:.005em}
+  img{max-width:100%;display:block}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 var(--pad);width:100%}
+  .eyebrow{font-family:"Inter";font-size:.72rem;letter-spacing:.32em;text-transform:uppercase;font-weight:500;color:var(--gold);display:inline-flex;align-items:center;gap:.6rem}
+  .eyebrow::before{content:"";width:28px;height:1px;background:var(--gold);opacity:.7}
+  .eyebrow.center::after{content:"";width:28px;height:1px;background:var(--gold);opacity:.7}
+  .eyebrow.center{justify-content:center}
+  .btn{
+    display:inline-flex;align-items:center;gap:.6rem;
+    font-family:"Inter";font-size:.82rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;
+    padding:.95rem 1.7rem;border-radius:100px;border:1px solid transparent;cursor:pointer;
+    transition:all .45s var(--ease);position:relative;background:none;color:inherit;
+  }
+  .btn-gold{background:var(--gold);color:#2A220F;box-shadow:0 10px 30px -10px rgba(201,168,94,.7)}
+  .btn-gold:hover{background:var(--gold-soft);transform:translateY(-3px);box-shadow:0 18px 40px -12px rgba(201,168,94,.85)}
+  .btn-ghost{border-color:rgba(250,246,236,.5);color:var(--white)}
+  .btn-ghost:hover{background:rgba(250,246,236,.12);border-color:var(--white);transform:translateY(-3px)}
+  .btn-line{border-color:var(--green);color:var(--green)}
+  .btn-line:hover{background:var(--green);color:var(--white);transform:translateY(-3px)}
+  .btn svg{transition:transform .45s var(--ease)}
+  .btn:hover svg{transform:translateX(4px)}
+
+  /* ---------- NAV ---------- */
+  header.nav{
+    position:fixed;top:0;left:0;right:0;z-index:100;
+    padding:1.4rem 0;transition:all .5s var(--ease);
+  }
+  header.nav.scrolled{background:rgba(250,246,236,.86);backdrop-filter:blur(14px);padding:.85rem 0;box-shadow:0 1px 0 rgba(108,88,69,.1)}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;gap:1rem}
+  .brand{display:flex;align-items:center;gap:.7rem;color:var(--white);transition:color .5s}
+  header.nav.scrolled .brand{color:var(--ink)}
+  .brand .mark{width:34px;height:34px;flex:none}
+  .brand .mark svg{width:100%;height:100%}
+  .brand b{font-family:"Cormorant Garamond";font-weight:600;font-size:1.18rem;letter-spacing:.16em;text-transform:uppercase;line-height:1}
+  .brand span{display:block;font-family:"Inter";font-size:.56rem;letter-spacing:.3em;opacity:.7;font-weight:400}
+  .nav-menu{display:flex;gap:2.2rem;list-style:none}
+  .nav-menu a{font-size:.82rem;letter-spacing:.05em;color:rgba(250,246,236,.92);position:relative;padding:.3rem 0;transition:color .5s}
+  header.nav.scrolled .nav-menu a{color:var(--ink)}
+  .nav-menu a::after{content:"";position:absolute;left:0;bottom:0;height:1px;width:0;background:var(--gold);transition:width .4s var(--ease)}
+  .nav-menu a:hover{color:var(--gold)}
+  .nav-menu a:hover::after{width:100%}
+  .nav-right{display:flex;align-items:center;gap:1rem}
+  .hamburger{display:none;width:44px;height:44px;border:none;background:none;cursor:pointer;flex-direction:column;gap:5px;align-items:center;justify-content:center}
+  .hamburger span{display:block;width:24px;height:2px;background:var(--white);transition:all .4s var(--ease)}
+  header.nav.scrolled .hamburger span{background:var(--ink)}
+  .hamburger[aria-expanded="true"] span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+  .hamburger[aria-expanded="true"] span:nth-child(2){opacity:0}
+  .hamburger[aria-expanded="true"] span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+
+  .overlay{
+    position:fixed;inset:0;z-index:99;background:var(--green-deep);
+    display:flex;flex-direction:column;justify-content:center;align-items:center;gap:1.4rem;
+    opacity:0;visibility:hidden;transition:opacity .5s,visibility .5s;
+  }
+  .overlay.open{opacity:1;visibility:visible}
+  .overlay a{font-family:"Cormorant Garamond";font-size:2.2rem;color:var(--white);opacity:.9;transition:.3s}
+  .overlay a:hover{color:var(--gold);letter-spacing:.04em}
+  .overlay .btn{margin-top:1rem}
+
+  /* ---------- HERO ---------- */
+  .hero{position:relative;min-height:100vh;display:flex;align-items:center;overflow:hidden;background:var(--green-deep)}
+  .hero-bg{position:absolute;inset:0;z-index:0}
+  .hero-bg img{width:100%;height:120%;object-fit:cover;filter:saturate(.92) brightness(.9)}
+  .hero-bg .fallback{position:absolute;inset:0;background:
+    radial-gradient(120% 90% at 60% 20%,rgba(94,124,104,.55),transparent 60%),
+    linear-gradient(160deg,#3A523F 0%,#4D6B57 40%,#6C5845 100%);}
+  .hero::after{content:"";position:absolute;inset:0;z-index:1;background:
+    linear-gradient(90deg,rgba(40,48,40,.72) 0%,rgba(40,48,40,.3) 45%,rgba(40,48,40,0) 70%),
+    linear-gradient(0deg,rgba(40,48,40,.6),transparent 45%)}
+  .hero-content{position:relative;z-index:3;padding-top:6rem;max-width:660px}
+  .hero h1{color:var(--white);font-size:clamp(2.8rem,6.5vw,5.4rem);letter-spacing:-.01em;margin:1.4rem 0 1.6rem;text-shadow:0 2px 30px rgba(0,0,0,.25)}
+  .hero h1 em{font-style:italic;color:var(--sand)}
+  .hero p.sub{color:rgba(250,246,236,.9);font-size:clamp(1rem,1.6vw,1.15rem);max-width:440px;margin-bottom:2.2rem;font-weight:300}
+  .hero-cta{display:flex;gap:1rem;flex-wrap:wrap;align-items:center}
+  .hero-eyebrow{color:rgba(250,246,236,.85)}
+  .hero-eyebrow::before{background:var(--sand)}
+  .seal{position:absolute;top:8.5rem;right:var(--pad);z-index:4;width:128px;height:128px;animation:spin 38s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .seal svg{width:100%;height:100%}
+  .scroll-cue{position:absolute;left:var(--pad);bottom:2.2rem;z-index:4;display:flex;align-items:center;gap:.8rem;color:rgba(250,246,236,.78);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase}
+  .scroll-cue .line{width:1px;height:46px;background:linear-gradient(var(--sand),transparent);position:relative;overflow:hidden}
+  .scroll-cue .line::after{content:"";position:absolute;top:-50%;left:0;width:100%;height:50%;background:var(--gold);animation:drop 2.4s var(--ease) infinite}
+  @keyframes drop{0%{top:-50%}60%,100%{top:120%}}
+
+  /* scalloped divider */
+  .scallop{position:relative;z-index:5;margin-top:-1px;line-height:0}
+  .scallop svg{width:100%;height:auto;display:block}
+
+  /* ---------- SECTIONS ---------- */
+  section{position:relative}
+  .pad-y{padding:var(--s6) 0}
+  .sec-head{text-align:center;max-width:680px;margin:0 auto var(--s5)}
+  .sec-head h2{font-size:clamp(2.1rem,4.5vw,3.4rem);margin:1rem 0 .8rem;color:var(--green-deep)}
+  .sec-head p{color:var(--earth);font-size:1.02rem}
+
+  /* SIX RITUALS */
+  .rituals{background:var(--white);padding:var(--s6) 0}
+  .ritual-row{display:grid;grid-template-columns:repeat(6,1fr);gap:.5rem;margin-top:var(--s5);border-top:1px solid rgba(108,88,69,.18);border-bottom:1px solid rgba(108,88,69,.18)}
+  .ritual{display:flex;flex-direction:column;align-items:center;text-align:center;padding:2.6rem 1rem;gap:1rem;transition:all .5s var(--ease);position:relative;cursor:default}
+  .ritual:not(:last-child)::after{content:"";position:absolute;right:0;top:22%;height:56%;width:1px;background:rgba(108,88,69,.16)}
+  .ritual .ico{width:46px;height:46px;color:var(--green);transition:all .55s var(--ease)}
+  .ritual .ico svg{width:100%;height:100%}
+  .ritual h4{font-size:1.45rem;color:var(--green-deep)}
+  .ritual span{font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;color:var(--earth-soft)}
+  .ritual:hover{background:var(--sand-soft);transform:translateY(-6px)}
+  .ritual:hover .ico{color:var(--gold);transform:scale(1.12) translateY(-3px)}
+
+  /* RITUAL PLANNER */
+  .planner-sec{background:linear-gradient(180deg,var(--white) 0%,var(--sand-soft) 100%);padding:var(--s6) 0}
+  .planner{display:grid;grid-template-columns:.9fr 1.4fr;gap:2.4rem;background:var(--white-pure);border-radius:var(--r-lg);box-shadow:0 40px 80px -40px var(--shadow);overflow:hidden;border:1px solid rgba(108,88,69,.1)}
+  .planner-left{padding:2.6rem;background:var(--green-deep);color:var(--white)}
+  .planner-left h3{font-size:1.9rem;margin:.8rem 0 .4rem;color:var(--white)}
+  .planner-left p.intro{color:rgba(250,246,236,.7);font-size:.92rem;margin-bottom:1.8rem}
+  .schedule{list-style:none;display:flex;flex-direction:column}
+  .schedule li{display:flex;gap:1.1rem;align-items:flex-start;padding:.85rem 0;border-top:1px solid rgba(250,246,236,.14);cursor:pointer;transition:all .35s;border-radius:8px}
+  .schedule li:hover{background:rgba(250,246,236,.06);padding-left:.6rem}
+  .schedule li.active{padding-left:.6rem}
+  .schedule li.active .dot{background:var(--gold);box-shadow:0 0 0 5px rgba(201,168,94,.22)}
+  .schedule li.active .s-act{color:var(--gold)}
+  .schedule .time{font-size:.78rem;letter-spacing:.08em;color:var(--sand);min-width:62px;padding-top:.15rem;font-variant-numeric:tabular-nums}
+  .schedule .dot{width:9px;height:9px;border-radius:50%;background:var(--sand);margin-top:.5rem;flex:none;transition:all .35s}
+  .schedule .s-body{display:flex;flex-direction:column}
+  .schedule .s-act{font-family:"Cormorant Garamond";font-size:1.2rem;color:var(--white);transition:color .3s}
+  .schedule .s-note{font-size:.76rem;color:rgba(250,246,236,.55)}
+  .planner-right{position:relative;display:flex;flex-direction:column}
+  .planner-photo{position:relative;height:300px;overflow:hidden;flex:none}
+  .planner-photo img{width:100%;height:100%;object-fit:cover;transition:transform 1.2s var(--ease),opacity .8s}
+  .planner-photo .fallback{position:absolute;inset:0;background:linear-gradient(135deg,var(--green),var(--sand))}
+  .planner-detail{padding:2.4rem 2.6rem}
+  .planner-detail .tag{font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);font-weight:500}
+  .planner-detail h4{font-size:2rem;color:var(--green-deep);margin:.5rem 0 .9rem}
+  .planner-detail p{color:var(--earth);font-size:.98rem}
+  .planner-detail .meta{display:flex;gap:2rem;margin-top:1.6rem;flex-wrap:wrap}
+  .planner-detail .meta div{display:flex;flex-direction:column}
+  .planner-detail .meta strong{font-family:"Cormorant Garamond";font-size:1.5rem;color:var(--green);font-weight:600}
+  .planner-detail .meta span{font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--earth-soft)}
+
+  /* PROGRAMS */
+  .programs{background:var(--white);padding:var(--s6) 0}
+  .prog-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.4rem}
+  .prog-card{background:var(--white-pure);border-radius:var(--r-md);overflow:hidden;border:1px solid rgba(108,88,69,.12);transition:all .55s var(--ease);display:flex;flex-direction:column}
+  .prog-card:hover{transform:translateY(-10px);box-shadow:0 36px 60px -34px var(--shadow);border-color:var(--gold)}
+  .prog-thumb{height:200px;overflow:hidden;position:relative}
+  .prog-thumb img{width:100%;height:100%;object-fit:cover;transition:transform 1.1s var(--ease)}
+  .prog-card:hover .prog-thumb img{transform:scale(1.08)}
+  .prog-thumb .fallback{position:absolute;inset:0;background:linear-gradient(150deg,var(--green-mist),var(--earth))}
+  .prog-thumb .num{position:absolute;top:1rem;left:1rem;font-family:"Cormorant Garamond";font-size:.9rem;letter-spacing:.1em;color:var(--white);background:rgba(44,51,41,.62);padding:.3rem .7rem;border-radius:100px}
+  .prog-body{padding:1.7rem;flex:1;display:flex;flex-direction:column}
+  .prog-body h4{font-size:1.6rem;color:var(--green-deep);margin-bottom:.5rem}
+  .prog-body .dur{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:.9rem}
+  .prog-body ul{list-style:none;display:flex;flex-direction:column;gap:.5rem;margin-top:auto}
+  .prog-body li{display:flex;gap:.55rem;align-items:flex-start;font-size:.86rem;color:var(--earth)}
+  .prog-body li svg{width:15px;height:15px;color:var(--green);flex:none;margin-top:.28rem}
+
+  /* SCIENCE BLOCK */
+  .science{background:linear-gradient(160deg,var(--green) 0%,var(--green-deep) 100%);color:var(--white);padding:var(--s7) 0;overflow:hidden}
+  .science-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:3.5rem;align-items:center}
+  .science h2{font-size:clamp(2.2rem,4.2vw,3.5rem);color:var(--white);margin:1.2rem 0 1.4rem}
+  .science h2 em{font-style:italic;color:var(--sand)}
+  .science p{color:rgba(250,246,236,.82);font-size:1.05rem;max-width:480px;margin-bottom:1.4rem}
+  .science .stats{display:flex;gap:2.6rem;margin-top:2rem;flex-wrap:wrap}
+  .science .stats .st strong{display:block;font-family:"Cormorant Garamond";font-size:2.8rem;color:var(--gold);font-weight:600;line-height:1}
+  .science .stats .st span{font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(250,246,236,.7)}
+  .science-img{position:relative;border-radius:var(--r-lg);overflow:hidden;aspect-ratio:4/5;box-shadow:0 40px 80px -30px rgba(0,0,0,.5)}
+  .science-img img{width:100%;height:100%;object-fit:cover}
+  .science-img .fallback{position:absolute;inset:0;background:radial-gradient(circle at 50% 40%,var(--gold-soft),var(--earth))}
+  .science-img .glow{position:absolute;inset:0;background:radial-gradient(circle at 50% 45%,rgba(201,168,94,.3),transparent 60%);mix-blend-mode:screen}
+
+  /* ACCOMMODATIONS */
+  .stay{background:var(--white);padding:var(--s6) 0}
+  .stay-head{display:flex;justify-content:space-between;align-items:flex-end;gap:2rem;margin-bottom:var(--s4);flex-wrap:wrap}
+  .stay-head h2{font-size:clamp(2rem,4vw,3.2rem);color:var(--green-deep);max-width:520px}
+  .stay-head p{color:var(--earth);max-width:340px}
+  .gallery{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:230px;gap:1rem}
+  .g-item{position:relative;overflow:hidden;border-radius:var(--r-md);cursor:pointer}
+  .g-item.tall{grid-row:span 2}
+  .g-item.wide{grid-column:span 2}
+  .g-item img{width:100%;height:100%;object-fit:cover;transition:transform 1.3s var(--ease)}
+  .g-item .fallback{position:absolute;inset:0;background:linear-gradient(135deg,var(--sand),var(--green-mist))}
+  .g-item:hover img{transform:scale(1.1)}
+  .g-item .cap{position:absolute;left:0;bottom:0;right:0;padding:1.3rem;background:linear-gradient(0deg,rgba(44,51,41,.78),transparent);color:var(--white);transform:translateY(8px);opacity:0;transition:all .5s var(--ease)}
+  .g-item:hover .cap{transform:translateY(0);opacity:1}
+  .g-item .cap h4{font-size:1.4rem}
+  .g-item .cap span{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--sand)}
+
+  /* AGENDA + EXPERTS */
+  .day{background:linear-gradient(180deg,var(--sand-soft),var(--white));padding:var(--s6) 0}
+  .agenda{background:var(--white-pure);border-radius:var(--r-lg);padding:2.6rem;border:1px solid rgba(108,88,69,.1);box-shadow:0 30px 70px -44px var(--shadow);margin-bottom:var(--s5)}
+  .agenda h3{font-size:1.9rem;color:var(--green-deep);margin-bottom:.4rem}
+  .agenda .lead{color:var(--earth);margin-bottom:2rem;font-size:.95rem}
+  .timeline{display:grid;grid-template-columns:repeat(6,1fr);gap:1rem;position:relative}
+  .timeline::before{content:"";position:absolute;top:34px;left:4%;right:4%;height:1px;background:rgba(108,88,69,.2)}
+  .tl-step{text-align:center;display:flex;flex-direction:column;align-items:center;gap:.7rem;position:relative}
+  .tl-step .ring{width:14px;height:14px;border-radius:50%;background:var(--white);border:2px solid var(--gold);position:relative;z-index:2;margin-top:28px;transition:all .4s}
+  .tl-step:hover .ring{background:var(--gold);transform:scale(1.25)}
+  .tl-step .t{font-size:.74rem;letter-spacing:.1em;color:var(--gold);font-weight:500}
+  .tl-step h5{font-family:"Cormorant Garamond";font-size:1.15rem;color:var(--green-deep);font-weight:600}
+  .tl-step p{font-size:.76rem;color:var(--earth-soft);line-height:1.4}
+
+  .experts-head{text-align:center;max-width:560px;margin:0 auto var(--s4)}
+  .experts-head h2{font-size:clamp(1.9rem,3.6vw,2.8rem);color:var(--green-deep);margin-top:.8rem}
+  .experts{display:grid;grid-template-columns:repeat(4,1fr);gap:1.4rem}
+  .exp-card{background:var(--white-pure);border-radius:var(--r-md);overflow:hidden;border:1px solid rgba(108,88,69,.12);transition:all .5s var(--ease)}
+  .exp-card:hover{transform:translateY(-8px);box-shadow:0 30px 56px -34px var(--shadow)}
+  .exp-photo{height:240px;overflow:hidden;position:relative}
+  .exp-photo img{width:100%;height:100%;object-fit:cover;filter:saturate(.95);transition:transform 1.1s var(--ease)}
+  .exp-card:hover .exp-photo img{transform:scale(1.06)}
+  .exp-photo .fallback{position:absolute;inset:0;background:linear-gradient(150deg,var(--green-mist),var(--sand))}
+  .exp-body{padding:1.3rem 1.4rem 1.6rem}
+  .exp-body h4{font-size:1.35rem;color:var(--green-deep)}
+  .exp-body .role{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin:.2rem 0 .7rem}
+  .exp-body p{font-size:.82rem;color:var(--earth)}
+
+  /* BOOKING CTA */
+  .booking{background:var(--green-deep);color:var(--white);padding:var(--s7) 0;position:relative;overflow:hidden}
+  .booking::before{content:"";position:absolute;width:560px;height:560px;border-radius:50%;background:radial-gradient(circle,rgba(201,168,94,.18),transparent 65%);top:-30%;right:-10%;animation:breathe 9s ease-in-out infinite;will-change:transform,opacity}
+  @keyframes breathe{0%,100%{transform:scale(1);opacity:.7}50%{transform:scale(1.18);opacity:1}}
+  .booking-grid{display:grid;grid-template-columns:1fr 1fr;gap:3.5rem;align-items:center;position:relative;z-index:2}
+  .booking h2{font-size:clamp(2.4rem,5vw,4rem);color:var(--white);margin:1rem 0 1.2rem}
+  .booking h2 em{font-style:italic;color:var(--sand)}
+  .booking p.lead{color:rgba(250,246,236,.8);max-width:420px;font-size:1.05rem}
+  .booking-list{list-style:none;margin-top:1.8rem;display:flex;flex-direction:column;gap:.8rem}
+  .booking-list li{display:flex;gap:.7rem;align-items:center;font-size:.92rem;color:rgba(250,246,236,.88)}
+  .booking-list svg{width:18px;height:18px;color:var(--gold);flex:none}
+  form.book{background:var(--white-pure);border-radius:var(--r-lg);padding:2.6rem;color:var(--ink);box-shadow:0 40px 80px -30px rgba(0,0,0,.5)}
+  form.book h3{font-size:1.7rem;color:var(--green-deep);margin-bottom:1.4rem}
+  .field{margin-bottom:1.1rem}
+  .field label{display:block;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--earth-soft);margin-bottom:.4rem}
+  .field input,.field select{width:100%;padding:.85rem 1rem;border:1px solid rgba(108,88,69,.25);border-radius:10px;background:var(--white);font-family:inherit;font-size:.92rem;color:var(--ink);transition:all .3s}
+  .field input:focus,.field select:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,168,94,.2)}
+  .field.row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+  form.book .btn{width:100%;justify-content:center;margin-top:.6rem}
+  .form-note{font-size:.74rem;color:var(--earth-soft);text-align:center;margin-top:1rem}
+  .form-success{display:none;text-align:center;padding:1rem 0}
+  .form-success.show{display:block}
+  .form-success svg{width:54px;height:54px;color:var(--green);margin:0 auto 1rem}
+  .form-success h3{color:var(--green-deep)}
+  .form-success p{color:var(--earth);font-size:.9rem}
+
+  /* QUOTE BAND */
+  .quote{background:var(--ink);color:var(--white);padding:var(--s7) 0;text-align:center;position:relative;overflow:hidden}
+  .quote .mark{font-family:"Cormorant Garamond";font-size:7rem;color:var(--gold);opacity:.35;line-height:.4;height:2rem}
+  .quote blockquote{font-family:"Cormorant Garamond";font-size:clamp(2rem,5vw,3.6rem);font-style:italic;max-width:840px;margin:1.4rem auto;color:var(--white);font-weight:400}
+  .quote cite{font-style:normal;font-size:.76rem;letter-spacing:.2em;text-transform:uppercase;color:var(--sand)}
+
+  /* FOOTER */
+  footer.site{background:var(--green-deep);color:rgba(250,246,236,.78);padding:var(--s6) 0 2.4rem}
+  .foot-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr 1.4fr;gap:2.4rem;padding-bottom:var(--s4);border-bottom:1px solid rgba(250,246,236,.14)}
+  .foot-brand .brand{color:var(--white);margin-bottom:1.1rem}
+  .foot-brand p{font-size:.88rem;max-width:280px;color:rgba(250,246,236,.66)}
+  .foot-col h5{font-family:"Inter";font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--sand);margin-bottom:1.1rem;font-weight:500}
+  .foot-col ul{list-style:none;display:flex;flex-direction:column;gap:.6rem}
+  .foot-col a{font-size:.88rem;color:rgba(250,246,236,.72);transition:color .3s}
+  .foot-col a:hover{color:var(--gold)}
+  .foot-news p{font-size:.88rem;margin-bottom:1rem;color:rgba(250,246,236,.66)}
+  .news-form{display:flex;border:1px solid rgba(250,246,236,.25);border-radius:100px;overflow:hidden}
+  .news-form input{flex:1;background:none;border:none;padding:.8rem 1.1rem;color:var(--white);font-family:inherit;font-size:.85rem}
+  .news-form input:focus{outline:none}
+  .news-form button{background:var(--gold);border:none;color:#2A220F;padding:0 1.2rem;cursor:pointer;transition:background .3s}
+  .news-form button:hover{background:var(--gold-soft)}
+  .foot-social{display:flex;gap:.8rem;margin-top:1.4rem}
+  .foot-social a{width:38px;height:38px;border-radius:50%;border:1px solid rgba(250,246,236,.25);display:flex;align-items:center;justify-content:center;transition:all .35s}
+  .foot-social a:hover{background:var(--gold);border-color:var(--gold);color:#2A220F;transform:translateY(-3px)}
+  .foot-social svg{width:17px;height:17px}
+  .foot-bottom{display:flex;justify-content:space-between;align-items:center;padding-top:1.8rem;flex-wrap:wrap;gap:1rem;font-size:.78rem;color:rgba(250,246,236,.5)}
+  .foot-bottom a{color:rgba(250,246,236,.5)}
+  .foot-bottom a:hover{color:var(--gold)}
+
+  /* REVEAL ANIM
+     Hidden state is NO LONGER hard-set in CSS. The legacy IO reveal below is
+     gated behind html:not(.gsap-on) so it only runs as a fallback when GSAP
+     fails to load. When the motion layer boots it adds .gsap-on to <html>,
+     neutralizing this and letting GSAP own the reveals. Result: a blocked CDN
+     degrades to a fully visible page, never stuck-invisible. */
+  .reveal{transition:opacity 1.1s var(--ease),transform 1.1s var(--ease)}
+  html:not(.gsap-on) .reveal{opacity:0;transform:translateY(34px)}
+  html:not(.gsap-on) .reveal.in{opacity:1;transform:none}
+  html:not(.gsap-on) .reveal[data-d="1"]{transition-delay:.1s}
+  html:not(.gsap-on) .reveal[data-d="2"]{transition-delay:.2s}
+  html:not(.gsap-on) .reveal[data-d="3"]{transition-delay:.3s}
+  html:not(.gsap-on) .reveal[data-d="4"]{transition-delay:.4s}
+  html:not(.gsap-on) .reveal[data-d="5"]{transition-delay:.5s}
+
+  /* ---------- MOTION LAYER (additive only) ---------- */
+  :root{--ease-expo:cubic-bezier(0.16,1,0.3,1)}
+  /* Scroll-progress indicator — reuses brand gold, introduces no new accent */
+  .scroll-prog{position:fixed;top:0;left:0;height:2px;width:100%;transform:scaleX(0);transform-origin:0 50%;
+    background:linear-gradient(90deg,var(--gold),var(--gold-soft));z-index:200;pointer-events:none;opacity:.92;will-change:transform}
+  /* Refined micro-interactions — transform/opacity only, never "all" */
+  .nav-menu a{transition:color .5s var(--ease-expo)}
+  .foot-col a,.foot-bottom a{transition:color .35s var(--ease-expo)}
+  .schedule li{transition:transform .35s var(--ease-expo),background .35s var(--ease-expo),padding-left .35s var(--ease-expo)}
+
+  /* ---------- TRUST BAR (social proof wordmarks) ---------- */
+  .trustbar{background:var(--white);padding:2.6rem 0 0}
+  .trustbar .lab{text-align:center;font-size:.68rem;letter-spacing:.26em;text-transform:uppercase;color:var(--earth-soft);margin-bottom:1.4rem}
+  .marks{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:2.4rem 3rem}
+  .marks span{font-family:"Cormorant Garamond",serif;font-size:1.18rem;letter-spacing:.14em;text-transform:uppercase;color:var(--earth);opacity:.5;transition:opacity .4s var(--ease),transform .4s var(--ease);white-space:nowrap}
+  .marks span b{font-weight:600}
+  .marks span:hover{opacity:.9;transform:translateY(-2px)}
+
+  /* ---------- LIFESTYLE / PROOF BAND ---------- */
+  .proof{position:relative;min-height:78vh;display:flex;align-items:center;overflow:hidden;background:var(--green-deep)}
+  .proof-bg{position:absolute;inset:0;z-index:0}
+  .proof-bg img{width:100%;height:100%;object-fit:cover;filter:saturate(.92) brightness(.82)}
+  .proof-bg .fallback{position:absolute;inset:0;background:linear-gradient(150deg,var(--green-deep),var(--earth))}
+  .proof::after{content:"";position:absolute;inset:0;z-index:1;background:
+    linear-gradient(90deg,rgba(40,48,40,.82) 0%,rgba(40,48,40,.45) 50%,rgba(40,48,40,.15) 100%),
+    linear-gradient(0deg,rgba(40,48,40,.55),transparent 50%)}
+  .proof-inner{position:relative;z-index:2;max-width:620px;color:var(--white);padding:var(--s6) 0}
+  .proof-inner h2{font-size:clamp(2rem,4.4vw,3.4rem);color:var(--white);margin:1.1rem 0 1.2rem}
+  .proof-inner h2 em{font-style:italic;color:var(--sand)}
+  .proof-inner p{color:rgba(250,246,236,.86);font-size:1.05rem;max-width:480px;margin-bottom:1.8rem}
+  .proof-stats{display:flex;gap:2.6rem;flex-wrap:wrap;margin-top:.4rem}
+  .proof-stats .st strong{display:block;font-family:"Cormorant Garamond";font-size:2.6rem;color:var(--gold);font-weight:600;line-height:1}
+  .proof-stats .st span{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(250,246,236,.72)}
+
+  /* ---------- TESTIMONIALS ---------- */
+  .voices{background:linear-gradient(180deg,var(--white) 0%,var(--sand-soft) 100%);padding:var(--s6) 0}
+  .voice-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.4rem;margin-top:var(--s5)}
+  .voice{background:var(--white-pure);border-radius:var(--r-md);padding:2rem 1.9rem;border:1px solid rgba(108,88,69,.12);transition:transform .5s var(--ease),box-shadow .5s var(--ease);display:flex;flex-direction:column}
+  .voice:hover{transform:translateY(-8px);box-shadow:0 34px 60px -36px var(--shadow)}
+  .voice .stars{display:flex;gap:.2rem;color:var(--gold);margin-bottom:1rem}
+  .voice .stars svg{width:16px;height:16px}
+  .voice blockquote{font-family:"Cormorant Garamond",serif;font-size:1.3rem;font-style:italic;color:var(--green-deep);line-height:1.34;margin-bottom:1.4rem;flex:1}
+  .voice .who{display:flex;align-items:center;gap:.9rem}
+  .voice .who .av{width:50px;height:50px;border-radius:50%;overflow:hidden;flex:none;position:relative;background:linear-gradient(140deg,var(--green-mist),var(--sand))}
+  .voice .who .av img{width:100%;height:100%;object-fit:cover}
+  .voice .who b{font-family:"Inter";font-weight:600;font-size:.92rem;color:var(--ink);display:block;letter-spacing:.01em}
+  .voice .who span{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--earth-soft)}
+
+  /* ---------- MEDICAL DIRECTOR / CREDIBILITY ---------- */
+  .director{background:var(--white);padding:var(--s6) 0}
+  .dir-grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:3rem;align-items:center}
+  .dir-photo{position:relative;border-radius:var(--r-lg);overflow:hidden;aspect-ratio:4/5;box-shadow:0 40px 80px -38px var(--shadow)}
+  .dir-photo img{width:100%;height:100%;object-fit:cover;filter:saturate(.96)}
+  .dir-photo .fallback{position:absolute;inset:0;background:linear-gradient(150deg,var(--green-mist),var(--sand))}
+  .dir-photo .badge{position:absolute;left:1.1rem;bottom:1.1rem;z-index:2;background:rgba(44,51,41,.78);color:var(--white);padding:.5rem 1rem;border-radius:100px;font-size:.7rem;letter-spacing:.14em;text-transform:uppercase}
+  .dir-body h2{font-size:clamp(2rem,3.8vw,3rem);color:var(--green-deep);margin:1rem 0 1.1rem}
+  .dir-body h2 em{font-style:italic;color:var(--gold)}
+  .dir-body p{color:var(--earth);font-size:1.02rem;margin-bottom:1.2rem;max-width:520px}
+  .dir-sign{display:flex;align-items:center;gap:1rem;margin-top:1.4rem}
+  .dir-sign .nm{font-family:"Cormorant Garamond",serif;font-size:1.5rem;color:var(--green-deep);font-weight:600}
+  .dir-sign .rl{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold)}
+  .trust-marks{display:flex;flex-wrap:wrap;gap:1rem;margin-top:1.8rem}
+  .trust-marks .tm{display:flex;align-items:center;gap:.55rem;font-size:.76rem;letter-spacing:.06em;color:var(--earth);border:1px solid rgba(108,88,69,.2);border-radius:100px;padding:.5rem .95rem;transition:border-color .4s var(--ease),transform .4s var(--ease)}
+  .trust-marks .tm:hover{border-color:var(--gold);transform:translateY(-2px)}
+  .trust-marks .tm svg{width:15px;height:15px;color:var(--green);flex:none}
+
+  /* ---------- FINAL CTA accents (within existing .booking) ---------- */
+  .booking-trust{display:flex;flex-wrap:wrap;gap:.7rem;margin-top:1.8rem}
+  .booking-trust .bt{display:flex;align-items:center;gap:.5rem;font-size:.74rem;letter-spacing:.05em;color:rgba(250,246,236,.82);border:1px solid rgba(250,246,236,.22);border-radius:100px;padding:.45rem .9rem}
+  .booking-trust .bt svg{width:14px;height:14px;color:var(--gold);flex:none}
+
+  /* RESPONSIVE */
+  @media(max-width:1023px){
+    .voice-grid{grid-template-columns:1fr;gap:1.2rem}
+    .dir-grid{grid-template-columns:1fr;gap:2rem}
+    .dir-photo{max-width:440px;margin:0 auto}
+    .nav-menu{display:none}
+    .hamburger{display:flex}
+    .planner{grid-template-columns:1fr}
+    .science-grid{grid-template-columns:1fr;gap:2.4rem}
+    .booking-grid{grid-template-columns:1fr;gap:2.4rem}
+    .prog-grid{grid-template-columns:repeat(2,1fr)}
+    .experts{grid-template-columns:repeat(2,1fr)}
+    .gallery{grid-template-columns:repeat(2,1fr)}
+    .timeline{grid-template-columns:repeat(3,1fr);gap:1.6rem 1rem}
+    .timeline::before{display:none}
+    .foot-grid{grid-template-columns:1fr 1fr}
+    .foot-brand{grid-column:1/-1}
+    .seal{width:96px;height:96px;top:auto;bottom:7rem;right:var(--pad)}
+  }
+  @media(max-width:640px){
+    .ritual-row{grid-template-columns:repeat(2,1fr);border:none}
+    .ritual{border:1px solid rgba(108,88,69,.14);border-radius:14px}
+    .ritual:not(:last-child)::after{display:none}
+    .prog-grid{grid-template-columns:1fr}
+    .experts{grid-template-columns:1fr}
+    .gallery{grid-template-columns:1fr;grid-auto-rows:200px}
+    .g-item.wide,.g-item.tall{grid-column:auto;grid-row:auto}
+    .timeline{grid-template-columns:repeat(2,1fr)}
+    .field.row{grid-template-columns:1fr}
+    .seal{display:none}
+    .hero-cta{flex-direction:column;align-items:stretch}
+    .planner-detail .meta{gap:1.4rem}
+    .marks{gap:1.4rem 2rem}
+    .marks span{font-size:1rem}
+    .proof-stats{gap:1.6rem}
+  }
+  @media(prefers-reduced-motion:reduce){
+    *{animation:none!important;scroll-behavior:auto!important}
+    .reveal{opacity:1;transform:none;filter:none;transition:none}
+    html.gsap-on .reveal{opacity:1!important;transform:none!important;filter:none!important}
+    .hero-bg img{height:100%}
+    .scroll-prog{display:none!important}
+  }
+</style>
+</head>
+<body>
+
+<!-- scroll-progress indicator (brand gold; populated by motion layer) -->
+<div class="scroll-prog" id="scrollProg" aria-hidden="true"></div>
+
+<!-- ===== NAV ===== -->
+<header class="nav" id="nav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="#top" aria-label="The Longevity Sanctuary home">
+      <span class="mark" aria-hidden="true">
+        <svg viewBox="0 0 40 40" fill="none">
+          <circle cx="20" cy="20" r="18.5" stroke="currentColor" stroke-width="1"/>
+          <path d="M20 30C20 24 16 19 11 17c2 8 6 11 9 13Zm0 0c0-6 4-11 9-13-2 8-6 11-9 13Z" fill="currentColor"/>
+          <path d="M20 30V14" stroke="currentColor" stroke-width="1"/>
+        </svg>
+      </span>
+      <span><b>The Longevity</b><span>Sanctuary</span></span>
+    </a>
+    <nav aria-label="Primary">
+      <ul class="nav-menu">
+        <li><a href="#sanctuary">Sanctuary</a></li>
+        <li><a href="#rituals">Rituals</a></li>
+        <li><a href="#programs">Programs</a></li>
+        <li><a href="#stay">Stay</a></li>
+        <li><a href="#experts">Experts</a></li>
+      </ul>
+    </nav>
+    <div class="nav-right">
+      <a href="#booking" class="btn btn-gold" style="padding:.7rem 1.3rem">Book Your Stay</a>
+      <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="overlay">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-label="Site menu">
+  <a href="#sanctuary">Sanctuary</a>
+  <a href="#rituals">Rituals</a>
+  <a href="#programs">Programs</a>
+  <a href="#stay">Stay</a>
+  <a href="#experts">Experts</a>
+  <a href="#booking" class="btn btn-gold">Book Your Stay</a>
+</div>
+
+<!-- ===== HERO ===== -->
+<section class="hero" id="top">
+  <div class="hero-bg" id="heroBg">
+    <img src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=1900&q=80"
+         alt="A person meditating cross-legged on a rock beside still water, surrounded by misty forested mountains at dawn"
+         onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+    <div class="fallback" style="display:none"></div>
+  </div>
+  <div class="wrap hero-content">
+    <span class="eyebrow hero-eyebrow">Live longer · Live better</span>
+    <h1>Reverse the years. <em>Restore</em> your vitality.</h1>
+    <p class="sub">An immersive wellness retreat where ancient ritual meets longevity medicine — leave with a measurable biological age, a personalised protocol and the energy to use it.</p>
+    <div class="hero-cta">
+      <a href="#booking" class="btn btn-gold">Reserve Your Stay
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+      <a href="#rituals" class="btn btn-ghost">Discover My Ritual</a>
+    </div>
+    <p style="margin-top:1.4rem;font-size:.78rem;letter-spacing:.04em;color:rgba(250,246,236,.7)">Complimentary longevity consultation · No payment today · 2,400+ guests renewed</p>
+  </div>
+  <div class="seal" aria-hidden="true">
+    <svg viewBox="0 0 120 120">
+      <defs><path id="cir" d="M60,60 m-44,0 a44,44 0 1,1 88,0 a44,44 0 1,1 -88,0"/></defs>
+      <circle cx="60" cy="60" r="56" fill="none" stroke="rgba(250,246,236,.5)" stroke-width="1"/>
+      <circle cx="60" cy="60" r="46" fill="none" stroke="rgba(201,168,94,.7)" stroke-width="1"/>
+      <text fill="rgba(250,246,236,.9)" font-family="Inter" font-size="8.5" letter-spacing="3.4">
+        <textPath href="#cir" startOffset="0%">· EST. MMXII · LONGEVITY · WELLNESS · SANCTUARY </textPath>
+      </text>
+      <path d="M60 74C60 67 55 61 49 59c2.5 9 7 12.5 11 15Zm0 0c0-7 5-13 11-15-2.5 9-7 12.5-11 15Z" fill="var(--gold)"/>
+      <path d="M60 74V50" stroke="var(--gold)" stroke-width="1.2"/>
+    </svg>
+  </div>
+  <div class="scroll-cue"><span class="line"></span>Scroll to enter</div>
+</section>
+
+<!-- scalloped divider -->
+<div class="scallop" aria-hidden="true">
+  <svg viewBox="0 0 1440 60" preserveAspectRatio="none">
+    <path d="M0,60 L0,30 Q30,0 60,30 T120,30 T180,30 T240,30 T300,30 T360,30 T420,30 T480,30 T540,30 T600,30 T660,30 T720,30 T780,30 T840,30 T900,30 T960,30 T1020,30 T1080,30 T1140,30 T1200,30 T1260,30 T1320,30 T1380,30 T1440,30 L1440,60 Z" fill="#FAF6EC"/>
+  </svg>
+</div>
+
+<!-- ===== TRUST BAR (social proof) ===== -->
+<section class="trustbar">
+  <div class="wrap reveal">
+    <p class="lab">Trusted by leaders, athletes &amp; longevity seekers worldwide</p>
+    <div class="marks">
+      <span>The <b>Vitality</b> Journal</span>
+      <span><b>Æon</b> Wellness</span>
+      <span>Condé <b>Santé</b></span>
+      <span><b>Meridian</b> Health</span>
+      <span>The <b>Longevity</b> Council</span>
+      <span><b>Élan</b> Travel</span>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SIX RITUALS ===== -->
+<section class="rituals" id="rituals">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow center">The Six Rituals</span>
+      <h2>A practice for every dimension of you</h2>
+      <p>Each day at the Sanctuary moves through six guided rituals — a measured rhythm designed to restore the systems that govern how well, and how long, you live.</p>
+    </div>
+    <div class="ritual-row">
+      <div class="ritual reveal" data-d="1">
+        <span class="ico"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M24 40c8-6 14-12 14-21a8 8 0 00-14-5 8 8 0 00-14 5c0 9 6 15 14 21Z"/><path d="M24 14v26" opacity=".5"/></svg></span>
+        <h4>Breathe</h4><span>Pranayama</span>
+      </div>
+      <div class="ritual reveal" data-d="2">
+        <span class="ico"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="24" cy="24" r="14"/><path d="M24 10v8M24 30v8M10 24h8M30 24h8"/></svg></span>
+        <h4>Restore</h4><span>Bodywork</span>
+      </div>
+      <div class="ritual reveal" data-d="3">
+        <span class="ico"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M10 34l8-10 6 6 8-14 6 8"/><path d="M8 40h32"/></svg></span>
+        <h4>Measure</h4><span>Diagnostics</span>
+      </div>
+      <div class="ritual reveal" data-d="4">
+        <span class="ico"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M24 12c-6 4-9 9-9 16a9 9 0 0018 0c0-7-3-12-9-16Z"/><path d="M24 12c0 8 0 18 0 28" opacity=".5"/></svg></span>
+        <h4>Nourish</h4><span>Vitality cuisine</span>
+      </div>
+      <div class="ritual reveal" data-d="5">
+        <span class="ico"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M34 26a12 12 0 11-12-16 9 9 0 0012 16Z"/><path d="M30 14l1.5 3 3 1.5-3 1.5L30 24l-1.5-3-3-1.5 3-1.5Z" fill="currentColor" stroke="none"/></svg></span>
+        <h4>Sleep</h4><span>Deep recovery</span>
+      </div>
+      <div class="ritual reveal" data-d="5">
+        <span class="ico"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M24 8c5 6 5 12 0 18-5-6-5-12 0-18Z"/><path d="M24 26c5 6 5 12 0 14-5-2-5-8 0-14Z"/></svg></span>
+        <h4>Renew</h4><span>Longevity therapy</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== RITUAL PLANNER ===== -->
+<section class="planner-sec" id="sanctuary">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow center">Plan Your Day</span>
+      <h2>Ritual Planner</h2>
+      <p>A personalised itinerary, guided by your goals. Tap any moment of the day to preview the experience and the science behind it.</p>
+    </div>
+    <div class="planner reveal" data-d="1">
+      <div class="planner-left">
+        <span class="eyebrow hero-eyebrow" style="color:var(--sand)">A day in the sanctuary</span>
+        <h3>Your daily rhythm</h3>
+        <p class="intro">Six rituals, gently sequenced around your circadian clock.</p>
+        <ul class="schedule" id="schedule">
+          <li data-key="breathe" class="active"><span class="time">06:30</span><span class="dot"></span><span class="s-body"><span class="s-act">Sunrise Breathwork</span><span class="s-note">Lakeside pranayama &amp; cold exposure</span></span></li>
+          <li data-key="measure"><span class="time">08:00</span><span class="dot"></span><span class="s-body"><span class="s-act">Biomarker Lab</span><span class="s-note">Blood panel &amp; VO₂ assessment</span></span></li>
+          <li data-key="nourish"><span class="time">09:30</span><span class="dot"></span><span class="s-body"><span class="s-act">Vitality Breakfast</span><span class="s-note">Polyphenol-rich, chef-prepared</span></span></li>
+          <li data-key="restore"><span class="time">12:00</span><span class="dot"></span><span class="s-body"><span class="s-act">Restorative Bodywork</span><span class="s-note">Lymphatic &amp; fascia therapy</span></span></li>
+          <li data-key="renew"><span class="time">16:00</span><span class="dot"></span><span class="s-body"><span class="s-act">Longevity Therapy</span><span class="s-note">Sauna, plunge &amp; red-light renewal</span></span></li>
+          <li data-key="sleep"><span class="time">21:00</span><span class="dot"></span><span class="s-body"><span class="s-act">Deep Sleep Ritual</span><span class="s-note">Sound bath &amp; wind-down protocol</span></span></li>
+        </ul>
+      </div>
+      <div class="planner-right">
+        <div class="planner-photo">
+          <img id="plannerImg" src="https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=1200&q=80"
+               alt="Morning breathwork session by misty water"
+               onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+          <div class="fallback" style="display:none"></div>
+        </div>
+        <div class="planner-detail">
+          <span class="tag" id="pTag">Ritual · Breathe</span>
+          <h4 id="pTitle">Sunrise Breathwork &amp; Cold Immersion</h4>
+          <p id="pDesc">Greet the day at the water's edge with guided pranayama and brief cold exposure — a practice shown to sharpen focus, prime the nervous system and elevate mood for the hours ahead.</p>
+          <div class="meta">
+            <div><strong id="pMeta1">45 min</strong><span>Duration</span></div>
+            <div><strong id="pMeta2">Lakeside Deck</strong><span>Location</span></div>
+            <div><strong id="pMeta3">Vagal tone</strong><span>Benefit</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PROGRAMS ===== -->
+<section class="programs" id="programs">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow center">Curated Programs</span>
+      <h2>Choose your path to renewal</h2>
+      <p>Four immersive retreats, each shaped around a single intention and led by our resident clinicians.</p>
+    </div>
+    <div class="prog-grid">
+      <article class="prog-card reveal" data-d="1">
+        <div class="prog-thumb"><span class="num">01</span>
+          <img src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=900&q=80" alt="Calm spa interior with botanical detoxification setting" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><div class="fallback" style="display:none"></div>
+        </div>
+        <div class="prog-body">
+          <h4>Detox</h4><div class="dur">5–7 nights</div>
+          <ul>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 13l4 4L19 7"/></svg>Cellular cleanse &amp; liver support</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 13l4 4L19 7"/></svg>Lymphatic drainage protocol</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 13l4 4L19 7"/></svg>Plant-based vitality cuisine</li>
+          </ul>
+        </div>
+      </article>
+      <article class="prog-card reveal" data-d="2">
+        <div class="prog-thumb"><span class="num">02</span>
+          <img src="https://images.unsplash.com/photo-1520206183501-b80df61043c2?auto=format&fit=crop&w=900&q=80" alt="Serene bedroom designed for deep sleep" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><div class="fallback" style="display:none"></div>
+        </div>
+        <div class="prog-body">
+          <h4>Sleep</h4><div class="dur">4–6 nights</div>
+          <ul>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 13l4 4L19 7"/></svg>Circadian rhythm reset</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 13l4 4L19 7"/></svg>Nightly sleep architecture tracking</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 13l4 4L19 7"/></svg>Sound bath &amp; breath wind-down</li>
+          </ul>
+        </div>
+      </article>
+      <article class="prog-card reveal" data-d="3">
+        <div class="prog-thumb"><span class="num">03</span>
+          <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=900&q=80" alt="Longevity diagnostics and movement practice" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><div class="fallback" style="display:none"></div>
+        </div>
+        <div class="prog-body">
+          <h4>Longevity</h4><div class="dur">7–10 nights</div>
+          <ul>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 13l4 4L19 7"/></svg>Full biological-age panel</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 13l4 4L19 7"/></svg>Cellular &amp; mitochondrial therapy</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 13l4 4L19 7"/></svg>Personalised longevity protocol</li>
+          </ul>
+        </div>
+      </article>
+      <article class="prog-card reveal" data-d="4">
+        <div class="prog-thumb"><span class="num">04</span>
+          <img src="https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=900&q=80" alt="Athletic recovery and performance training outdoors" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><div class="fallback" style="display:none"></div>
+        </div>
+        <div class="prog-body">
+          <h4>Performance</h4><div class="dur">5–7 nights</div>
+          <ul>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 13l4 4L19 7"/></svg>VO₂ max &amp; strength profiling</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 13l4 4L19 7"/></svg>Metabolic &amp; HRV optimisation</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 13l4 4L19 7"/></svg>Recovery &amp; resilience training</li>
+          </ul>
+        </div>
+      </article>
+    </div>
+    <div style="text-align:center;margin-top:var(--s5)" class="reveal">
+      <a href="#booking" class="btn btn-line">Create My Renewal Plan
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SCIENCE BLOCK ===== -->
+<section class="science">
+  <div class="wrap science-grid">
+    <div class="reveal">
+      <span class="eyebrow hero-eyebrow" style="color:var(--sand)">Wisdom meets science</span>
+      <h2>Ancient wisdom. Modern science. <em>Extraordinary results.</em></h2>
+      <p>For centuries, the world's longest-lived people have practiced rituals of breath, rest and nourishment. We pair that timeless knowledge with clinical-grade diagnostics and longevity medicine — translating intuition into measurable change.</p>
+      <p>Every guest leaves with a biomarker report, a personalised protocol, and a renewed relationship with their own vitality.</p>
+      <div class="stats">
+        <div class="st"><strong data-count="40" data-suffix="+">0</strong><span>Biomarkers tracked</span></div>
+        <div class="st"><strong data-count="98" data-suffix="%">0</strong><span>Guests renewed</span></div>
+        <div class="st"><strong data-count="12" data-suffix="">0</strong><span>Years of research</span></div>
+      </div>
+    </div>
+    <div class="science-img reveal" data-d="2">
+      <img src="https://images.unsplash.com/photo-1564890369478-c89ca6d9cde9?auto=format&fit=crop&w=1100&q=80" alt="A golden bowl of herbal tea surrounded by fresh botanicals and dried herbs" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+      <div class="fallback" style="display:none"></div>
+      <div class="glow"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== LIFESTYLE / PROOF BAND ===== -->
+<section class="proof">
+  <div class="proof-bg" id="proofBg">
+    <img src="https://images.unsplash.com/photo-1545205597-3d9d02c29597?auto=format&fit=crop&w=1920&q=80"
+         loading="lazy" decoding="async"
+         alt="A woman in serene movement practice at sunrise, overlooking a calm mountain valley"
+         onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+    <div class="fallback" style="display:none"></div>
+  </div>
+  <div class="wrap">
+    <div class="proof-inner reveal">
+      <span class="eyebrow hero-eyebrow" style="color:var(--sand)">Measured outcomes</span>
+      <h2>Guests don't just feel younger. <em>They measure it.</em></h2>
+      <p>Across every program, our guests leave with quantifiable change — verified in the lab, felt in daily life, and sustained long after they return home.</p>
+      <div class="proof-stats">
+        <div class="st"><strong data-count="3" data-suffix=".4 yrs">0</strong><span>Avg. biological age reduced</span></div>
+        <div class="st"><strong data-count="2400" data-suffix="+">0</strong><span>Guests renewed</span></div>
+        <div class="st"><strong data-count="96" data-suffix="%">0</strong><span>Would return</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TESTIMONIALS ===== -->
+<section class="voices">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow center">Guest stories</span>
+      <h2>Transformations that last</h2>
+      <p>Real words from guests who arrived depleted and left measurably renewed.</p>
+    </div>
+    <div class="voice-grid">
+      <article class="voice reveal" data-d="1">
+        <div class="stars" aria-label="Five out of five">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.9 21l1.2-6.8-5-4.9 6.9-1z"/></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.9 21l1.2-6.8-5-4.9 6.9-1z"/></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.9 21l1.2-6.8-5-4.9 6.9-1z"/></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.9 21l1.2-6.8-5-4.9 6.9-1z"/></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.9 21l1.2-6.8-5-4.9 6.9-1z"/></svg>
+        </div>
+        <blockquote>&ldquo;I arrived exhausted and left with a biological age four years younger — and the protocol to keep it that way. It reset how I live.&rdquo;</blockquote>
+        <div class="who">
+          <span class="av"><img loading="lazy" decoding="async" width="50" height="50" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=120&h=120&q=80" alt="Portrait of Charlotte Vance" onerror="this.style.display='none'"></span>
+          <div><b>Charlotte Vance</b><span>Longevity Program</span></div>
+        </div>
+      </article>
+      <article class="voice reveal" data-d="2">
+        <div class="stars" aria-label="Five out of five">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.9 21l1.2-6.8-5-4.9 6.9-1z"/></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.9 21l1.2-6.8-5-4.9 6.9-1z"/></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.9 21l1.2-6.8-5-4.9 6.9-1z"/></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.9 21l1.2-6.8-5-4.9 6.9-1z"/></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.9 21l1.2-6.8-5-4.9 6.9-1z"/></svg>
+        </div>
+        <blockquote>&ldquo;The diagnostics were genuinely clinical, but the experience felt like the most beautiful holiday of my life. I sleep deeply for the first time in a decade.&rdquo;</blockquote>
+        <div class="who">
+          <span class="av"><img loading="lazy" decoding="async" width="50" height="50" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=120&h=120&q=80" alt="Portrait of James Okonkwo" onerror="this.style.display='none'"></span>
+          <div><b>James Okonkwo</b><span>Sleep Program</span></div>
+        </div>
+      </article>
+      <article class="voice reveal" data-d="3">
+        <div class="stars" aria-label="Five out of five">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.9 21l1.2-6.8-5-4.9 6.9-1z"/></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.9 21l1.2-6.8-5-4.9 6.9-1z"/></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.9 21l1.2-6.8-5-4.9 6.9-1z"/></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.9 21l1.2-6.8-5-4.9 6.9-1z"/></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.9 21l1.2-6.8-5-4.9 6.9-1z"/></svg>
+        </div>
+        <blockquote>&ldquo;As a CEO I came for the recovery. I left with a measurable VO₂ gain, a calmer mind, and habits that have held for a full year.&rdquo;</blockquote>
+        <div class="who">
+          <span class="av"><img loading="lazy" decoding="async" width="50" height="50" src="https://images.unsplash.com/photo-1573497161161-c3e73707e25c?auto=format&fit=crop&w=120&h=120&q=80" alt="Portrait of Isabelle Mercier" onerror="this.style.display='none'"></span>
+          <div><b>Isabelle Mercier</b><span>Performance Program</span></div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ===== MEDICAL DIRECTOR / CREDIBILITY ===== -->
+<section class="director">
+  <div class="wrap dir-grid">
+    <div class="dir-photo reveal" data-d="1">
+      <img loading="lazy" decoding="async"
+           src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=1100&q=80"
+           alt="Dr. Elena Rhodes, Medical Director, in clinical consultation"
+           onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+      <div class="fallback" style="display:none"></div>
+      <span class="badge">MD · Board-certified</span>
+    </div>
+    <div class="dir-body reveal" data-d="2">
+      <span class="eyebrow">Clinical leadership</span>
+      <h2>Longevity medicine, led by <em>a physician</em> — not a trend.</h2>
+      <p>Every protocol at the Sanctuary is designed and overseen by our Medical Director. Your data is interpreted by clinicians, your plan is grounded in peer-reviewed science, and your safety is held to hospital standards throughout your stay.</p>
+      <p>It is the rare retreat where the spa and the laboratory answer to the same exacting clinical standard.</p>
+      <div class="dir-sign">
+        <div>
+          <div class="nm">Dr. Elena Rhodes</div>
+          <div class="rl">Medical Director · Longevity Physician</div>
+        </div>
+      </div>
+      <div class="trust-marks">
+        <div class="tm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z"/><path d="M9 12l2 2 4-4"/></svg>Clinically supervised</div>
+        <div class="tm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="5"/><path d="M8 21l4-3 4 3"/></svg>Longevity accredited</div>
+        <div class="tm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>Data privacy assured</div>
+        <div class="tm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>Satisfaction guarantee</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== ACCOMMODATIONS ===== -->
+<section class="stay" id="stay">
+  <div class="wrap">
+    <div class="stay-head reveal">
+      <div>
+        <span class="eyebrow">Where you rest</span>
+        <h2>Rest in natural luxury.</h2>
+      </div>
+      <p>Suites carved into the landscape, thermal waters and spa pavilions — every space designed to dissolve the noise of the world.</p>
+    </div>
+    <div class="gallery">
+      <div class="g-item tall reveal" data-d="1">
+        <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=900&q=80" alt="Minimalist sanctuary suite with floor-to-ceiling forest views" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><div class="fallback" style="display:none"></div>
+        <div class="cap"><span>Suite</span><h4>Forest Suite</h4></div>
+      </div>
+      <div class="g-item wide reveal" data-d="2">
+        <img src="https://images.unsplash.com/photo-1572331165267-854da2b10ccc?auto=format&fit=crop&w=1200&q=80" alt="Spa treatment pavilion with warm natural light" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><div class="fallback" style="display:none"></div>
+        <div class="cap"><span>Spa</span><h4>Thermal Pavilion</h4></div>
+      </div>
+      <div class="g-item reveal" data-d="3">
+        <img src="https://images.unsplash.com/photo-1540541338287-41700207dee6?auto=format&fit=crop&w=900&q=80" alt="Infinity pool overlooking misty mountains" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><div class="fallback" style="display:none"></div>
+        <div class="cap"><span>Water</span><h4>Mineral Pool</h4></div>
+      </div>
+      <div class="g-item wide reveal" data-d="2">
+        <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=80" alt="Serene lounge with natural materials and soft daylight" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><div class="fallback" style="display:none"></div>
+        <div class="cap"><span>Lounge</span><h4>The Conservatory</h4></div>
+      </div>
+      <div class="g-item tall reveal" data-d="3">
+        <img src="https://images.unsplash.com/photo-1596178065887-1198b6148b2b?auto=format&fit=crop&w=900&q=80" alt="Sunlit yoga and movement studio with timber floors" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><div class="fallback" style="display:none"></div>
+        <div class="cap"><span>Movement</span><h4>Light Studio</h4></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== AGENDA + EXPERTS ===== -->
+<section class="day" id="experts">
+  <div class="wrap">
+    <div class="agenda reveal">
+      <span class="eyebrow">A day, gently sequenced</span>
+      <h3>The daily agenda</h3>
+      <p class="lead">From first light to deep rest — a rhythm engineered around your biology.</p>
+      <div class="timeline">
+        <div class="tl-step reveal" data-d="1"><span class="t">06:30</span><span class="ring"></span><h5>Awaken</h5><p>Breathwork &amp; cold exposure by the water</p></div>
+        <div class="tl-step reveal" data-d="2"><span class="t">08:00</span><span class="ring"></span><h5>Measure</h5><p>Diagnostics &amp; biomarker lab</p></div>
+        <div class="tl-step reveal" data-d="3"><span class="t">09:30</span><span class="ring"></span><h5>Nourish</h5><p>Vitality breakfast &amp; longevity tonics</p></div>
+        <div class="tl-step reveal" data-d="3"><span class="t">12:00</span><span class="ring"></span><h5>Restore</h5><p>Bodywork &amp; mindful movement</p></div>
+        <div class="tl-step reveal" data-d="2"><span class="t">16:00</span><span class="ring"></span><h5>Renew</h5><p>Thermal cycle &amp; cellular therapy</p></div>
+        <div class="tl-step reveal" data-d="1"><span class="t">21:00</span><span class="ring"></span><h5>Rest</h5><p>Sound bath &amp; deep-sleep ritual</p></div>
+      </div>
+    </div>
+
+    <div class="experts-head reveal">
+      <span class="eyebrow center">Your guides</span>
+      <h2>Guided by leading experts in longevity and well-being</h2>
+    </div>
+    <div class="experts">
+      <article class="exp-card reveal" data-d="1">
+        <div class="exp-photo"><img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=700&q=80" alt="Portrait of Dr. Elena Rhodes, longevity physician" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><div class="fallback" style="display:none"></div></div>
+        <div class="exp-body"><h4>Dr. Elena Rhodes</h4><div class="role">Longevity Physician</div><p>Pioneer in biological-age diagnostics and personalised longevity medicine.</p></div>
+      </article>
+      <article class="exp-card reveal" data-d="2">
+        <div class="exp-photo"><img src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&w=700&q=80" alt="Portrait of Dr. Amara Okafor, integrative nutrition lead" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><div class="fallback" style="display:none"></div></div>
+        <div class="exp-body"><h4>Dr. Amara Okafor</h4><div class="role">Integrative Nutrition</div><p>Designs the polyphenol-rich cuisine behind every Vitality program.</p></div>
+      </article>
+      <article class="exp-card reveal" data-d="3">
+        <div class="exp-photo"><img src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=700&q=80" alt="Portrait of Kenji Tanaka, breath and movement master" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><div class="fallback" style="display:none"></div></div>
+        <div class="exp-body"><h4>Kenji Tanaka</h4><div class="role">Breath &amp; Movement</div><p>Master of pranayama, mobility and the science of restorative rest.</p></div>
+      </article>
+      <article class="exp-card reveal" data-d="4">
+        <div class="exp-photo"><img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=700&q=80" alt="Portrait of Sofia Marchetti, sleep and recovery specialist" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><div class="fallback" style="display:none"></div></div>
+        <div class="exp-body"><h4>Sofia Marchetti</h4><div class="role">Sleep &amp; Recovery</div><p>Leads our circadian and deep-recovery protocols for lasting renewal.</p></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ===== BOOKING CTA ===== -->
+<section class="booking" id="booking">
+  <div class="wrap booking-grid">
+    <div class="reveal">
+      <span class="eyebrow hero-eyebrow" style="color:var(--sand)">Begin your renewal</span>
+      <h2>Reserve your stay. <em>Reclaim your years.</em></h2>
+      <p class="lead">Spaces are intentionally limited each season. Reserve now and our concierge will craft a personalised arrival around your goals, dates and chosen ritual — at no cost today.</p>
+      <ul class="booking-list">
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>Complimentary pre-arrival longevity consultation</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>Private transfer from the valley airfield</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>Full biomarker report &amp; take-home protocol</li>
+      </ul>
+      <div class="booking-trust">
+        <span class="bt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z"/></svg>Clinically supervised</span>
+        <span class="bt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>Secure &amp; private</span>
+        <span class="bt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>No payment today</span>
+      </div>
+    </div>
+    <form class="book reveal" data-d="2" id="bookForm" novalidate>
+      <div id="formFields">
+        <h3>Reserve your experience</h3>
+        <div class="field"><label for="name">Full name</label><input id="name" name="name" type="text" required placeholder="Your name"></div>
+        <div class="field"><label for="email">Email</label><input id="email" name="email" type="email" required placeholder="you@email.com"></div>
+        <div class="field row">
+          <div><label for="program">Program</label>
+            <select id="program" name="program">
+              <option>Detox</option><option selected>Longevity</option><option>Sleep</option><option>Performance</option>
+            </select>
+          </div>
+          <div><label for="date">Arrival</label><input id="date" name="date" type="date"></div>
+        </div>
+        <button type="submit" class="btn btn-gold">Reserve Experience
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+        <p class="form-note">No payment today · A concierge will confirm within 24 hours.</p>
+      </div>
+      <div class="form-success" id="formSuccess">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-6"/></svg>
+        <h3>Your journey has begun.</h3>
+        <p>Thank you. Our concierge will reach out shortly to craft your arrival.</p>
+      </div>
+    </form>
+  </div>
+</section>
+
+<!-- ===== QUOTE BAND ===== -->
+<section class="quote">
+  <div class="wrap reveal">
+    <div class="mark" aria-hidden="true">&ldquo;</div>
+    <blockquote>The greatest wealth is health.</blockquote>
+    <cite>— Virgil</cite>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer class="site">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a class="brand" href="#top">
+          <span class="mark" aria-hidden="true">
+            <svg viewBox="0 0 40 40" fill="none">
+              <circle cx="20" cy="20" r="18.5" stroke="currentColor" stroke-width="1"/>
+              <path d="M20 30C20 24 16 19 11 17c2 8 6 11 9 13Zm0 0c0-6 4-11 9-13-2 8-6 11-9 13Z" fill="currentColor"/>
+              <path d="M20 30V14" stroke="currentColor" stroke-width="1"/>
+            </svg>
+          </span>
+          <span><b>The Longevity</b><span>Sanctuary</span></span>
+        </a>
+        <p>A retreat where ancient ritual and modern science meet — to restore the body and extend the years that matter.</p>
+        <div class="foot-social">
+          <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg></a>
+          <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M15 8h-2a2 2 0 00-2 2v12M8 13h6"/></svg></a>
+          <a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 11v6M8 8v.01M12 17v-3a2 2 0 014 0v3"/></svg></a>
+        </div>
+      </div>
+      <div class="foot-col">
+        <h5>Sanctuary</h5>
+        <ul><li><a href="#sanctuary">The Day</a></li><li><a href="#rituals">Six Rituals</a></li><li><a href="#stay">Accommodations</a></li><li><a href="#experts">Our Experts</a></li></ul>
+      </div>
+      <div class="foot-col">
+        <h5>Programs</h5>
+        <ul><li><a href="#programs">Detox</a></li><li><a href="#programs">Sleep</a></li><li><a href="#programs">Longevity</a></li><li><a href="#programs">Performance</a></li></ul>
+      </div>
+      <div class="foot-col">
+        <h5>Visit</h5>
+        <ul><li><a href="#booking">Book Your Stay</a></li><li><a href="#">Getting Here</a></li><li><a href="#">Journal</a></li><li><a href="#">Contact</a></li></ul>
+      </div>
+      <div class="foot-news">
+        <h5>The Quiet Letter</h5>
+        <p>Seasonal rituals and longevity insight, delivered gently.</p>
+        <form class="news-form" id="newsForm">
+          <input type="email" aria-label="Email address" placeholder="Your email" required>
+          <button type="submit" aria-label="Subscribe">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </button>
+        </form>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 The Longevity Sanctuary. Alpine Valley, Switzerland.</span>
+      <span><a href="#">Privacy</a> · <a href="#">Terms</a> · <a href="#">Accessibility</a></span>
+    </div>
+  </div>
+</footer>
+
+<!-- Motion layer libraries (CDN). Loaded at end of body so above-fold hero
+     paints first (LCP not delayed). No 'defer' so they execute before the
+     inline scripts below, letting the legacy script detect GSAP and hand off
+     reveals/parallax. A blocked CDN simply leaves window.gsap undefined and the
+     page runs on its native fallbacks, fully visible. -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/CustomEase.min.js"></script>
+<!-- Lenis smooth-scroll removed: wheel hijacking caused scroll jank; native scroll is used instead. -->
+
+<script>
+(function(){
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  /* The motion layer (GSAP) will own reveals + hero parallax when available.
+     If GSAP is present we skip the legacy IO reveal / inline parallax here so
+     nothing animates twice. Counters always run from here (re-fired by the
+     motion layer only if it boots). */
+  var GSAP_READY = !!(window.gsap && window.ScrollTrigger);
+
+  /* NAV scroll state */
+  var nav = document.getElementById('nav');
+  function onScroll(){ nav.classList.toggle('scrolled', window.scrollY > 40); }
+  onScroll(); window.addEventListener('scroll', onScroll, {passive:true});
+
+  /* Hamburger overlay */
+  var burger = document.getElementById('hamburger');
+  var overlay = document.getElementById('overlay');
+  function toggleMenu(open){
+    burger.setAttribute('aria-expanded', open);
+    overlay.classList.toggle('open', open);
+    document.body.style.overflow = open ? 'hidden' : '';
+  }
+  burger.addEventListener('click', function(){ toggleMenu(burger.getAttribute('aria-expanded')!=='true'); });
+  overlay.querySelectorAll('a').forEach(function(a){ a.addEventListener('click', function(){ toggleMenu(false); }); });
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape') toggleMenu(false); });
+
+  /* Hero parallax — legacy fallback only (GSAP/Lenis owns it when present) */
+  var heroBg = document.getElementById('heroBg');
+  if(!reduce && !GSAP_READY && heroBg){
+    window.addEventListener('scroll', function(){
+      var y = window.scrollY;
+      if(y < window.innerHeight){ heroBg.style.transform = 'translateY(' + (y*0.28) + 'px)'; }
+    }, {passive:true});
+  }
+
+  /* Reveal on scroll — legacy IO; skipped entirely when GSAP will run the
+     ScrollTrigger.batch reveal (prevents double reveals). */
+  if(!GSAP_READY){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){ if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); } });
+    }, {threshold:0.12, rootMargin:'0px 0px -8% 0px'});
+    document.querySelectorAll('.reveal').forEach(function(el){
+      if(reduce){ el.classList.add('in'); } else { io.observe(el); }
+    });
+  }
+
+  /* Count up — one-shot per element. Exposed as window.__countUp so the GSAP
+     motion layer can re-fire it on a ScrollTrigger onEnter (since the legacy
+     IO is disabled when GSAP runs). */
+  function runCount(el){
+    if(el.__counted) return; el.__counted = true;
+    var target = +el.dataset.count, suf = el.dataset.suffix||'';
+    if(reduce){ el.textContent = target + suf; return; }
+    var start = null, dur = 1600;
+    function step(t){ if(!start) start=t; var p=Math.min((t-start)/dur,1);
+      el.textContent = Math.round((1-Math.pow(1-p,3))*target) + suf;
+      if(p<1) requestAnimationFrame(step); }
+    requestAnimationFrame(step);
+  }
+  window.__countUp = runCount;
+  if(!GSAP_READY){
+    var counted = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if(!en.isIntersecting) return;
+        runCount(en.target); counted.unobserve(en.target);
+      });
+    }, {threshold:0.6});
+    document.querySelectorAll('[data-count]').forEach(function(el){ counted.observe(el); });
+  }
+
+  /* Ritual planner */
+  var data = {
+    breathe:{tag:'Ritual · Breathe', title:'Sunrise Breathwork &amp; Cold Immersion',
+      desc:"Greet the day at the water's edge with guided pranayama and brief cold exposure — a practice shown to sharpen focus, prime the nervous system and elevate mood for the hours ahead.",
+      m:['45 min','Lakeside Deck','Vagal tone'], img:'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=1200&q=80'},
+    measure:{tag:'Ritual · Measure', title:'Biomarker Lab &amp; Assessment',
+      desc:'A clinical-grade panel of blood, body composition and VO₂ data establishes your baseline — the foundation for a protocol tuned precisely to your biology.',
+      m:['60 min','Diagnostics Lab','Biological age'], img:'https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=1200&q=80'},
+    nourish:{tag:'Ritual · Nourish', title:'Vitality Breakfast',
+      desc:'A chef-prepared, polyphenol-rich table built around longevity nutrition — slow energy, deep flavour and the compounds that quiet inflammation.',
+      m:['Open','The Conservatory','Metabolic health'], img:'https://images.unsplash.com/photo-1490645935967-10de6ba17061?auto=format&fit=crop&w=1200&q=80'},
+    restore:{tag:'Ritual · Restore', title:'Restorative Bodywork',
+      desc:'Lymphatic and fascia therapy releases stored tension and improves circulation — the body unwinding under expert, unhurried hands.',
+      m:['75 min','Thermal Pavilion','Recovery'], img:'https://images.unsplash.com/photo-1600334129128-685c5582fd35?auto=format&fit=crop&w=1200&q=80'},
+    renew:{tag:'Ritual · Renew', title:'Longevity Therapy',
+      desc:'A guided thermal cycle of sauna, cold plunge and red-light renewal stimulates cellular repair and resilience — modern science in a timeless rhythm.',
+      m:['90 min','Thermal Pavilion','Cellular repair'], img:'https://images.unsplash.com/photo-1556228578-8c89e6adf883?auto=format&fit=crop&w=1200&q=80'},
+    sleep:{tag:'Ritual · Sleep', title:'Deep Sleep Ritual',
+      desc:'A sound bath and breath-led wind-down lower the nervous system into rest, while your sleep architecture is gently tracked through the night.',
+      m:['60 min','Forest Suite','Deep recovery'], img:'https://images.unsplash.com/photo-1520206183501-b80df61043c2?auto=format&fit=crop&w=1200&q=80'}
+  };
+  var sched = document.getElementById('schedule');
+  var pImg=document.getElementById('plannerImg'), pTag=document.getElementById('pTag'),
+      pTitle=document.getElementById('pTitle'), pDesc=document.getElementById('pDesc'),
+      m1=document.getElementById('pMeta1'), m2=document.getElementById('pMeta2'), m3=document.getElementById('pMeta3');
+  function setRitual(key){
+    var d = data[key]; if(!d) return;
+    pTag.innerHTML=d.tag; pTitle.innerHTML=d.title; pDesc.innerHTML=d.desc;
+    m1.textContent=d.m[0]; m2.textContent=d.m[1]; m3.textContent=d.m[2];
+    pImg.style.opacity=0;
+    var tmp=new Image();
+    tmp.onload=function(){ pImg.src=d.img; pImg.style.display='block'; pImg.style.opacity=1; if(pImg.nextElementSibling) pImg.nextElementSibling.style.display='none'; };
+    tmp.onerror=function(){ pImg.style.display='none'; if(pImg.nextElementSibling) pImg.nextElementSibling.style.display='block'; };
+    tmp.src=d.img;
+  }
+  sched.querySelectorAll('li').forEach(function(li){
+    li.setAttribute('tabindex','0');
+    function act(){ sched.querySelectorAll('li').forEach(function(x){x.classList.remove('active');}); li.classList.add('active'); setRitual(li.dataset.key); }
+    li.addEventListener('click', act);
+    li.addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); act(); } });
+  });
+
+  /* Booking form */
+  var bookForm=document.getElementById('bookForm');
+  bookForm.addEventListener('submit', function(e){
+    e.preventDefault();
+    var name=document.getElementById('name'), email=document.getElementById('email');
+    if(!name.value.trim()||!email.value.trim()){ (name.value.trim()?email:name).focus(); return; }
+    document.getElementById('formFields').style.display='none';
+    document.getElementById('formSuccess').classList.add('show');
+  });
+  document.getElementById('newsForm').addEventListener('submit', function(e){
+    e.preventDefault(); var inp=this.querySelector('input');
+    if(inp.value.trim()){ inp.value=''; inp.placeholder='Thank you — welcome.'; }
+  });
+})();
+</script>
+
+<!-- ===== CINEMATIC MOTION LAYER (additive; degrades to fully-visible page) ===== -->
+<script>
+(function(){
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var docEl = document.documentElement;
+
+  /* Hard failsafe: if init never runs (CDN blocked / error), force-clear any
+     hidden state after 1.5s. The CSS hidden state is gated to html:not(.gsap-on),
+     so the worst case is the native IO reveal still running — this is belt+braces. */
+  var failsafe = setTimeout(function(){
+    docEl.querySelectorAll('.reveal').forEach(function(el){
+      el.style.opacity=''; el.style.transform=''; el.style.filter='';
+      el.classList.add('in');
+    });
+  }, 1500);
+
+  /* If GSAP is unavailable, do nothing — page is already fully visible and the
+     legacy script handled reveals/counters/parallax. */
+  if(!(window.gsap && window.ScrollTrigger)){ return; }
+
+  gsap.registerPlugin(ScrollTrigger);
+  if(window.CustomEase){ CustomEase.create("expoOut","0.16,1,0.3,1"); }
+  var EASE = window.CustomEase ? "expoOut" : "power3.out";
+
+  /* Take ownership: neutralize the CSS fallback hidden-state. */
+  docEl.classList.add('gsap-on');
+  clearTimeout(failsafe);
+
+  var isCoarse = window.matchMedia('(pointer: coarse)').matches;
+  var isSmall  = window.matchMedia('(max-width: 1023px)').matches;
+  var mobile   = isCoarse || isSmall;
+
+  /* ---------- PERF TIER ---------- */
+  /* lowPower devices skip every continuous/heavy effect (Lenis, parallax,
+     mouse-parallax). Reveals + hero intro + counters still run (cheap). */
+  var lowPower = reduce
+    || window.matchMedia('(pointer: coarse)').matches
+    || window.matchMedia('(max-width: 860px)').matches
+    || (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4)
+    || (navigator.deviceMemory && navigator.deviceMemory <= 4);
+  /* Treat lowPower as "no heavy effects" — fold into the mobile gate so all the
+     existing !mobile blocks below are also skipped on weak hardware. */
+  var heavy = !mobile && !lowPower;
+
+  /* ---------- SHARED OFF-SCREEN GATE for CSS-animation decorations ---------- */
+  /* Pauses a host element's CSS animation when off-screen or tab hidden, so the
+     seal spin and booking "breathe" glow cost nothing while not visible. */
+  var ambient = [];
+  function gateAmbient(el){
+    if(!el) return;
+    ambient.push(el);
+    if(!gateAmbient._io){
+      gateAmbient._io = new IntersectionObserver(function(ents){
+        ents.forEach(function(en){
+          en.target.style.animationPlayState =
+            (en.isIntersecting && !document.hidden) ? 'running' : 'paused';
+        });
+      }, {rootMargin:'0px'});
+    }
+    gateAmbient._io.observe(el);
+  }
+  gateAmbient(document.querySelector('.seal'));
+  gateAmbient(document.querySelector('.booking'));   /* hosts ::before breathe */
+  gateAmbient(document.querySelector('.scroll-cue .line'));
+  document.addEventListener('visibilitychange', function(){
+    var st = document.hidden ? 'paused' : 'running';
+    ambient.forEach(function(el){
+      /* only resume those still in view; IO will re-correct on next intersection */
+      if(!document.hidden){ el.style.animationPlayState = 'running'; }
+      else { el.style.animationPlayState = 'paused'; }
+    });
+  }, {passive:true});
+
+  /* If reduced motion: show everything at final state, fire counters, no Lenis,
+     no parallax, no pin. Continuous CSS animations already paused by the media
+     query in CSS. */
+  if(reduce){
+    gsap.set('.reveal', {clearProps:'all'});
+    document.querySelectorAll('.reveal').forEach(function(el){ el.classList.add('in'); });
+    document.querySelectorAll('[data-count]').forEach(function(el){ if(window.__countUp) window.__countUp(el); });
+    return;
+  }
+
+  /* ---------- LENIS (real-scroll mode; disabled on coarse/small/lowPower) ---------- */
+  var lenis = null, lenisTick = null;
+  if(window.Lenis && heavy){
+    lenis = new Lenis({ duration:1.1, smoothWheel:true });
+    lenis.on('scroll', ScrollTrigger.update);
+    lenisTick = function(t){ lenis.raf(t*1000); };
+    gsap.ticker.add(lenisTick);
+    gsap.ticker.lagSmoothing(0);
+  }
+
+  /* Registry of teardownable heavy effects, used by the FPS watchdog. */
+  var scrubTriggers = [];   /* scrub ScrollTriggers we can kill on downgrade */
+  var heroMouseHandlers = null;
+  var heroImgRef = null;
+
+  /* ---------- will-change helper (toggled per-stage, never permanent) ---------- */
+  function wc(el,on){ if(el) el.style.willChange = on ? 'transform' : ''; }
+
+  /* ---------- REVEALS: ScrollTrigger.batch with hierarchy + stagger ---------- */
+  /* Set hidden state via JS only (after GSAP confirmed). The quote's .reveal
+     wrapper is excluded here because the pinned quote beat (below) controls its
+     children directly — prevents double-animation. On mobile (no pin) the quote
+     wrapper still gets a plain reveal. */
+  var quoteWrap = document.querySelector('.quote .wrap.reveal');
+  var pinQuote = quoteWrap && heavy;
+  var revealEls = gsap.utils.toArray('.reveal').filter(function(el){
+    return !(pinQuote && el === quoteWrap);
+  });
+  if(pinQuote && quoteWrap){ quoteWrap.classList.add('in'); } /* wrapper visible; children handled by pin */
+  gsap.set(revealEls, {opacity:0, y:30});
+
+  ScrollTrigger.batch(revealEls, {
+    start: "top 88%",
+    once: true,
+    onEnter: function(batch){
+      gsap.to(batch, {
+        opacity:1, y:0, duration:1.0, ease:EASE,
+        stagger:{each:0.09, from:"start"},
+        overwrite:true,
+        onComplete:function(){ batch.forEach(function(el){ el.classList.add('in'); }); }
+      });
+    }
+  });
+
+  /* ---------- COUNTERS: re-fire via ScrollTrigger onEnter ---------- */
+  document.querySelectorAll('[data-count]').forEach(function(el){
+    ScrollTrigger.create({
+      trigger: el, start:"top 80%", once:true,
+      onEnter:function(){ if(window.__countUp) window.__countUp(el); }
+    });
+  });
+
+  /* ---------- HERO INTRO TIMELINE (on LOAD, not scroll) ---------- */
+  var heroEyebrow = document.querySelector('.hero-content .eyebrow');
+  var heroH1 = document.querySelector('.hero h1');
+  var heroSub = document.querySelector('.hero p.sub');
+  var heroCta = document.querySelector('.hero-cta');
+  var heroEls = [heroEyebrow, heroH1, heroSub, heroCta].filter(Boolean);
+  if(heroEls.length){
+    gsap.set(heroEls, {opacity:0, y:26});
+    gsap.timeline({delay:0.15})
+      .to(heroEls, {opacity:1, y:0, duration:1.1, ease:EASE, stagger:0.12});
+  }
+
+  /* ---------- HERO DEPTH PARALLAX (scrub) + image inner-layer only ---------- */
+  /* Kept as one of the two allowed subtle scrubs; smoothing scrub for cheaper ticks. */
+  var heroImg = document.querySelector('.hero-bg img');
+  heroImgRef = heroImg;
+  if(heroImg && heavy){
+    var heroTween = gsap.to(heroImg, {
+      yPercent:14, ease:"none",
+      scrollTrigger:{ trigger:".hero", start:"top top", end:"bottom top", scrub:0.6 }
+    });
+    if(heroTween.scrollTrigger) scrubTriggers.push(heroTween.scrollTrigger);
+  }
+
+  /* ---------- DISCREET DESKTOP MOUSE-PARALLAX ON HERO (frame-throttled) ---------- */
+  if(heavy){
+    var hero = document.querySelector('.hero');
+    var hx = gsap.quickTo(heroImg, "x", {duration:0.8, ease:"power3.out"});
+    var hy = gsap.quickTo(heroImg, "y", {duration:0.8, ease:"power3.out"});
+    if(hero && heroImg){
+      var pendingMove = false, lastE = null;
+      var onMove = function(e){
+        lastE = e;
+        if(pendingMove) return;
+        pendingMove = true;
+        requestAnimationFrame(function(){
+          pendingMove = false;
+          var r = hero.getBoundingClientRect();
+          var dx = (lastE.clientX - r.left)/r.width - 0.5;
+          var dy = (lastE.clientY - r.top)/r.height - 0.5;
+          hx(dx * 18); hy(dy * 18);
+        });
+      };
+      var onLeave = function(){ hx(0); hy(0); };
+      hero.addEventListener('mousemove', onMove, {passive:true});
+      hero.addEventListener('mouseleave', onLeave, {passive:true});
+      heroMouseHandlers = {hero:hero, move:onMove, leave:onLeave, hx:hx, hy:hy};
+    }
+  }
+
+  /* ---------- LAYERED SECTION PARALLAX (inner media only; desktop) ---------- */
+  if(heavy){
+    var scienceImg = document.querySelector('.science-img img');
+    if(scienceImg){
+      var sciTween = gsap.fromTo(scienceImg, {yPercent:-8}, {
+        yPercent:8, ease:"none",
+        scrollTrigger:{ trigger:".science", start:"top bottom", end:"bottom top", scrub:0.6 }
+      });
+      if(sciTween.scrollTrigger) scrubTriggers.push(sciTween.scrollTrigger);
+    }
+  }
+
+  /* VELOCITY SKEW removed entirely (worst cost/benefit — created tweens every
+     scroll tick and ran an unconditional per-frame ticker). */
+
+  /* ---------- SCROLL PROGRESS INDICATOR (brand gold) ---------- */
+  var prog = document.getElementById('scrollProg');
+  if(prog && heavy){
+    gsap.set(prog,{scaleX:0});
+    var progTween = gsap.to(prog, {
+      scaleX:1, ease:"none",
+      scrollTrigger:{ start:0, end:"max", scrub:0.3 }
+    });
+    if(progTween.scrollTrigger) scrubTriggers.push(progTween.scrollTrigger);
+  } else if(prog){
+    /* lowPower: keep it visually present but cheap — drive width on scroll, no scrub tween. */
+    prog.style.willChange = '';
+    var updProg = function(){
+      var h = docEl.scrollHeight - window.innerHeight;
+      prog.style.transform = 'scaleX(' + (h>0 ? Math.min(1, window.scrollY/h) : 0) + ')';
+    };
+    updProg(); window.addEventListener('scroll', updProg, {passive:true});
+  }
+
+  /* ---------- PINNED BEAT (1): QUOTE BAND — a deliberate sticky hold ----------
+     The quote section is a self-contained, single-column, full-width block —
+     safe to pin (ScrollTrigger uses a pin-spacer; no grid/flex alignment to
+     break). We pin it briefly and scrub the blockquote's reveal so it lands as
+     a calm cinematic beat. Desktop only; skipped on mobile / reduced motion,
+     where the section is normal flow with a legible static composition.
+     Pin budget for the whole page: this single beat. */
+  var quoteSec = document.querySelector('.quote');
+  var quoteInner = document.querySelector('.quote .wrap');
+  var quoteBq = document.querySelector('.quote blockquote');
+  var quoteCite = document.querySelector('.quote cite');
+  if(quoteSec && quoteInner && !mobile){
+    /* Override the batch reveal for the quote's own children so the pin controls
+       them (avoids double-animating). */
+    gsap.set([quoteBq, quoteCite].filter(Boolean), {opacity:0, y:24});
+    var qtl = gsap.timeline({
+      scrollTrigger:{
+        trigger: quoteSec,
+        start: "top top",
+        end: "+=60%",
+        pin: true,
+        pinSpacing: true,
+        anticipatePin: 1,
+        scrub: 0.4,
+        onToggle:function(self){ wc(quoteInner, self.isActive); }
+      }
+    });
+    qtl.to(quoteBq, {opacity:1, y:0, ease:"none"}, 0)
+       .to(quoteCite, {opacity:1, y:0, ease:"none"}, 0.4);
+  }
+
+  /* Keep ScrollTrigger in sync after fonts/images settle. */
+  window.addEventListener('load', function(){ ScrollTrigger.refresh(); });
+  setTimeout(function(){ ScrollTrigger.refresh(); }, 600);
+})();
+</script>
+</body>
+</html>

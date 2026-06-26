@@ -1,0 +1,1604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>The Invisible Engine — Infrastructure for Intelligence</title>
+<meta name="description" content="The Invisible Engine builds the data center and AI infrastructure that powers the world's most demanding models — silicon to global scale." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --infra-black:#030508;
+  --infra-black-2:#05080d;
+  --rack-grey:#1B222C;
+  --rack-grey-2:#11171f;
+  --electric:#2F80FF;
+  --electric-soft:#5e9bff;
+  --electric-dim:#1d4f9e;
+  --silver:#B7C0CC;
+  --cold-white:#EDF4FF;
+  --line:rgba(183,192,204,.12);
+  --line-2:rgba(183,192,204,.07);
+  --glow:rgba(47,128,255,.55);
+
+  --font-display:"Space Grotesk",system-ui,sans-serif;
+  --font-body:"Inter",system-ui,sans-serif;
+  --font-mono:"IBM Plex Mono",ui-monospace,monospace;
+
+  --s-1:.5rem; --s-2:1rem; --s-3:1.5rem; --s-4:2rem; --s-5:3rem;
+  --s-6:4rem; --s-7:6rem; --s-8:8rem; --s-9:11rem;
+
+  --maxw:1320px;
+  --nav-h:74px;
+  --ease:cubic-bezier(.16,1,.3,1);
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{
+  background:var(--infra-black);
+  color:var(--cold-white);
+  font-family:var(--font-body);
+  font-size:16px;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+body::before{
+  content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:
+    linear-gradient(var(--line-2) 1px,transparent 1px),
+    linear-gradient(90deg,var(--line-2) 1px,transparent 1px);
+  background-size:64px 64px;
+  mask-image:radial-gradient(ellipse 120% 90% at 50% 0%,#000 35%,transparent 80%);
+}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+:focus-visible{outline:2px solid var(--electric);outline-offset:3px;border-radius:3px}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 var(--s-4);position:relative;z-index:1}
+@media(max-width:768px){.wrap{padding:0 var(--s-3)}}
+
+.mono{font-family:var(--font-mono)}
+.eyebrow{
+  font-family:var(--font-mono);font-size:.72rem;letter-spacing:.28em;
+  text-transform:uppercase;color:var(--electric-soft);
+  display:inline-flex;align-items:center;gap:.6rem;
+}
+.eyebrow::before{content:"";width:26px;height:1px;background:var(--electric)}
+
+/* ---------- NAV ---------- */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;height:var(--nav-h);
+  display:flex;align-items:center;
+  transition:background .4s var(--ease),height .4s var(--ease),border-color .4s var(--ease);
+  border-bottom:1px solid transparent;
+}
+.nav.scrolled{
+  height:62px;background:rgba(3,5,8,.78);backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line);
+}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;width:100%}
+.brand{display:flex;align-items:center;gap:.7rem;font-family:var(--font-display);
+  font-weight:700;letter-spacing:.04em;font-size:.92rem}
+.brand .cube{width:30px;height:30px;flex:none}
+.nav-menu{display:flex;gap:var(--s-4);list-style:none}
+.nav-menu a{
+  font-size:.83rem;color:var(--silver);letter-spacing:.02em;position:relative;
+  padding:.3rem 0;transition:color .25s;
+}
+.nav-menu a::after{
+  content:"";position:absolute;left:0;bottom:-2px;height:1px;width:0;
+  background:var(--electric);transition:width .3s var(--ease);
+}
+.nav-menu a:hover{color:var(--cold-white)}
+.nav-menu a:hover::after{width:100%}
+.nav-cta{
+  display:inline-flex;align-items:center;gap:.5rem;background:var(--electric);
+  color:#fff;font-size:.82rem;font-weight:600;padding:.62rem 1.15rem;border-radius:6px;
+  letter-spacing:.01em;transition:transform .25s var(--ease),box-shadow .3s,background .3s;
+  box-shadow:0 0 0 rgba(47,128,255,0);
+}
+.nav-cta:hover{transform:translateY(-2px);box-shadow:0 10px 30px -8px var(--glow);background:#3a8aff}
+.hamburger{display:none;width:42px;height:42px;border:1px solid var(--line);border-radius:8px;
+  align-items:center;justify-content:center;flex-direction:column;gap:5px}
+.hamburger span{width:18px;height:1.5px;background:var(--cold-white);transition:.3s var(--ease)}
+.hamburger[aria-expanded="true"] span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.hamburger[aria-expanded="true"] span:nth-child(2){opacity:0}
+.hamburger[aria-expanded="true"] span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+
+.mobile-menu{
+  position:fixed;inset:0;z-index:99;background:rgba(3,5,8,.99);
+  display:flex;flex-direction:column;justify-content:center;gap:var(--s-3);padding:var(--s-6);
+  transform:translateY(-100%);transition:transform .5s var(--ease);visibility:hidden;
+}
+.mobile-menu.open{transform:translateY(0);visibility:visible}
+.mobile-menu a{font-family:var(--font-display);font-size:1.6rem;font-weight:600;letter-spacing:.02em;
+  color:var(--silver);border-bottom:1px solid var(--line);padding-bottom:var(--s-2)}
+.mobile-menu a:hover{color:var(--electric-soft)}
+.mobile-menu .nav-cta{align-self:flex-start;margin-top:var(--s-2);font-size:1rem;padding:.8rem 1.5rem}
+
+@media(max-width:1023px){
+  .nav-menu{display:none}
+  .nav .nav-cta{display:none}
+  .hamburger{display:flex}
+}
+
+/* ---------- BUTTONS ---------- */
+.btn{
+  display:inline-flex;align-items:center;gap:.6rem;font-weight:600;font-size:.9rem;
+  padding:.85rem 1.5rem;border-radius:7px;letter-spacing:.01em;
+  transition:transform .25s var(--ease),box-shadow .3s,background .3s,border-color .3s;
+}
+.btn-primary{background:var(--electric);color:#fff;box-shadow:0 0 0 rgba(47,128,255,0)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 14px 36px -10px var(--glow);background:#3a8aff}
+.btn-ghost{border:1px solid var(--line);color:var(--cold-white);background:rgba(183,192,204,.02)}
+.btn-ghost:hover{border-color:var(--electric);color:var(--electric-soft);transform:translateY(-2px)}
+.btn svg{width:16px;height:16px;transition:transform .3s var(--ease)}
+.btn:hover svg{transform:translateX(3px)}
+
+/* ---------- HERO ---------- */
+.hero{position:relative;padding-top:calc(var(--nav-h) + var(--s-6));padding-bottom:var(--s-7);overflow:hidden}
+.hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:var(--s-6);align-items:center}
+.hero-copy h1{
+  font-family:var(--font-display);font-weight:700;line-height:1.02;letter-spacing:-.02em;
+  font-size:clamp(2.4rem,5.4vw,4.6rem);margin:var(--s-3) 0 var(--s-3);
+}
+.hero-copy h1 .accent{color:var(--electric)}
+.hero-sub{color:var(--silver);font-size:clamp(1rem,1.4vw,1.12rem);max-width:46ch;margin-bottom:var(--s-4)}
+.hero-actions{display:flex;gap:var(--s-2);flex-wrap:wrap}
+.hero-trust{display:flex;gap:var(--s-4);margin-top:var(--s-5);flex-wrap:wrap}
+.hero-trust div{font-family:var(--font-mono);font-size:.74rem;color:var(--silver);letter-spacing:.06em}
+.hero-trust b{display:block;font-family:var(--font-display);font-size:1.35rem;color:var(--cold-white);letter-spacing:0}
+
+.hero-visual{position:relative;min-height:480px;display:flex;flex-direction:column;gap:var(--s-2)}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:.7rem;position:relative;z-index:3}
+.tile{
+  border:1px solid var(--line);background:rgba(17,23,31,.92);border-radius:10px;padding:.85rem .9rem;
+  position:relative;overflow:hidden;transition:border-color .3s,transform .3s var(--ease);
+}
+.tile:hover{border-color:var(--electric);transform:translateY(-3px)}
+.tile .lbl{font-family:var(--font-mono);font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--silver);opacity:.8}
+.tile .val{font-family:var(--font-mono);font-size:1.5rem;font-weight:600;color:var(--cold-white);margin-top:.35rem;line-height:1}
+.tile .val .u{font-size:.7rem;color:var(--electric-soft);margin-left:.25rem}
+.tile .spark{margin-top:.5rem;height:18px;width:100%}
+.tile.wide{grid-column:span 3;display:flex;justify-content:space-between;align-items:center}
+.chip-stage{position:relative;flex:1;min-height:230px;border:1px solid var(--line);border-radius:12px;
+  background:radial-gradient(circle at 50% 45%,rgba(47,128,255,.12),transparent 60%);overflow:hidden;margin-top:.3rem}
+#chipCanvas{position:absolute;inset:0;width:100%;height:100%}
+.chip-cap{position:absolute;left:14px;bottom:12px;font-family:var(--font-mono);font-size:.62rem;
+  letter-spacing:.14em;color:var(--silver);text-transform:uppercase;z-index:2}
+.chip-cap .dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--electric);
+  margin-right:.5rem;box-shadow:0 0 8px var(--electric);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+
+@media(max-width:1023px){
+  .hero-grid{grid-template-columns:1fr;gap:var(--s-5)}
+  .hero-visual{min-height:auto}
+}
+@media(max-width:560px){
+  .tiles{grid-template-columns:repeat(2,1fr)}
+  .tile.wide{grid-column:span 2}
+}
+
+/* ---------- SECTION SHELL ---------- */
+.section{padding:var(--s-8) 0;position:relative}
+.section-head{max-width:760px;margin-bottom:var(--s-6)}
+.section-head h2{font-family:var(--font-display);font-weight:700;letter-spacing:-.015em;
+  font-size:clamp(1.9rem,3.6vw,3rem);line-height:1.05;margin:var(--s-2) 0}
+.section-head p{color:var(--silver);font-size:1.05rem;max-width:58ch}
+
+/* ---------- NARRATIVE SPINE ---------- */
+.narrative{position:relative}
+.spine{position:absolute;left:50%;top:0;bottom:0;width:2px;transform:translateX(-50%);
+  background:linear-gradient(var(--line),var(--line));z-index:0}
+.spine .flow{position:absolute;left:0;top:0;width:100%;height:0;
+  background:linear-gradient(var(--electric),var(--electric-soft));box-shadow:0 0 16px var(--glow);
+  transition:height .15s linear}
+.stage{
+  display:grid;grid-template-columns:1fr 96px 1fr;gap:var(--s-4);align-items:center;
+  padding:var(--s-6) 0;position:relative;
+}
+.stage-label{text-align:right}
+.stage:nth-child(even) .stage-label{text-align:left;order:3}
+.stage:nth-child(even) .stage-metrics{order:1;text-align:right}
+.stage:nth-child(even) .stage-viz{order:2}
+.stage-idx{font-family:var(--font-mono);font-size:.72rem;letter-spacing:.2em;color:var(--electric-soft)}
+.stage-label h3{font-family:var(--font-display);font-weight:700;font-size:clamp(1.5rem,2.6vw,2.3rem);
+  letter-spacing:.01em;margin:.4rem 0;transition:color .5s}
+.stage-label p{color:var(--silver);font-size:.95rem;max-width:38ch;margin-left:auto}
+.stage:nth-child(even) .stage-label p{margin-left:0;margin-right:auto}
+.stage-node{justify-self:center;align-self:center;position:relative;z-index:2}
+.node-dot{width:18px;height:18px;border-radius:50%;border:2px solid var(--line);background:var(--infra-black);
+  transition:.5s var(--ease);position:relative}
+.stage.active .node-dot{border-color:var(--electric);box-shadow:0 0 0 6px rgba(47,128,255,.12),0 0 22px var(--glow)}
+.stage.active .node-dot::after{content:"";position:absolute;inset:4px;border-radius:50%;background:var(--electric)}
+.stage.active .stage-label h3{color:var(--electric-soft)}
+.stage-viz{position:relative;height:180px;border:1px solid var(--line);border-radius:12px;overflow:hidden;
+  background:var(--rack-grey-2);transition:border-color .5s,box-shadow .5s}
+.stage.active .stage-viz{border-color:rgba(47,128,255,.4);box-shadow:0 0 50px -18px var(--glow)}
+.stage-viz canvas{position:absolute;inset:0;width:100%;height:100%}
+.stage-metrics{display:flex;flex-direction:column;gap:.7rem}
+.metric-row{display:flex;justify-content:space-between;align-items:baseline;
+  border-bottom:1px solid var(--line);padding-bottom:.45rem}
+.metric-row .mk{font-family:var(--font-mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--silver)}
+.metric-row .mv{font-family:var(--font-mono);font-size:1.05rem;color:var(--cold-white)}
+.metric-row .mv .u{font-size:.62rem;color:var(--electric-soft);margin-left:.2rem}
+
+@media(max-width:900px){
+  .spine{left:24px}
+  .stage{grid-template-columns:1fr;gap:var(--s-2);padding:var(--s-4) 0 var(--s-4) 56px}
+  .stage-label,.stage:nth-child(even) .stage-label{text-align:left;order:1}
+  .stage-viz,.stage:nth-child(even) .stage-viz{order:2;height:150px}
+  .stage-metrics,.stage:nth-child(even) .stage-metrics{order:3;text-align:left}
+  .stage-label p,.stage:nth-child(even) .stage-label p{margin:.4rem 0}
+  .stage-node{position:absolute;left:24px;top:var(--s-5);transform:translateX(-50%)}
+}
+
+/* ---------- CAPABILITIES ---------- */
+.caps{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s-2)}
+.cap{border:1px solid var(--line);border-radius:12px;padding:var(--s-3);background:var(--rack-grey-2);
+  position:relative;overflow:hidden;transition:.4s var(--ease)}
+.cap::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--electric),transparent);transform:scaleX(0);transform-origin:left;transition:transform .5s var(--ease)}
+.cap:hover{transform:translateY(-6px);border-color:rgba(47,128,255,.4);box-shadow:0 24px 50px -28px var(--glow)}
+.cap:hover::before{transform:scaleX(1)}
+.cap-ic{width:44px;height:44px;border:1px solid var(--line);border-radius:10px;display:flex;align-items:center;
+  justify-content:center;color:var(--electric-soft);margin-bottom:var(--s-2)}
+.cap-ic svg{width:22px;height:22px}
+.cap h3{font-family:var(--font-display);font-weight:600;font-size:1.08rem;letter-spacing:.02em;margin-bottom:.3rem}
+.cap .ct{font-family:var(--font-mono);font-size:.6rem;letter-spacing:.18em;color:var(--silver);text-transform:uppercase;margin-bottom:var(--s-2);display:block}
+.cap ul{list-style:none;display:flex;flex-direction:column;gap:.5rem}
+.cap li{display:flex;gap:.55rem;font-size:.85rem;color:var(--silver);align-items:flex-start}
+.cap li svg{width:14px;height:14px;color:var(--electric);flex:none;margin-top:.28rem}
+@media(max-width:1023px){.caps{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.caps{grid-template-columns:1fr}}
+
+/* ---------- RELIABILITY ---------- */
+.reliability{border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  background:linear-gradient(180deg,rgba(17,23,31,.4),transparent)}
+.rstats{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s-3);margin-bottom:var(--s-6)}
+.rstat .num{font-family:var(--font-display);font-weight:700;font-size:clamp(2.2rem,4.5vw,3.4rem);
+  letter-spacing:-.02em;color:var(--cold-white);line-height:1}
+.rstat .num .u{color:var(--electric);font-size:.5em;margin-left:.15rem}
+.rstat .rk{font-family:var(--font-mono);font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--silver);margin-top:.6rem;display:block}
+@media(max-width:768px){.rstats{grid-template-columns:repeat(2,1fr);gap:var(--s-4)}}
+
+.logos-lbl{font-family:var(--font-mono);font-size:.66rem;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--silver);text-align:center;margin-bottom:var(--s-3)}
+.logos{display:flex;flex-wrap:wrap;gap:.7rem;justify-content:center}
+.logo-chip{display:inline-flex;align-items:center;gap:.5rem;border:1px solid var(--line);border-radius:40px;
+  padding:.5rem 1.1rem;font-family:var(--font-mono);font-size:.78rem;color:var(--silver);
+  background:rgba(17,23,31,.45);transition:.3s var(--ease)}
+.logo-chip:hover{border-color:var(--electric);color:var(--cold-white);transform:translateY(-2px)}
+.logo-chip svg{width:14px;height:14px;color:var(--electric-soft)}
+
+/* ---------- CTA BAND ---------- */
+.ctaband{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:18px;
+  background:radial-gradient(ellipse 80% 120% at 80% 50%,rgba(47,128,255,.18),transparent 60%),var(--rack-grey-2);
+  padding:var(--s-7) var(--s-6);display:grid;grid-template-columns:1.2fr 1fr;gap:var(--s-5);align-items:center}
+.ctaband h2{font-family:var(--font-display);font-weight:700;letter-spacing:-.01em;
+  font-size:clamp(2rem,4vw,3.3rem);line-height:1.02;margin:var(--s-2) 0 var(--s-3)}
+.ctaband p{color:var(--silver);max-width:46ch;margin-bottom:var(--s-4)}
+.ctaband .actions{display:flex;gap:var(--s-2);flex-wrap:wrap}
+.facility{height:260px;position:relative;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--infra-black)}
+#facilityCanvas{position:absolute;inset:0;width:100%;height:100%}
+@media(max-width:900px){.ctaband{grid-template-columns:1fr;padding:var(--s-5)}}
+
+/* ---------- FOOTER ---------- */
+.footer{border-top:1px solid var(--line);padding:var(--s-7) 0 var(--s-4);margin-top:var(--s-8)}
+.fgrid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr 1.2fr;gap:var(--s-4)}
+.fcol h4{font-family:var(--font-mono);font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--silver);margin-bottom:var(--s-2)}
+.fcol ul{list-style:none;display:flex;flex-direction:column;gap:.6rem}
+.fcol a{font-size:.88rem;color:var(--silver);transition:color .25s}
+.fcol a:hover{color:var(--electric-soft)}
+.fbrand .brand{margin-bottom:var(--s-2)}
+.fbrand p{font-size:.85rem;color:var(--silver);max-width:34ch}
+.fstatus{display:inline-flex;align-items:center;gap:.5rem;margin-top:var(--s-3);font-family:var(--font-mono);
+  font-size:.72rem;color:var(--silver)}
+.fstatus .dot{width:8px;height:8px;border-radius:50%;background:#33d68a;box-shadow:0 0 10px #33d68a;animation:pulse 2s infinite}
+.fbar{display:flex;justify-content:space-between;align-items:center;margin-top:var(--s-6);padding-top:var(--s-3);
+  border-top:1px solid var(--line);font-family:var(--font-mono);font-size:.72rem;color:var(--silver);flex-wrap:wrap;gap:var(--s-2)}
+.fbar .links{display:flex;gap:var(--s-3)}
+@media(max-width:1023px){.fgrid{grid-template-columns:1fr 1fr 1fr}.fbrand{grid-column:span 3}}
+@media(max-width:560px){.fgrid{grid-template-columns:1fr 1fr}.fbrand{grid-column:span 2}}
+
+/* ---------- IMG FALLBACK (404-safe gradient in palette) ---------- */
+.imgwrap{position:relative;overflow:hidden;
+  background:linear-gradient(135deg,var(--rack-grey),var(--rack-grey-2) 60%,var(--infra-black));}
+.imgwrap::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(135deg,rgba(47,128,255,.10),transparent 55%);}
+.imgwrap img{position:relative;z-index:1;width:100%;height:100%;object-fit:cover;display:block}
+
+/* ---------- HERO ATMOSPHERE PHOTO ---------- */
+.hero-bg{position:absolute;inset:0;z-index:0;overflow:hidden;
+  background:linear-gradient(135deg,var(--infra-black-2),var(--infra-black));}
+.hero-bg img{width:100%;height:100%;object-fit:cover;opacity:.42;
+  transform:scale(1.04);filter:saturate(1.05)}
+.hero-bg::after{content:"";position:absolute;inset:0;
+  background:
+    linear-gradient(180deg,rgba(3,5,8,.55),rgba(3,5,8,.82) 70%,var(--infra-black) 100%),
+    radial-gradient(ellipse 90% 70% at 18% 38%,transparent,rgba(3,5,8,.7) 75%);}
+.hero .wrap{position:relative;z-index:1}
+
+/* ---------- STAGE PHOTO BACKDROP (behind generated canvas) ---------- */
+.stage-viz .viz-photo{position:absolute;inset:0;z-index:0;opacity:.5;
+  object-fit:cover;width:100%;height:100%}
+.stage-viz::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(180deg,rgba(5,8,13,.55),rgba(5,8,13,.78))}
+.stage-viz canvas{z-index:2}
+
+/* ---------- PROOF / FACILITY BAND ---------- */
+.proof{position:relative;overflow:hidden;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.proof-bg{position:absolute;inset:0;z-index:0}
+.proof-bg img{width:100%;height:100%;object-fit:cover;opacity:.34}
+.proof-bg::after{content:"";position:absolute;inset:0;
+  background:linear-gradient(90deg,var(--infra-black) 8%,rgba(3,5,8,.78) 50%,rgba(3,5,8,.55))}
+.proof .wrap{position:relative;z-index:1}
+.proof-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:var(--s-6);align-items:center}
+.proof-copy h2{font-family:var(--font-display);font-weight:700;letter-spacing:-.015em;
+  font-size:clamp(1.8rem,3.4vw,2.8rem);line-height:1.06;margin:var(--s-2) 0 var(--s-3)}
+.proof-copy p{color:var(--silver);max-width:48ch;margin-bottom:var(--s-4)}
+.proof-feats{display:flex;flex-direction:column;gap:.8rem}
+.proof-feats li{display:flex;gap:.6rem;align-items:flex-start;font-size:.92rem;color:var(--silver);list-style:none}
+.proof-feats svg{width:16px;height:16px;color:var(--electric);flex:none;margin-top:.28rem}
+.proof-shots{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto auto;gap:.7rem}
+.proof-shots .imgwrap{border:1px solid var(--line);border-radius:12px;aspect-ratio:4/3;transition:transform .4s var(--ease),border-color .4s}
+.proof-shots .imgwrap:hover{transform:translateY(-4px);border-color:rgba(47,128,255,.4)}
+.proof-shots .tall{grid-row:span 2;aspect-ratio:auto}
+.proof-shots .imgwrap img{transition:transform .6s var(--ease)}
+.proof-shots .imgwrap:hover img{transform:scale(1.05)}
+@media(max-width:900px){.proof-grid{grid-template-columns:1fr;gap:var(--s-5)}}
+@media(max-width:560px){.proof-shots .tall{grid-row:auto}}
+
+/* ---------- TESTIMONIALS ---------- */
+.tgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s-2)}
+.tcard{border:1px solid var(--line);border-radius:14px;padding:var(--s-3);background:var(--rack-grey-2);
+  display:flex;flex-direction:column;gap:var(--s-3);transition:.4s var(--ease)}
+.tcard:hover{transform:translateY(-5px);border-color:rgba(47,128,255,.35);box-shadow:0 24px 50px -30px var(--glow)}
+.tcard .quote{font-size:1rem;line-height:1.62;color:var(--cold-white)}
+.tcard .quote::before{content:"";display:block;width:26px;height:2px;background:var(--electric);margin-bottom:var(--s-2)}
+.tperson{display:flex;align-items:center;gap:.8rem;margin-top:auto}
+.tperson .av{width:46px;height:46px;border-radius:50%;flex:none;border:1px solid var(--line);
+  background:linear-gradient(135deg,var(--electric-dim),var(--rack-grey));overflow:hidden}
+.tperson .av img{width:100%;height:100%;object-fit:cover}
+.tperson .nm{font-family:var(--font-display);font-weight:600;font-size:.92rem;color:var(--cold-white)}
+.tperson .rl{font-family:var(--font-mono);font-size:.68rem;letter-spacing:.08em;color:var(--silver);margin-top:.15rem}
+@media(max-width:900px){.tgrid{grid-template-columns:1fr}}
+
+/* ---------- TRUST / SLA BAND ---------- */
+.trust{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s-2);margin-top:var(--s-5)}
+.tbadge{border:1px solid var(--line);border-radius:12px;padding:var(--s-3);background:rgba(17,23,31,.45);
+  display:flex;flex-direction:column;gap:.6rem;transition:.35s var(--ease)}
+.tbadge:hover{border-color:rgba(47,128,255,.4);transform:translateY(-3px)}
+.tbadge .ic{width:38px;height:38px;border:1px solid var(--line);border-radius:9px;display:flex;align-items:center;
+  justify-content:center;color:var(--electric-soft)}
+.tbadge .ic svg{width:20px;height:20px}
+.tbadge .bt{font-family:var(--font-display);font-weight:600;font-size:.96rem;color:var(--cold-white)}
+.tbadge .bd{font-size:.82rem;color:var(--silver);line-height:1.5}
+@media(max-width:900px){.trust{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:480px){.trust{grid-template-columns:1fr}}
+
+/* ---------- CTA BAND PHOTO ---------- */
+.ctaband .facility .fac-photo{position:absolute;inset:0;z-index:0;width:100%;height:100%;object-fit:cover;opacity:.45}
+.ctaband .facility::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(180deg,rgba(3,5,8,.35),rgba(3,5,8,.72))}
+.ctaband .facility canvas{z-index:2}
+.cta-assure{display:flex;gap:var(--s-3);margin-top:var(--s-4);flex-wrap:wrap}
+.cta-assure span{display:inline-flex;align-items:center;gap:.45rem;font-family:var(--font-mono);
+  font-size:.72rem;letter-spacing:.06em;color:var(--silver)}
+.cta-assure svg{width:14px;height:14px;color:var(--electric)}
+
+/* ---------- REVEAL ---------- */
+/* NOTE: hidden state is now applied by JS (gsap.set) only AFTER GSAP confirms
+   loaded, via the .gsap-ready hook below. If the CDN fails or JS errors, the
+   page renders 100% visible. The legacy IO-driven .in transition is kept as a
+   graceful fallback path but is neutralized when GSAP drives reveals. */
+.reveal{
+  transition:opacity .8s var(--ease),transform .8s var(--ease),filter .8s var(--ease)}
+/* Only hide reveal elements once GSAP is confirmed AND has not yet animated them.
+   gsap.set writes inline styles that win over this; this rule is just a CSS-side
+   safety so first paint of a GSAP-capable page doesn't flash content before set runs. */
+body.gsap-ready .reveal:not(.gsap-done){opacity:0}
+.reveal.in{opacity:1;transform:none;filter:none}
+.reveal[data-d="1"]{transition-delay:.08s}
+.reveal[data-d="2"]{transition-delay:.16s}
+.reveal[data-d="3"]{transition-delay:.24s}
+.reveal[data-d="4"]{transition-delay:.32s}
+
+/* Scroll-progress indicator — reuses brand --electric, no new accent. */
+.scroll-progress{
+  position:fixed;top:0;left:0;height:2px;width:100%;z-index:200;
+  transform:scaleX(0);transform-origin:0 50%;pointer-events:none;
+  background:linear-gradient(90deg,var(--electric),var(--electric-soft));
+  box-shadow:0 0 12px var(--glow);
+}
+
+@media (prefers-reduced-motion:reduce){
+  .reveal{opacity:1;transform:none;filter:none;transition:none}
+  body.gsap-ready .reveal:not(.gsap-done){opacity:1}
+  .scroll-progress{display:none}
+  .spine .flow{transition:none}
+  .chip-cap .dot,.fstatus .dot{animation:none}
+}
+</style>
+</head>
+<body>
+
+<div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+
+<!-- NAV -->
+<header class="nav" id="nav">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="The Invisible Engine home">
+      <svg class="cube" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+        <path d="M20 3 35 11.5V28.5L20 37 5 28.5V11.5L20 3Z" stroke="#2F80FF" stroke-width="1.4"/>
+        <path d="M20 3 35 11.5 20 20 5 11.5 20 3Z" fill="rgba(47,128,255,.18)" stroke="#2F80FF" stroke-width="1.2"/>
+        <path d="M20 20V37M20 20 35 11.5M20 20 5 11.5" stroke="#5e9bff" stroke-width="1.2"/>
+      </svg>
+      THE INVISIBLE ENGINE
+    </a>
+    <nav aria-label="Primary">
+      <ul class="nav-menu">
+        <li><a href="#platform">Platform</a></li>
+        <li><a href="#solutions">Solutions</a></li>
+        <li><a href="#security">Security</a></li>
+        <li><a href="#network">Network</a></li>
+        <li><a href="#company">Company</a></li>
+      </ul>
+    </nav>
+    <a class="nav-cta" href="#contact">
+      Contact Sales
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </a>
+    <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+  <a href="#platform">Platform</a>
+  <a href="#solutions">Solutions</a>
+  <a href="#security">Security</a>
+  <a href="#network">Network</a>
+  <a href="#company">Company</a>
+  <a class="nav-cta" href="#contact">Contact Sales</a>
+</div>
+
+<main id="top">
+
+<!-- HERO -->
+<section class="hero" id="platform">
+  <div class="hero-bg" aria-hidden="true">
+    <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1920&q=80"
+         alt="" fetchpriority="high" decoding="async" width="1920" height="1080"
+         onerror="this.style.display='none'" />
+  </div>
+  <div class="wrap">
+    <div class="hero-grid">
+      <div class="hero-copy">
+        <span class="eyebrow reveal">AI Infrastructure · Silicon to Global Scale</span>
+        <h1 class="reveal" data-d="1">INTELLIGENCE NEEDS INFRASTRUCTURE.<br><span class="accent">WE BUILD WHAT POWERS IT.</span></h1>
+        <p class="hero-sub reveal" data-d="2">The frontier of intelligence is built on power, silicon, and certainty. We engineer the invisible engine behind it — purpose-built data centers, dense GPU fabric, and resilient grids that keep your models training, day and night.</p>
+        <div class="hero-actions reveal" data-d="3">
+          <a class="btn btn-primary" href="#contact">Get My Capacity Plan
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+          <a class="btn btn-ghost" href="#solutions">See How It Scales</a>
+        </div>
+        <div class="hero-trust reveal" data-d="4">
+          <div><b>14</b>Global regions</div>
+          <div><b>3.2 GW</b>Contracted power</div>
+          <div><b>99.99%</b>Uptime SLA</div>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <div class="tiles">
+          <div class="tile reveal">
+            <span class="lbl">PUE</span>
+            <div class="val" data-count="1.18" data-dec="2">1.18</div>
+            <svg class="spark" viewBox="0 0 100 18" preserveAspectRatio="none" aria-hidden="true"><polyline fill="none" stroke="#2F80FF" stroke-width="1.5" points="0,14 14,11 28,12 42,7 56,9 70,4 84,6 100,2"/></svg>
+          </div>
+          <div class="tile reveal" data-d="1">
+            <span class="lbl">GPUs Online</span>
+            <div class="val" data-count="79560" data-dec="0">79,560</div>
+            <svg class="spark" viewBox="0 0 100 18" preserveAspectRatio="none" aria-hidden="true"><polyline fill="none" stroke="#2F80FF" stroke-width="1.5" points="0,15 16,13 32,14 48,9 64,8 80,5 100,3"/></svg>
+          </div>
+          <div class="tile reveal" data-d="2">
+            <span class="lbl">Utilization</span>
+            <div class="val" data-count="81" data-dec="0">81<span class="u">%</span></div>
+            <svg class="spark" viewBox="0 0 100 18" preserveAspectRatio="none" aria-hidden="true"><polyline fill="none" stroke="#2F80FF" stroke-width="1.5" points="0,10 16,12 32,8 48,11 64,7 80,9 100,6"/></svg>
+          </div>
+          <div class="tile wide reveal" data-d="3">
+            <div>
+              <span class="lbl">Live Draw</span>
+              <div class="val" data-count="10.3" data-dec="1" style="font-size:1.7rem">10.3<span class="u">MW</span></div>
+            </div>
+            <div style="text-align:right">
+              <span class="lbl">Carbon Intensity</span>
+              <div class="val" style="font-size:1.7rem" data-count="23.4" data-dec="1">23.4<span class="u">gCO₂</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="chip-stage reveal" data-d="2">
+          <canvas id="chipCanvas" aria-hidden="true"></canvas>
+          <span class="chip-cap"><span class="dot"></span>CORE · ROUTING 1.42 EB/S</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NARRATIVE SPINE -->
+<section class="section" id="solutions">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">The Descent</span>
+      <h2>From a single transistor to planetary scale.</h2>
+      <p>Every model you ship rides on six layers of engineering. Follow the data spine down — from silicon to the global fabric — and watch each layer activate.</p>
+    </div>
+
+    <div class="narrative">
+      <div class="spine"><div class="flow" id="spineFlow"></div></div>
+
+      <!-- STAGE 1 -->
+      <article class="stage reveal" data-stage>
+        <div class="stage-label">
+          <span class="stage-idx">LAYER 01</span>
+          <h3>SILICON</h3>
+          <p>Latest-generation accelerators, binned and burned-in. Every die validated before it touches a customer workload.</p>
+        </div>
+        <div class="stage-node"><span class="node-dot"></span></div>
+        <div class="stage-viz"><img class="viz-photo" src="https://images.unsplash.com/photo-1591405351990-4726e331f141?auto=format&fit=crop&w=1100&q=80" alt="Close-up of a silicon processor die" loading="lazy" decoding="async" width="1100" height="619" onerror="this.style.display='none'" /><canvas data-viz="silicon" aria-hidden="true"></canvas></div>
+        <div class="stage-metrics">
+          <div class="metric-row"><span class="mk">Transistors / die</span><span class="mv" data-count="208" data-dec="0">208<span class="u">B</span></span></div>
+          <div class="metric-row"><span class="mk">Memory bandwidth</span><span class="mv" data-count="8" data-dec="1">8.0<span class="u">TB/s</span></span></div>
+          <div class="metric-row"><span class="mk">Die yield</span><span class="mv" data-count="94" data-dec="0">94<span class="u">%</span></span></div>
+        </div>
+      </article>
+
+      <!-- STAGE 2 -->
+      <article class="stage reveal" data-stage>
+        <div class="stage-label">
+          <span class="stage-idx">LAYER 02</span>
+          <h3>RACK</h3>
+          <p>Liquid-cooled racks packing dozens of accelerators into a single NVLink domain — wired for maximum density, minimum heat.</p>
+        </div>
+        <div class="stage-node"><span class="node-dot"></span></div>
+        <div class="stage-viz"><img class="viz-photo" src="https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?auto=format&fit=crop&w=1100&q=80" alt="Server racks glowing with blue indicator lights" loading="lazy" decoding="async" width="1100" height="619" onerror="this.style.display='none'" /><canvas data-viz="rack" aria-hidden="true"></canvas></div>
+        <div class="stage-metrics">
+          <div class="metric-row"><span class="mk">Density / rack</span><span class="mv" data-count="132" data-dec="0">132<span class="u">kW</span></span></div>
+          <div class="metric-row"><span class="mk">Accelerators</span><span class="mv" data-count="72" data-dec="0">72<span class="u">GPU</span></span></div>
+          <div class="metric-row"><span class="mk">Coolant ΔT</span><span class="mv" data-count="6" data-dec="0">6<span class="u">°C</span></span></div>
+        </div>
+      </article>
+
+      <!-- STAGE 3 -->
+      <article class="stage reveal" data-stage>
+        <div class="stage-label">
+          <span class="stage-idx">LAYER 03</span>
+          <h3>ROOM</h3>
+          <p>Hot-aisle contained data halls with redundant CRAH and closed-loop liquid, engineered for sustained peak draw without a thermal ceiling.</p>
+        </div>
+        <div class="stage-node"><span class="node-dot"></span></div>
+        <div class="stage-viz"><img class="viz-photo" src="https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=1100&q=80" alt="Long aisle inside a data center hall" loading="lazy" decoding="async" width="1100" height="619" onerror="this.style.display='none'" /><canvas data-viz="room" aria-hidden="true"></canvas></div>
+        <div class="stage-metrics">
+          <div class="metric-row"><span class="mk">Racks / hall</span><span class="mv" data-count="320" data-dec="0">320</span></div>
+          <div class="metric-row"><span class="mk">Cooling capacity</span><span class="mv" data-count="42" data-dec="0">42<span class="u">MW</span></span></div>
+          <div class="metric-row"><span class="mk">Room PUE</span><span class="mv" data-count="1.12" data-dec="2">1.12</span></div>
+        </div>
+      </article>
+
+      <!-- STAGE 4 -->
+      <article class="stage reveal" data-stage>
+        <div class="stage-label">
+          <span class="stage-idx">LAYER 04</span>
+          <h3>CAMPUS</h3>
+          <p>Multi-building campuses with on-site substations and dedicated water — power and connectivity that scale as a single contiguous fabric.</p>
+        </div>
+        <div class="stage-node"><span class="node-dot"></span></div>
+        <div class="stage-viz"><img class="viz-photo" src="https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?auto=format&fit=crop&w=1100&q=80" alt="Aerial view of an industrial campus at dusk" loading="lazy" decoding="async" width="1100" height="619" onerror="this.style.display='none'" /><canvas data-viz="campus" aria-hidden="true"></canvas></div>
+        <div class="stage-metrics">
+          <div class="metric-row"><span class="mk">Campus power</span><span class="mv" data-count="420" data-dec="0">420<span class="u">MW</span></span></div>
+          <div class="metric-row"><span class="mk">Data halls</span><span class="mv" data-count="18" data-dec="0">18</span></div>
+          <div class="metric-row"><span class="mk">Fiber pairs</span><span class="mv" data-count="864" data-dec="0">864</span></div>
+        </div>
+      </article>
+
+      <!-- STAGE 5 -->
+      <article class="stage reveal" data-stage>
+        <div class="stage-label">
+          <span class="stage-idx">LAYER 05</span>
+          <h3>CLOUD</h3>
+          <p>A software fabric that abstracts thousands of accelerators into one elastic pool — schedulable, observable, and instantly reprovisioned.</p>
+        </div>
+        <div class="stage-node"><span class="node-dot"></span></div>
+        <div class="stage-viz"><canvas data-viz="cloud" aria-hidden="true"></canvas></div>
+        <div class="stage-metrics">
+          <div class="metric-row"><span class="mk">Schedulable pool</span><span class="mv" data-count="79560" data-dec="0">79,560</span></div>
+          <div class="metric-row"><span class="mk">Provision time</span><span class="mv" data-count="90" data-dec="0">90<span class="u">s</span></span></div>
+          <div class="metric-row"><span class="mk">Fleet utilization</span><span class="mv" data-count="81" data-dec="0">81<span class="u">%</span></span></div>
+        </div>
+      </article>
+
+      <!-- STAGE 6 -->
+      <article class="stage reveal" data-stage>
+        <div class="stage-label">
+          <span class="stage-idx">LAYER 06</span>
+          <h3>GLOBAL SCALE</h3>
+          <p>Fourteen regions stitched by private backbone — train where the power is cleanest, serve where your users are, route around anything.</p>
+        </div>
+        <div class="stage-node"><span class="node-dot"></span></div>
+        <div class="stage-viz"><canvas data-viz="global" aria-hidden="true"></canvas></div>
+        <div class="stage-metrics">
+          <div class="metric-row"><span class="mk">Regions</span><span class="mv" data-count="14" data-dec="0">14</span></div>
+          <div class="metric-row"><span class="mk">Backbone</span><span class="mv" data-count="400" data-dec="0">400<span class="u">Tbps</span></span></div>
+          <div class="metric-row"><span class="mk">Inter-region RTT</span><span class="mv" data-count="28" data-dec="0">28<span class="u">ms</span></span></div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- CAPABILITIES -->
+<section class="section" id="security">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">Capability Stack</span>
+      <h2>Four disciplines. One uncompromising standard.</h2>
+      <p>Infrastructure is only as strong as its weakest layer. We own physical, digital, power, and network end to end — so accountability never falls through the cracks.</p>
+    </div>
+    <div class="caps">
+      <article class="cap reveal">
+        <div class="cap-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.4 8.5 8 11 4.6-2.5 8-6 8-11V5l-8-3Z"/></svg></div>
+        <span class="ct">Layer A</span>
+        <h3>Physical Security</h3>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg>5-zone biometric access control</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg>24/7 manned SOC &amp; mantraps</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg>Anti-tailgating &amp; vehicle bollards</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg>SOC 2 Type II &amp; ISO 27001</li>
+        </ul>
+      </article>
+
+      <article class="cap reveal" data-d="1">
+        <div class="cap-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg></div>
+        <span class="ct">Layer B</span>
+        <h3>Digital Security</h3>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg>Confidential compute enclaves</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg>Per-tenant network isolation</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg>HSM-backed key management</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg>Continuous attestation &amp; audit logs</li>
+        </ul>
+      </article>
+
+      <article class="cap reveal" data-d="2">
+        <div class="cap-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z"/></svg></div>
+        <span class="ct">Layer C</span>
+        <h3>Power &amp; Energy</h3>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg>2N redundant utility feeds</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg>On-site substation &amp; BESS storage</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg>100% matched renewable supply</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg>Sub-1.2 design PUE</li>
+        </ul>
+      </article>
+
+      <article class="cap reveal" data-d="3">
+        <div class="cap-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4M5 5l3 3M16 16l3 3M19 5l-3 3M8 16l-3 3"/></svg></div>
+        <span class="ct">Layer D</span>
+        <h3>Network Architecture</h3>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg>Non-blocking rail-optimized fabric</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg>400G / 800G InfiniBand &amp; Ethernet</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg>Private global backbone</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg>Sub-millisecond intra-fabric RTT</li>
+        </ul>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- PROOF / FACILITY BAND -->
+<section class="section proof">
+  <div class="proof-bg" aria-hidden="true">
+    <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1920&q=80"
+         alt="" loading="lazy" decoding="async" width="1920" height="1080"
+         onerror="this.style.display='none'" />
+  </div>
+  <div class="wrap">
+    <div class="proof-grid">
+      <div class="proof-copy reveal">
+        <span class="eyebrow">Inside The Facility</span>
+        <h2>Real metal. Real power. Built to be toured.</h2>
+        <p>Every claim on this page maps to a physical place you can walk. Hot-aisle containment, on-site substations, and closed-loop liquid cooling — engineered, instrumented, and audited so your training runs never wait on the building.</p>
+        <ul class="proof-feats">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg>Concurrently maintainable — service any component live, zero downtime.</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg>Direct-to-chip liquid loops rated for next-gen 130kW+ racks.</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg>On-site engineers and remote hands available 24/7/365.</li>
+        </ul>
+        <a class="btn btn-primary" href="#contact">Book a Facility Tour
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+      </div>
+      <div class="proof-shots reveal" data-d="1">
+        <div class="imgwrap tall">
+          <img src="https://images.unsplash.com/photo-1597852074816-d933c7d2b988?auto=format&fit=crop&w=1100&q=80"
+               alt="Technician inspecting equipment in a data center" loading="lazy" decoding="async"
+               width="1100" height="1400" onerror="this.style.display='none';this.closest('.imgwrap').style.aspectRatio='3/4'" />
+        </div>
+        <div class="imgwrap">
+          <img src="https://images.unsplash.com/photo-1544197150-b99a580bb7a8?auto=format&fit=crop&w=1100&q=80"
+               alt="Network fiber-optic cabling close-up" loading="lazy" decoding="async"
+               width="1100" height="825" onerror="this.style.display='none'" />
+        </div>
+        <div class="imgwrap">
+          <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1100&q=80"
+               alt="Cooling and power infrastructure detail" loading="lazy" decoding="async"
+               width="1100" height="825" onerror="this.style.display='none'" />
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RELIABILITY -->
+<section class="section reliability" id="network">
+  <div class="wrap">
+    <div class="section-head reveal" style="max-width:640px">
+      <span class="eyebrow">Proven At Scale</span>
+      <h2>The numbers behind the engine.</h2>
+    </div>
+    <div class="rstats">
+      <div class="rstat reveal"><div class="num" data-count="99.99" data-dec="2">99.99<span class="u">%</span></div><span class="rk">Measured uptime</span></div>
+      <div class="rstat reveal" data-d="1"><div class="num"><span class="u" style="font-size:.7em">&lt;</span><span data-count="30" data-dec="0">30</span><span class="u">ms</span></div><span class="rk">Edge latency</span></div>
+      <div class="rstat reveal" data-d="2"><div class="num" data-count="100" data-dec="0">100<span class="u">%</span></div><span class="rk">Renewable matched</span></div>
+      <div class="rstat reveal" data-d="3"><div class="num" data-count="11.5" data-dec="1">11.5<span class="u">×</span></div><span class="rk">Fleet growth YoY</span></div>
+    </div>
+
+    <p class="logos-lbl reveal">Trusted by the teams building the frontier</p>
+    <div class="logos reveal" data-d="1">
+      <span class="logo-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="9"/></svg>Neural Foundry</span>
+      <span class="logo-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="3"/></svg>Helix Labs</span>
+      <span class="logo-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 3 21 18H3L12 3Z"/></svg>Vector AI</span>
+      <span class="logo-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 3v18M3 12h18"/></svg>Quanta Research</span>
+      <span class="logo-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><polygon points="12,3 20,8 20,16 12,21 4,16 4,8"/></svg>Orbital Systems</span>
+      <span class="logo-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="8" cy="12" r="4"/><circle cx="16" cy="12" r="4"/></svg>Cohere Grid</span>
+      <span class="logo-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 12h16M12 4v16"/></svg>Axiom Compute</span>
+    </div>
+
+    <div class="tgrid" style="margin-top:var(--s-7)">
+      <article class="tcard reveal">
+        <p class="quote">We moved a 32k-GPU training run with zero replanning. The fabric was non-blocking out of the box and the team caught a power-phase issue before we ever saw it.</p>
+        <div class="tperson">
+          <span class="av"><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=160&q=80" alt="Portrait of Lena Okafor" loading="lazy" decoding="async" width="46" height="46" onerror="this.style.display='none'" /></span>
+          <div><div class="nm">Lena Okafor</div><div class="rl">VP Infrastructure · Neural Foundry</div></div>
+        </div>
+      </article>
+      <article class="tcard reveal" data-d="1">
+        <p class="quote">Four quarters, zero unplanned downtime. They treat our SLA like a promise, not a target — and the live telemetry means we never have to ask how the cluster is doing.</p>
+        <div class="tperson">
+          <span class="av"><img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=160&q=80" alt="Portrait of Marcus Reyes" loading="lazy" decoding="async" width="46" height="46" onerror="this.style.display='none'" /></span>
+          <div><div class="nm">Marcus Reyes</div><div class="rl">Head of ML Platform · Helix Labs</div></div>
+        </div>
+      </article>
+      <article class="tcard reveal" data-d="2">
+        <p class="quote">From signed contract to first watt in a contiguous campus build — faster than anyone we evaluated. This is the partner you want when capacity is the bottleneck on your roadmap.</p>
+        <div class="tperson">
+          <span class="av"><img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=160&q=80" alt="Portrait of Priya Nandi" loading="lazy" decoding="async" width="46" height="46" onerror="this.style.display='none'" /></span>
+          <div><div class="nm">Priya Nandi</div><div class="rl">CTO · Vector AI</div></div>
+        </div>
+      </article>
+    </div>
+
+    <div class="trust">
+      <div class="tbadge reveal">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.4 8.5 8 11 4.6-2.5 8-6 8-11V5l-8-3Z"/></svg></div>
+        <div class="bt">SOC 2 Type II · ISO 27001</div>
+        <div class="bd">Independently audited controls across every facility, renewed annually.</div>
+      </div>
+      <div class="tbadge reveal" data-d="1">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 3v6M12 3l4 2M12 3 8 5M5 9v6l7 4 7-4V9l-7-4"/></svg></div>
+        <div class="bt">99.99% Uptime SLA</div>
+        <div class="bd">Financially backed, concurrently maintainable, Tier III+ topology.</div>
+      </div>
+      <div class="tbadge reveal" data-d="2">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z"/></svg></div>
+        <div class="bt">100% Renewable Matched</div>
+        <div class="bd">Every watt matched with clean supply and on-site BESS storage.</div>
+      </div>
+      <div class="tbadge reveal" data-d="3">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg></div>
+        <div class="bt">Confidential Compute</div>
+        <div class="bd">HSM-backed keys, tenant isolation, continuous attestation by default.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BAND -->
+<section class="section" id="contact">
+  <div class="wrap">
+    <div class="ctaband reveal">
+      <div>
+        <span class="eyebrow">Let's build</span>
+        <h2>LET'S BUILD WHAT'S NEXT. TOGETHER.</h2>
+        <p>Tell us your power envelope, accelerator target, and timeline. Our infrastructure engineers return a fully modeled capacity plan — power, cooling, network, and cost — within five business days. No procurement maze. Just a build path.</p>
+        <div class="actions">
+          <a class="btn btn-primary" href="mailto:sales@invisible-engine.io">Get My Capacity Plan
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+          <a class="btn btn-ghost" href="#company">Talk to an Engineer</a>
+        </div>
+        <div class="cta-assure">
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg>5-day modeled plan</span>
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg>No long-term lock-in to start</span>
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg>NDA on request</span>
+        </div>
+      </div>
+      <div class="facility" id="capacity">
+        <img class="fac-photo" src="https://images.unsplash.com/photo-1551808525-51a94da548ce?auto=format&fit=crop&w=1100&q=80" alt="Illuminated server room aisle" loading="lazy" decoding="async" width="1100" height="619" onerror="this.style.display='none'" />
+        <canvas id="facilityCanvas" aria-hidden="true"></canvas>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="footer" id="company">
+  <div class="wrap">
+    <div class="fgrid">
+      <div class="fcol fbrand">
+        <a class="brand" href="#top">
+          <svg class="cube" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+            <path d="M20 3 35 11.5V28.5L20 37 5 28.5V11.5L20 3Z" stroke="#2F80FF" stroke-width="1.4"/>
+            <path d="M20 3 35 11.5 20 20 5 11.5 20 3Z" fill="rgba(47,128,255,.18)" stroke="#2F80FF" stroke-width="1.2"/>
+            <path d="M20 20V37M20 20 35 11.5M20 20 5 11.5" stroke="#5e9bff" stroke-width="1.2"/>
+          </svg>
+          THE INVISIBLE ENGINE
+        </a>
+        <p>The infrastructure layer for frontier intelligence. Silicon to global scale, engineered as one system.</p>
+        <span class="fstatus"><span class="dot"></span>ALL SYSTEMS OPERATIONAL · 99.99%</span>
+      </div>
+      <div class="fcol">
+        <h4>Platform</h4>
+        <ul>
+          <li><a href="#platform">Compute Fabric</a></li>
+          <li><a href="#solutions">Bare Metal GPU</a></li>
+          <li><a href="#solutions">Managed Clusters</a></li>
+          <li><a href="#network">Private Backbone</a></li>
+        </ul>
+      </div>
+      <div class="fcol">
+        <h4>Solutions</h4>
+        <ul>
+          <li><a href="#solutions">Model Training</a></li>
+          <li><a href="#solutions">Inference at Scale</a></li>
+          <li><a href="#solutions">Sovereign AI</a></li>
+          <li><a href="#capacity">Capacity Planning</a></li>
+        </ul>
+      </div>
+      <div class="fcol">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#company">About</a></li>
+          <li><a href="#security">Security &amp; Trust</a></li>
+          <li><a href="#company">Careers</a></li>
+          <li><a href="#contact">Contact Sales</a></li>
+        </ul>
+      </div>
+      <div class="fcol">
+        <h4>Engineering Desk</h4>
+        <ul>
+          <li><a href="mailto:sales@invisible-engine.io">sales@invisible-engine.io</a></li>
+          <li><a href="tel:+18005550199">+1 (800) 555-0199</a></li>
+          <li><a href="#contact">Request capacity model</a></li>
+        </ul>
+        <a class="btn btn-ghost" href="#contact" style="margin-top:1rem;font-size:.82rem;padding:.6rem 1rem">Plan My Infrastructure</a>
+      </div>
+    </div>
+    <div class="fbar">
+      <span>© 2026 The Invisible Engine, Inc. — Infrastructure for intelligence.</span>
+      <span class="links">
+        <a href="#company">Privacy</a><a href="#company">Terms</a><a href="#security">Trust Center</a><a href="#network">Status</a>
+      </span>
+    </div>
+  </div>
+</footer>
+
+<!-- Cinematic motion layer (additive, fully optional) -->
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/CustomEase.min.js"></script>
+<!-- Lenis smooth-scroll removed: wheel hijacking caused scroll jank; native scroll is used instead. -->
+
+<script>
+(function(){
+  "use strict";
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---------------------------------------------------------------------------
+     PERFORMANCE LAYER (shared)
+     A tiny helper so every continuous requestAnimationFrame loop:
+       - only runs while its host element is on-screen (IntersectionObserver),
+       - stops when the document/tab is hidden, resumes when visible,
+       - is capped to ~30fps for ambient/decorative motion (half the cost,
+         visually identical for slow ambient animation).
+     Exposed on window so the cinematic layer can reuse the perf tier.
+  --------------------------------------------------------------------------- */
+  var docHidden = false;
+  document.addEventListener("visibilitychange", function(){
+    docHidden = document.hidden;
+  });
+
+  /* lowPower tier: weak / mobile / battery devices skip ALL heavy continuous
+     effects (Lenis, parallax, mouse-parallax, velocity-skew). Reveals + hero
+     intro + on-screen canvas loops still run (cheap). */
+  var lowPower = (function(){
+    if(reduce) return true;
+    if(window.matchMedia("(pointer: coarse)").matches) return true;
+    if(window.matchMedia("(max-width: 860px)").matches) return true;
+    if(navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4) return true;
+    if(navigator.deviceMemory && navigator.deviceMemory <= 4) return true;
+    return false;
+  })();
+  window.__lowPower = lowPower;
+
+  /* Wrap a per-frame draw fn into a visibility-gated, ~30fps-capped RAF loop.
+     Returns a control object; call .observe(hostEl) to gate it on that element.
+     draw(now) is invoked at most every ~33ms while the host is intersecting
+     and the tab is visible. cancelAnimationFrame on exit, resume on re-enter. */
+  function makeLoop(draw, fps){
+    var interval = 1000 / (fps || 30);
+    var rafId = null, last = 0, onScreen = false;
+    function tick(now){
+      rafId = requestAnimationFrame(tick);
+      if(docHidden || !onScreen){ return; }
+      if(now - last < interval){ return; }
+      last = now;
+      draw(now);
+    }
+    function start(){ if(rafId === null){ last = 0; rafId = requestAnimationFrame(tick); } }
+    function stop(){ if(rafId !== null){ cancelAnimationFrame(rafId); rafId = null; } }
+    document.addEventListener("visibilitychange", function(){
+      if(document.hidden) stop(); else if(onScreen) start();
+    });
+    return {
+      observe:function(host){
+        if(!("IntersectionObserver" in window)){ onScreen = true; start(); return; }
+        var io = new IntersectionObserver(function(es){
+          es.forEach(function(e){ onScreen = e.isIntersecting; });
+          if(onScreen && !document.hidden) start(); else stop();
+        }, {threshold:0.01});
+        io.observe(host);
+      },
+      drawOnce:function(){ draw(performance.now()); }
+    };
+  }
+  window.__makeLoop = makeLoop;
+
+  /* GSAP loads via deferred CDN scripts and is NOT guaranteed present when this
+     IIFE runs. The cinematic layer (bottom of file) sets window.__GSAP_REVEAL
+     once it has taken ownership of reveals/counters. Until then the native
+     systems below remain the source of truth, so a blocked CDN degrades cleanly. */
+  function gsapOwnsReveals(){ return !!window.__GSAP_REVEAL; }
+
+  /* ---- NAV scroll state ---- */
+  var nav = document.getElementById("nav");
+  function onScroll(){ nav.classList.toggle("scrolled", window.scrollY > 24); }
+  onScroll();
+  window.addEventListener("scroll", onScroll, {passive:true});
+
+  /* ---- Mobile menu ---- */
+  var burger = document.getElementById("hamburger");
+  var mm = document.getElementById("mobileMenu");
+  function setMenu(open){
+    burger.setAttribute("aria-expanded", open ? "true":"false");
+    mm.setAttribute("aria-hidden", open ? "false":"true");
+    mm.classList.toggle("open", open);
+    burger.setAttribute("aria-label", open ? "Close menu":"Open menu");
+    document.body.style.overflow = open ? "hidden":"";
+  }
+  burger.addEventListener("click", function(){ setMenu(!mm.classList.contains("open")); });
+  mm.querySelectorAll("a").forEach(function(a){ a.addEventListener("click", function(){ setMenu(false); }); });
+  document.addEventListener("keydown", function(e){ if(e.key==="Escape") setMenu(false); });
+
+  /* ---- Reveal on scroll (native fallback) ---- */
+  var revealEls = document.querySelectorAll(".reveal");
+  if(reduce){ revealEls.forEach(function(el){ el.classList.add("in"); }); }
+  else{
+    var ro = new IntersectionObserver(function(entries){
+      /* If the GSAP layer has taken ownership, stand down — it will reveal these. */
+      if(gsapOwnsReveals()){ ro.disconnect(); return; }
+      entries.forEach(function(en){ if(en.isIntersecting){ en.target.classList.add("in"); ro.unobserve(en.target); } });
+    },{threshold:.18, rootMargin:"0px 0px -8% 0px"});
+    revealEls.forEach(function(el){ ro.observe(el); });
+    /* expose so the cinematic layer can fully disconnect it before animating */
+    window.__nativeRevealIO = ro;
+  }
+
+  /* ---- Counters ---- */
+  function animateCount(el){
+    var target = parseFloat(el.getAttribute("data-count"));
+    var dec = parseInt(el.getAttribute("data-dec")||"0",10);
+    var unitSpan = el.querySelector(".u");
+    var unitHTML = unitSpan ? unitSpan.outerHTML : "";
+    var dur = 1500, start = null;
+    function fmt(v){
+      var s = v.toLocaleString("en-US",{minimumFractionDigits:dec, maximumFractionDigits:dec});
+      return s + unitHTML;
+    }
+    function step(ts){
+      if(!start) start = ts;
+      var p = Math.min((ts-start)/dur,1);
+      var eased = 1 - Math.pow(1-p,3);
+      el.innerHTML = fmt(target*eased);
+      if(p<1) requestAnimationFrame(step);
+      else el.innerHTML = fmt(target);
+    }
+    requestAnimationFrame(step);
+  }
+  var counters = document.querySelectorAll("[data-count]");
+  /* expose the count-up fn so the GSAP layer can re-fire counters via ScrollTrigger */
+  window.__animateCount = animateCount;
+  if(reduce){ counters.forEach(function(el){
+      var dec=parseInt(el.getAttribute("data-dec")||"0",10);
+      var u=el.querySelector(".u"); var uh=u?u.outerHTML:"";
+      el.innerHTML = parseFloat(el.getAttribute("data-count")).toLocaleString("en-US",{minimumFractionDigits:dec,maximumFractionDigits:dec})+uh;
+  }); }
+  else{
+    var co = new IntersectionObserver(function(entries){
+      /* If GSAP owns the scroll layer, it drives counters via ScrollTrigger instead. */
+      if(gsapOwnsReveals()){ co.disconnect(); return; }
+      entries.forEach(function(en){ if(en.isIntersecting){ animateCount(en.target); co.unobserve(en.target); } });
+    },{threshold:.5});
+    counters.forEach(function(el){ co.observe(el); });
+    window.__nativeCounterIO = co;
+  }
+
+  /* ---- Hero parallax (native fallback) ---- */
+  var chipStage = document.querySelector(".chip-stage");
+  if(!reduce && chipStage){
+    window.addEventListener("scroll", function(){
+      /* GSAP scrub parallax supersedes this to avoid fighting over transform. */
+      if(gsapOwnsReveals()) return;
+      var y = window.scrollY;
+      if(y < 900) chipStage.style.transform = "translateY(" + (y*0.06) + "px)";
+    }, {passive:true});
+  }
+
+  /* ---- Canvas helper: hi-dpi sizing ---- */
+  function fitCanvas(cv){
+    var dpr = Math.min(window.devicePixelRatio||1, 1.5);
+    var r = cv.getBoundingClientRect();
+    cv.width = Math.max(1, r.width*dpr);
+    cv.height = Math.max(1, r.height*dpr);
+    var ctx = cv.getContext("2d");
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    return {ctx:ctx, w:r.width, h:r.height};
+  }
+
+  /* ---- HERO CHIP/CUBE ---- */
+  var chipCv = document.getElementById("chipCanvas");
+  if(chipCv){
+    var C = fitCanvas(chipCv);
+    var t = 0;
+    var pins = 7;
+    function drawChip(now){
+      t = (now||0) * 0.001 * 0.96; /* time-based: ~0.016/frame at 60fps, identical speed at 30fps */
+      var ctx = C.ctx, w = C.w, h = C.h;
+      ctx.clearRect(0,0,w,h);
+      var cx = w/2, cy = h/2, sz = Math.min(w,h)*0.26;
+      // grid backdrop
+      ctx.strokeStyle = "rgba(183,192,204,.06)";
+      ctx.lineWidth = 1;
+      for(var gx=0; gx<w; gx+=26){ ctx.beginPath(); ctx.moveTo(gx,0); ctx.lineTo(gx,h); ctx.stroke(); }
+      for(var gy=0; gy<h; gy+=26){ ctx.beginPath(); ctx.moveTo(0,gy); ctx.lineTo(w,gy); ctx.stroke(); }
+      // radiating data lines
+      for(var i=0;i<pins;i++){
+        var side = i/pins;
+        var ax = cx - sz + (sz*2)*((i%4)/3);
+        // four sides traces
+        var dirs = [[0,-1],[1,0],[0,1],[-1,0]];
+      }
+      // traces out of 4 sides
+      var traceCount = 6;
+      ctx.lineWidth = 1.4;
+      for(var s=0;s<4;s++){
+        for(var j=0;j<traceCount;j++){
+          var frac = (j+1)/(traceCount+1);
+          var pulse = ((t*0.5 + j*0.7 + s*1.3) % 4)/4;
+          var alpha = 0.12 + 0.5*Math.max(0, Math.sin((pulse)*Math.PI));
+          ctx.strokeStyle = "rgba(47,128,255," + alpha.toFixed(3) + ")";
+          ctx.beginPath();
+          if(s===0){ var x=cx-sz+sz*2*frac; ctx.moveTo(x,cy-sz); ctx.lineTo(x,0); }
+          else if(s===1){ var y=cy-sz+sz*2*frac; ctx.moveTo(cx+sz,y); ctx.lineTo(w,y); }
+          else if(s===2){ var x2=cx-sz+sz*2*frac; ctx.moveTo(x2,cy+sz); ctx.lineTo(x2,h); }
+          else { var y2=cy-sz+sz*2*frac; ctx.moveTo(cx-sz,y2); ctx.lineTo(0,y2); }
+          ctx.stroke();
+        }
+      }
+      // chip body glow
+      var grd = ctx.createRadialGradient(cx,cy,2,cx,cy,sz*1.8);
+      grd.addColorStop(0,"rgba(47,128,255,.35)");
+      grd.addColorStop(1,"rgba(47,128,255,0)");
+      ctx.fillStyle = grd;
+      ctx.fillRect(cx-sz*2,cy-sz*2,sz*4,sz*4);
+      // chip square
+      ctx.strokeStyle = "rgba(94,155,255,.9)";
+      ctx.lineWidth = 1.6;
+      ctx.strokeRect(cx-sz,cy-sz,sz*2,sz*2);
+      ctx.fillStyle = "rgba(11,20,33,.85)";
+      ctx.fillRect(cx-sz,cy-sz,sz*2,sz*2);
+      // inner core pulsing
+      var pr = sz*0.42*(0.85 + 0.15*Math.sin(t*1.5));
+      var cg = ctx.createRadialGradient(cx,cy,0,cx,cy,pr);
+      cg.addColorStop(0,"rgba(180,210,255,.95)");
+      cg.addColorStop(.5,"rgba(47,128,255,.7)");
+      cg.addColorStop(1,"rgba(47,128,255,0)");
+      ctx.fillStyle = cg;
+      ctx.beginPath(); ctx.arc(cx,cy,pr,0,Math.PI*2); ctx.fill();
+      // inner circuit lines
+      ctx.strokeStyle = "rgba(94,155,255,.5)";
+      ctx.lineWidth = 1;
+      ctx.strokeRect(cx-sz*0.55,cy-sz*0.55,sz*1.1,sz*1.1);
+      // corner pins
+      ctx.fillStyle = "rgba(94,155,255,.8)";
+      var pp = sz*0.5;
+      [[-1,-1],[1,-1],[1,1],[-1,1]].forEach(function(d){
+        ctx.fillRect(cx+d[0]*pp-2, cy+d[1]*pp-2, 4,4);
+      });
+    }
+    var chipStageHost = chipCv.closest(".chip-stage") || chipCv;
+    if(reduce){ drawChip(performance.now()); }
+    else{
+      var chipLoop = makeLoop(drawChip, 30);
+      chipLoop.observe(chipStageHost);
+    }
+    window.addEventListener("resize", function(){ C = fitCanvas(chipCv); }, {passive:true});
+  }
+
+  /* ---- STAGE VISUALS ---- */
+  var stages = document.querySelectorAll(".stage");
+  var spineFlow = document.getElementById("spineFlow");
+  var narrative = document.querySelector(".narrative");
+
+  // spine flow tied to scroll
+  if(spineFlow && narrative && !reduce){
+    function updateSpine(){
+      var r = narrative.getBoundingClientRect();
+      var vh = window.innerHeight;
+      var total = r.height;
+      var scrolled = Math.min(Math.max(vh*0.5 - r.top, 0), total);
+      spineFlow.style.height = (scrolled/total*100) + "%";
+    }
+    updateSpine();
+    window.addEventListener("scroll", updateSpine, {passive:true});
+    window.addEventListener("resize", updateSpine);
+  } else if(spineFlow){ spineFlow.style.height = "100%"; }
+
+  // activate stages
+  var sObs = new IntersectionObserver(function(entries){
+    entries.forEach(function(en){ if(en.isIntersecting) en.target.classList.add("active"); });
+  },{threshold:.4});
+  stages.forEach(function(st){ sObs.observe(st); });
+
+  // per-stage canvas animations
+  var vizCanvases = document.querySelectorAll("[data-viz]");
+  vizCanvases.forEach(function(cv){
+    var kind = cv.getAttribute("data-viz");
+    var V = fitCanvas(cv);
+    var phaseOffset = Math.random()*10;
+
+    function blue(a){ return "rgba(47,128,255," + a + ")"; }
+
+    function frame(now){
+      var phase = phaseOffset + (now||0)*0.001*1.2; /* time-based: matches old ~0.02/frame at 60fps */
+      var ctx = V.ctx, w = V.w, h = V.h;
+      ctx.clearRect(0,0,w,h);
+
+      if(kind==="silicon"){
+        // wafer grid of dies lighting up
+        var cols=10, rows=5, pad=14;
+        var cw=(w-pad*2)/cols, ch=(h-pad*2)/rows;
+        for(var y=0;y<rows;y++)for(var x=0;x<cols;x++){
+          var lit = (Math.sin(phase*1.4 + x*0.6 + y*0.9)+1)/2;
+          ctx.fillStyle = blue(0.08 + lit*0.45);
+          ctx.fillRect(pad+x*cw+1, pad+y*ch+1, cw-3, ch-3);
+          ctx.strokeStyle = blue(0.18); ctx.lineWidth=.5;
+          ctx.strokeRect(pad+x*cw+1, pad+y*ch+1, cw-3, ch-3);
+        }
+      }
+      else if(kind==="rack"){
+        // vertical rack units with flowing energy
+        var units=14, m=14;
+        var uw=w-m*2, uh=(h-m*2)/units;
+        for(var u=0;u<units;u++){
+          var fl = (Math.sin(phase*2 - u*0.5)+1)/2;
+          ctx.fillStyle = blue(0.06);
+          ctx.fillRect(m, m+u*uh+1, uw, uh-2);
+          ctx.fillStyle = blue(0.2 + fl*0.55);
+          ctx.fillRect(m, m+u*uh+1, uw*(0.3+fl*0.6), uh-2);
+          ctx.fillStyle = blue(0.7);
+          ctx.fillRect(m+uw-5, m+u*uh+uh/2-1, 3,2);
+        }
+      }
+      else if(kind==="room"){
+        // perspective rows of racks
+        ctx.strokeStyle = blue(0.5); ctx.lineWidth=1;
+        var vx=w/2, vy=h*0.25;
+        for(var rrow=0;rrow<7;rrow++){
+          var rz=rrow/7;
+          var ry=vy + rz*rz*h*0.9;
+          var spread=(rz)*w*0.55;
+          var col = blue(0.12 + 0.4*((Math.sin(phase*1.6 - rrow)+1)/2));
+          ctx.strokeStyle=col;
+          ctx.beginPath(); ctx.moveTo(vx-spread,ry); ctx.lineTo(vx-spread*0.3,ry); ctx.stroke();
+          ctx.beginPath(); ctx.moveTo(vx+spread*0.3,ry); ctx.lineTo(vx+spread,ry); ctx.stroke();
+        }
+        // aisle vanishing lines
+        ctx.strokeStyle=blue(0.25);
+        ctx.beginPath(); ctx.moveTo(w*0.5-6,vy); ctx.lineTo(w*0.1,h); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(w*0.5+6,vy); ctx.lineTo(w*0.9,h); ctx.stroke();
+      }
+      else if(kind==="campus"){
+        // cluster of buildings (blocks) with link lines
+        var blocks=[[0.2,0.35],[0.4,0.6],[0.55,0.3],[0.72,0.55],[0.33,0.75],[0.66,0.78]];
+        ctx.strokeStyle=blue(0.2); ctx.lineWidth=1;
+        for(var b=0;b<blocks.length;b++){
+          for(var b2=b+1;b2<blocks.length;b2++){
+            if(Math.hypot(blocks[b][0]-blocks[b2][0],blocks[b][1]-blocks[b2][1])<0.35){
+              ctx.beginPath(); ctx.moveTo(blocks[b][0]*w,blocks[b][1]*h); ctx.lineTo(blocks[b2][0]*w,blocks[b2][1]*h); ctx.stroke();
+            }
+          }
+        }
+        blocks.forEach(function(p,i){
+          var lit=(Math.sin(phase*1.8+i)+1)/2;
+          ctx.fillStyle=blue(0.25+lit*0.5);
+          ctx.fillRect(p[0]*w-9,p[1]*h-9,18,18);
+          ctx.strokeStyle=blue(0.8); ctx.strokeRect(p[0]*w-9,p[1]*h-9,18,18);
+        });
+      }
+      else if(kind==="cloud"){
+        // central node + orbiting nodes (mesh)
+        var cx=w/2, cy=h/2;
+        var N=8;
+        ctx.strokeStyle=blue(0.25); ctx.lineWidth=1;
+        var pts=[];
+        for(var n=0;n<N;n++){
+          var ang=phase*0.4 + n*(Math.PI*2/N);
+          var rad=Math.min(w,h)*0.34;
+          pts.push([cx+Math.cos(ang)*rad, cy+Math.sin(ang)*rad*0.7]);
+        }
+        pts.forEach(function(p){ ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(p[0],p[1]); ctx.stroke(); });
+        pts.forEach(function(p,i){
+          var lit=(Math.sin(phase*2+i)+1)/2;
+          ctx.fillStyle=blue(0.3+lit*0.5);
+          ctx.beginPath(); ctx.arc(p[0],p[1],4+lit*2,0,Math.PI*2); ctx.fill();
+        });
+        var cg=ctx.createRadialGradient(cx,cy,0,cx,cy,22);
+        cg.addColorStop(0,blue(0.95)); cg.addColorStop(1,blue(0));
+        ctx.fillStyle=cg; ctx.beginPath(); ctx.arc(cx,cy,22,0,Math.PI*2); ctx.fill();
+      }
+      else if(kind==="global"){
+        // globe with arcs
+        var gx=w/2, gy=h/2, R=Math.min(w,h)*0.36;
+        ctx.strokeStyle=blue(0.3); ctx.lineWidth=1;
+        ctx.beginPath(); ctx.arc(gx,gy,R,0,Math.PI*2); ctx.stroke();
+        for(var lat=-2;lat<=2;lat++){
+          ctx.beginPath();
+          ctx.ellipse(gx,gy,R,R*Math.abs(Math.cos(lat*0.5))*0.55||2,0,0,Math.PI*2);
+          ctx.strokeStyle=blue(0.12); ctx.stroke();
+        }
+        for(var ln=0;ln<4;ln++){
+          ctx.beginPath();
+          ctx.ellipse(gx,gy,R*Math.abs(Math.cos(ln*0.6+phase*0.2))*0.9||2,R,0,0,Math.PI*2);
+          ctx.strokeStyle=blue(0.1); ctx.stroke();
+        }
+        // travelling arcs
+        for(var a=0;a<3;a++){
+          var prog=((phase*0.4+a*0.6)%1);
+          var a1=a*2.1, a2=a*2.1+2.2;
+          var p1=[gx+Math.cos(a1)*R, gy+Math.sin(a1)*R*0.6];
+          var p2=[gx+Math.cos(a2)*R, gy+Math.sin(a2)*R*0.6];
+          var mx=(p1[0]+p2[0])/2, my=(p1[1]+p2[1])/2 - R*0.5;
+          var tt=prog;
+          var bx=(1-tt)*(1-tt)*p1[0]+2*(1-tt)*tt*mx+tt*tt*p2[0];
+          var by=(1-tt)*(1-tt)*p1[1]+2*(1-tt)*tt*my+tt*tt*p2[1];
+          ctx.strokeStyle=blue(0.4);
+          ctx.beginPath(); ctx.moveTo(p1[0],p1[1]); ctx.quadraticCurveTo(mx,my,p2[0],p2[1]); ctx.stroke();
+          ctx.fillStyle=blue(0.95);
+          ctx.beginPath(); ctx.arc(bx,by,3,0,Math.PI*2); ctx.fill();
+        }
+      }
+
+    }
+    /* PERF: gate each per-stage canvas through the shared makeLoop helper — it animates
+       ONLY while on-screen (IntersectionObserver), pauses when the tab is hidden, and is
+       capped to ~30fps. Replaces the old always-on 60fps RAF loop and the undeclared
+       `active` flag that kept all 6 stage loops ticking even off-screen. */
+    var vizLoop = makeLoop(frame, 30);
+    if(reduce) vizLoop.drawOnce(); else vizLoop.observe(cv);
+    window.addEventListener("resize", function(){ V = fitCanvas(cv); });
+  });
+
+  /* ---- FACILITY (CTA) VISUAL ---- */
+  var facCv = document.getElementById("facilityCanvas");
+  if(facCv){
+    var F = fitCanvas(facCv);
+    var fp = 0;
+    function facility(){
+      var ctx=F.ctx, w=F.w, h=F.h;
+      ctx.clearRect(0,0,w,h);
+      fp += 0.02;
+      // floor grid perspective
+      var vy=h*0.32;
+      ctx.strokeStyle="rgba(47,128,255,.14)"; ctx.lineWidth=1;
+      for(var i=0;i<=12;i++){
+        var x=(i/12)*w;
+        ctx.beginPath(); ctx.moveTo(x,h); ctx.lineTo(w/2 + (x-w/2)*0.18, vy); ctx.stroke();
+      }
+      for(var d=0;d<8;d++){
+        var z=d/8; var yy=vy + z*z*(h-vy);
+        ctx.strokeStyle="rgba(47,128,255,"+(0.05+z*0.1)+")";
+        ctx.beginPath(); ctx.moveTo(0,yy); ctx.lineTo(w,yy); ctx.stroke();
+      }
+      // server rows (two columns of glowing racks)
+      function row(baseX, count){
+        for(var r=0;r<count;r++){
+          var z=r/count;
+          var yy=vy + z*z*(h-vy);
+          var scale=0.25 + z*0.9;
+          var rw=26*scale, rh=40*scale;
+          var lit=(Math.sin(fp*2 - r*0.6 + baseX)+1)/2;
+          var px = baseX<0 ? w*0.5 - (w*0.42)*z : w*0.5 + (w*0.42)*z;
+          ctx.fillStyle="rgba(11,20,33,.9)";
+          ctx.fillRect(px-rw/2, yy-rh, rw, rh);
+          ctx.strokeStyle="rgba(47,128,255,"+(0.3+lit*0.5)+")";
+          ctx.strokeRect(px-rw/2, yy-rh, rw, rh);
+          // led strip
+          ctx.fillStyle="rgba(94,155,255,"+(0.4+lit*0.6)+")";
+          ctx.fillRect(px-rw/2+2, yy-rh+3, rw-4, 2*scale);
+          ctx.fillRect(px-rw/2+2, yy-rh+8*scale, (rw-4)*lit, 2*scale);
+        }
+      }
+      row(-1,7); row(1,7);
+      // central glow
+      var cg=ctx.createRadialGradient(w/2,h*0.6,0,w/2,h*0.6,w*0.5);
+      cg.addColorStop(0,"rgba(47,128,255,.18)"); cg.addColorStop(1,"rgba(47,128,255,0)");
+      ctx.fillStyle=cg; ctx.fillRect(0,0,w,h);
+    }
+    /* PERF: gate the facility/CTA canvas — it sits near the page bottom yet was repainting
+       a full server-room scene at 60fps forever, even while off-screen. Now visibility-gated + 30fps. */
+    var facLoop = makeLoop(facility, 30);
+    if(reduce) facLoop.drawOnce(); else facLoop.observe(facCv);
+    window.addEventListener("resize", function(){ F = fitCanvas(facCv); });
+  }
+})();
+</script>
+
+<!-- ===================== CINEMATIC MOTION LAYER (additive, reversible) ===================== -->
+<script>
+(function(){
+  "use strict";
+
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var coarse = window.matchMedia("(pointer: coarse)").matches;
+  var smallScreen = window.matchMedia("(max-width: 768px)").matches;
+
+  /* Hard failsafe: if init never runs (CDN blocked / JS error / very slow CDN),
+     force-clear any hidden state so the page is guaranteed 100% visible. */
+  var failsafeFired = false;
+  var failsafe = setTimeout(function(){
+    failsafeFired = true;
+    document.body.classList.remove("gsap-ready");
+    document.querySelectorAll(".reveal").forEach(function(el){
+      el.style.opacity=""; el.style.transform=""; el.style.filter="";
+      el.classList.add("in");
+    });
+  }, 1500);
+
+  function ready(fn){
+    if(document.readyState !== "loading") fn();
+    else document.addEventListener("DOMContentLoaded", fn);
+  }
+
+  /* Wait until the deferred GSAP/Lenis scripts have executed. Poll briefly. */
+  function whenGsap(cb){
+    var tries = 0;
+    (function poll(){
+      if(window.gsap && window.ScrollTrigger){ cb(); return; }
+      if(tries++ > 120){ return; } /* ~2s; failsafe already covers visibility */
+      requestAnimationFrame(poll);
+    })();
+  }
+
+  ready(function(){
+    whenGsap(function(){
+      if(!(window.gsap && window.ScrollTrigger)){ return; } /* page already visible */
+      clearTimeout(failsafe);
+
+      var gsap = window.gsap;
+      var ScrollTrigger = window.ScrollTrigger;
+      gsap.registerPlugin(ScrollTrigger);
+      if(window.CustomEase){ gsap.registerPlugin(window.CustomEase); window.CustomEase.create("expoOut","0.16,1,0.3,1"); }
+      var EASE = window.CustomEase ? "expoOut" : "power3.out";
+
+      /* Take ownership of reveals + counters, and disconnect the native observers
+         so nothing fires twice. */
+      window.__GSAP_REVEAL = true;
+      if(window.__nativeRevealIO) window.__nativeRevealIO.disconnect();
+      if(window.__nativeCounterIO) window.__nativeCounterIO.disconnect();
+
+      var revealEls = Array.prototype.slice.call(document.querySelectorAll(".reveal"));
+
+      /* If the failsafe already revealed the page (slow CDN), do NOT re-hide and
+         re-animate — that would flash content out. Keep everything visible. */
+      if(failsafeFired){
+        revealEls.forEach(function(el){ el.classList.add("in","gsap-done"); });
+        return;
+      }
+
+      /* ---------- prefers-reduced-motion: show everything statically, fire counters once, bail ---------- */
+      if(reduce){
+        revealEls.forEach(function(el){ el.classList.add("in","gsap-done"); el.style.opacity=""; el.style.transform=""; el.style.filter=""; });
+        return; /* native counters already rendered final values under reduce */
+      }
+
+      document.body.classList.add("gsap-ready");
+
+      /* ---------- Lenis smooth scroll (real-scroll mode; no transformed wrapper) ---------- */
+      var lenis = null;
+      var useLenis = window.Lenis && !reduce && !(coarse && smallScreen);
+      if(useLenis){
+        lenis = new window.Lenis({ duration:1.05, easing:function(t){ return Math.min(1, 1.001 - Math.pow(2, -10*t)); }, smoothWheel:true });
+        lenis.on("scroll", ScrollTrigger.update);
+        gsap.ticker.add(function(t){ lenis.raf(t*1000); });
+        gsap.ticker.lagSmoothing(0);
+      }
+
+      /* ---------- Scroll progress indicator ---------- */
+      var progress = document.getElementById("scrollProgress");
+      if(progress){
+        /* Lightweight passive scroll listener (no scrubbed ScrollTrigger). */
+        var updateProgress = function(){
+          var doc = document.documentElement;
+          var max = (doc.scrollHeight - doc.clientHeight) || 1;
+          progress.style.transform = "scaleX(" + Math.min(1, Math.max(0, window.scrollY / max)) + ")";
+        };
+        updateProgress();
+        window.addEventListener("scroll", updateProgress, {passive:true});
+      }
+
+      /* ---------- Initial hidden state via JS only (never trapped invisible) ---------- */
+      gsap.set(revealEls, { opacity:0, y:28 });
+
+      function clearReveal(el){
+        el.classList.add("gsap-done","in");
+      }
+
+      /* ---------- Hero intro timeline on LOAD (LCP animates immediately) ---------- */
+      var heroReveals = revealEls.filter(function(el){ return el.closest(".hero"); });
+      var rest = revealEls.filter(function(el){ return !el.closest(".hero"); });
+
+      if(heroReveals.length){
+        var heroTl = gsap.timeline({ defaults:{ ease:EASE, duration:0.9 } });
+        heroTl.to(heroReveals, {
+          opacity:1, y:0, stagger:0.08,
+          onStart:function(){ heroReveals.forEach(function(el){ el.style.willChange="transform,opacity"; }); heroReveals.forEach(clearReveal); },
+          onComplete:function(){ heroReveals.forEach(function(el){ el.style.willChange="auto"; }); }
+        });
+      }
+
+      /* ---------- Batched reveals with hierarchy for the rest of the page ---------- */
+      /* Sort each batch so headings/eyebrows lead, then body, then grids — using
+         the document's existing data-d delay attribute as the hierarchy hint. */
+      ScrollTrigger.batch(rest, {
+        start:"top 86%",
+        once:true,
+        onEnter:function(batch){
+          batch.sort(function(a,b){
+            return (parseInt(a.getAttribute("data-d")||"0",10)) - (parseInt(b.getAttribute("data-d")||"0",10));
+          });
+          gsap.to(batch, {
+            opacity:1, y:0,
+            ease:EASE, duration:0.85, stagger:0.09,
+            onStart:function(){ batch.forEach(function(el){ el.style.willChange="transform,opacity"; }); batch.forEach(clearReveal); },
+            onComplete:function(){ batch.forEach(function(el){ el.style.willChange="auto"; }); }
+          });
+        }
+      });
+
+      /* ---------- Re-fire count-up counters via ScrollTrigger (no double-trigger) ---------- */
+      var counters = document.querySelectorAll("[data-count]");
+      if(window.__animateCount){
+        counters.forEach(function(el){
+          ScrollTrigger.create({
+            trigger:el, start:"top 88%", once:true,
+            onEnter:function(){ window.__animateCount(el); }
+          });
+        });
+      }
+
+      /* ---------- Depth parallax (transform only, inner layers only) ---------- */
+      var allowParallax = !smallScreen; /* reduce/disable on mobile */
+      if(allowParallax){
+        var tilesEl = document.querySelector(".tiles");
+        var chipStageEl = document.querySelector(".chip-stage");
+
+        if(tilesEl){
+          gsap.to(tilesEl, { yPercent:-6, ease:"none",
+            scrollTrigger:{ trigger:".hero", start:"top top", end:"bottom top", scrub:0.5 } });
+        }
+        if(chipStageEl){
+          gsap.to(chipStageEl, { yPercent:10, ease:"none",
+            scrollTrigger:{ trigger:".hero", start:"top top", end:"bottom top", scrub:0.5 } });
+        }
+        /* Remaining layers (stage-viz, facility) left static — parallax removed to
+           cap scrubbed ScrollTriggers at the two subtle hero depth passes above. */
+      }
+
+      /* ---------- Discreet desktop mouse-parallax on hero (pointer:fine only) ---------- */
+      if(!coarse && !smallScreen){
+        var hero = document.querySelector(".hero");
+        var heroVisual = document.querySelector(".hero-visual");
+        var heroCopy = document.querySelector(".hero-copy");
+        if(hero && heroVisual){
+          var qVx = gsap.quickTo(heroVisual,"x",{duration:0.6,ease:"power3.out"});
+          var qVy = gsap.quickTo(heroVisual,"y",{duration:0.6,ease:"power3.out"});
+          var qCx = heroCopy ? gsap.quickTo(heroCopy,"x",{duration:0.6,ease:"power3.out"}) : null;
+          hero.addEventListener("mousemove", function(e){
+            var r = hero.getBoundingClientRect();
+            var nx = (e.clientX - r.left)/r.width - 0.5;
+            var ny = (e.clientY - r.top)/r.height - 0.5;
+            qVx(nx*14); qVy(ny*14);
+            if(qCx) qCx(nx*-6);
+          }, {passive:true});
+          hero.addEventListener("mouseleave", function(){ qVx(0); qVy(0); if(qCx) qCx(0); }, {passive:true});
+        }
+      }
+
+      /* ---------- One marked sticky beat: pin the narrative section head while the spine scrolls ---------- */
+      if(!smallScreen){
+        var narrSection = document.getElementById("solutions");
+        var narrHead = narrSection ? narrSection.querySelector(".section-head") : null;
+        var narrative = narrSection ? narrSection.querySelector(".narrative") : null;
+        if(narrHead && narrative){
+          ScrollTrigger.create({
+            trigger:narrative,
+            start:"top 22%",
+            end:"bottom 60%",
+            pin:narrHead,
+            pinSpacing:false,
+            anticipatePin:1
+          });
+        }
+      }
+
+      /* Velocity skew/scale removed: it wrote per-frame transforms to many media
+         elements and pinned persistent will-change on them. The two hero depth
+         parallaxes above are the only scrubbed motion now. */
+
+      /* (stage-viz will-change toggle removed: those layers are now static, so
+         promoting them to a compositor layer would cost memory for no animation.) */
+
+      /* Refresh after fonts/layout settle. */
+      window.addEventListener("load", function(){ ScrollTrigger.refresh(); });
+      setTimeout(function(){ ScrollTrigger.refresh(); }, 400);
+    });
+  });
+})();
+</script>
+</body>
+</html>
