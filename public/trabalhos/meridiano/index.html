@@ -500,6 +500,15 @@
   .scene--patagonia .scene__sky{ background:linear-gradient(to bottom, oklch(0.14 0.018 250), oklch(0.2 0.02 244) 60%, oklch(0.27 0.016 242)); }
   .scene--svalbard .scene__sky{ background:linear-gradient(to bottom, oklch(0.13 0.02 256), oklch(0.19 0.026 230) 55%, oklch(0.25 0.022 220)); }
   .scene--karakoram .scene__sky{ background:linear-gradient(to bottom, oklch(0.12 0.018 252), oklch(0.18 0.022 248) 58%, oklch(0.26 0.018 245)); }
+  /* Fotos reais das expedicoes (Unsplash, baixadas localmente): a foto vai no
+     .exped__visual (sem skew, sem gaps) e a cena vetorial fica escondida.
+     Gradiente escuro mantem o clima editorial frio do meridiano. */
+  .exped__visual[data-photo]{ background-size:cover; background-position:center; background-repeat:no-repeat; }
+  .exped__visual[data-photo] .exped__scene{ display:none; }
+  .exped__visual[data-photo="atacama"]{ background-image:linear-gradient(to bottom, oklch(0.06 0.012 250 / 0.30), transparent 36%, oklch(0.06 0.012 250 / 0.58)), url(/trabalhos/meridiano/img/atacama.jpg); }
+  .exped__visual[data-photo="patagonia"]{ background-image:linear-gradient(to bottom, oklch(0.06 0.012 250 / 0.30), transparent 36%, oklch(0.06 0.012 250 / 0.58)), url(/trabalhos/meridiano/img/patagonia.jpg); }
+  .exped__visual[data-photo="svalbard"]{ background-image:linear-gradient(to bottom, oklch(0.06 0.012 250 / 0.30), transparent 36%, oklch(0.06 0.012 250 / 0.58)), url(/trabalhos/meridiano/img/svalbard.jpg); }
+  .exped__visual[data-photo="karakoram"]{ background-image:linear-gradient(to bottom, oklch(0.06 0.012 250 / 0.30), transparent 36%, oklch(0.06 0.012 250 / 0.58)), url(/trabalhos/meridiano/img/karakoram.jpg); }
   .scene__sun{
     position:absolute; left:58%; top:46%; width:clamp(70px,9vw,130px); aspect-ratio:1; border-radius:50%;
     background:radial-gradient(circle, oklch(0.74 0.06 90 / 0.5), oklch(0.6 0.05 70 / 0.12) 60%, transparent 72%);
@@ -853,7 +862,7 @@
               <svg viewBox="0 0 28 12" fill="none" aria-hidden="true"><path d="M0 6h26M21 1l5 5-5 5" stroke-width="1.4"/></svg>
             </a>
           </div>
-          <div class="exped__visual">
+          <div class="exped__visual" data-photo="atacama">
             <div class="exped__scene scene scene--atacama" data-skew>
               <div class="scene__sky"></div>
               <div class="scene__stars"></div>
@@ -882,7 +891,7 @@
               <svg viewBox="0 0 28 12" fill="none" aria-hidden="true"><path d="M0 6h26M21 1l5 5-5 5" stroke-width="1.4"/></svg>
             </a>
           </div>
-          <div class="exped__visual">
+          <div class="exped__visual" data-photo="patagonia">
             <div class="exped__scene scene scene--patagonia" data-skew>
               <div class="scene__sky"></div>
               <svg class="scene__hills" viewBox="0 0 800 600" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
@@ -910,7 +919,7 @@
               <svg viewBox="0 0 28 12" fill="none" aria-hidden="true"><path d="M0 6h26M21 1l5 5-5 5" stroke-width="1.4"/></svg>
             </a>
           </div>
-          <div class="exped__visual">
+          <div class="exped__visual" data-photo="svalbard">
             <div class="exped__scene scene scene--svalbard" data-skew>
               <div class="scene__sky"></div>
               <div class="scene__aurora"></div>
@@ -940,7 +949,7 @@
               <svg viewBox="0 0 28 12" fill="none" aria-hidden="true"><path d="M0 6h26M21 1l5 5-5 5" stroke-width="1.4"/></svg>
             </a>
           </div>
-          <div class="exped__visual">
+          <div class="exped__visual" data-photo="karakoram">
             <div class="exped__scene scene scene--karakoram" data-skew>
               <div class="scene__sky"></div>
               <svg class="scene__hills" viewBox="0 0 800 600" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
