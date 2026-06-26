@@ -35,7 +35,7 @@ function moldura(conteudo: string): string {
       ANDRADE, Estúdio digital. Matheus de Andrade.<br>
       Sumaré, SP. Remoto para o Brasil inteiro.<br>
       <a href="https://wa.me/5519971460099" style="color:#6b6557;">WhatsApp</a> ·
-      <a href="mailto:contato@andradestudio.dev.br" style="color:#6b6557;">E-mail</a>
+      <a href="mailto:ma.fulldev@gmail.com" style="color:#6b6557;">E-mail</a>
     </p>
   </div>
 </body>

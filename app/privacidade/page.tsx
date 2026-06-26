@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     "O que o ANDRADE, Estúdio digital coleta, por quê, por quanto tempo e como pedir a exclusão dos seus dados.",
 };
 
-const EMAIL = "contato@andradestudio.dev.br";
+const EMAIL = "ma.fulldev@gmail.com";
 
 const SECOES: { titulo: string; corpo: string[] }[] = [
   {

@@ -27,7 +27,7 @@ const ITENS: { num: string; rotulo: string; hash?: string; href?: string }[] = [
   { num: "09", rotulo: "Conceitos", href: "/conceitos" },
 ];
 
-const EMAIL = "contato@andradestudio.dev.br";
+const EMAIL = "ma.fulldev@gmail.com";
 const WHATSAPP = "https://wa.me/5519971460099";
 
 export default function MenuOverlay({

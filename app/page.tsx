@@ -43,7 +43,7 @@ import s from "./page.module.css";
 
 const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 const WHATSAPP = "https://wa.me/5519971460099";
-const EMAIL = "contato@andradestudio.dev.br";
+const EMAIL = "ma.fulldev@gmail.com";
 
 const PERGUNTAS = [
   "Qual é o seu segmento?",

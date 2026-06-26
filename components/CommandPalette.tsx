@@ -19,7 +19,7 @@ import { registrarMotion } from "@/lib/motion/registro";
 
 registrarMotion();
 
-const EMAIL = "contato@andradestudio.dev.br";
+const EMAIL = "ma.fulldev@gmail.com";
 const WHATSAPP = "https://wa.me/5519971460099";
 
 type Comando = {
