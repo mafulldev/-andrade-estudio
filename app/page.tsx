@@ -131,7 +131,14 @@ const PRINCIPIOS = [
   "Um dia útil não é pressa. É processo refinado.",
 ];
 
-const PLANOS = [
+const PLANOS: {
+  nome: string;
+  valor: string;
+  prazo: string;
+  itens: string;
+  cta: string;
+  destaque?: boolean;
+}[] = [
   {
     nome: "Pronto",
     valor: "R$ 1.200",
@@ -147,6 +154,7 @@ const PLANOS = [
     itens:
       "Design exclusivo do zero · SEO técnico · animações e tema duplo · suporte de estreia · código entregue",
     cta: "diagnostico",
+    destaque: true,
   },
   {
     nome: "Avançado",
@@ -569,8 +577,18 @@ export default function Home() {
             <h2 className={s.tituloCap}>O preço acompanha o caminho.</h2>
             <div className={s.planos}>
               {PLANOS.map((p) => (
-                <div className={s.plano} key={p.nome} data-plano>
-                  <span className={s.planoNome}>{p.nome}</span>
+                <div
+                  className={s.plano}
+                  key={p.nome}
+                  data-plano
+                  data-destaque={p.destaque || undefined}
+                >
+                  <span className={s.planoNome}>
+                    {p.nome}
+                    {p.destaque ? (
+                      <span className={s.planoTag}>Recomendado</span>
+                    ) : null}
+                  </span>
                   <span className={s.planoPreco}>
                     <span className="label">a partir de</span>
                     <span className={s.planoValor} data-plano-valor>
