@@ -614,6 +614,13 @@ export default function Home() {
                 </div>
               ))}
             </div>
+            <div className={s.risco}>
+              <p className={s.riscoTexto}>
+                <strong>Você vê antes de decidir.</strong> Aprova a prévia
+                navegável do seu site antes de seguir, com uma rodada de ajuste
+                inclusa. O código e o domínio saem no seu nome, nada fica refém.
+              </p>
+            </div>
             <p className={s.planosNota}>
               Valores de partida. A estimativa do seu projeto sai na hora, no
               diagnóstico.
