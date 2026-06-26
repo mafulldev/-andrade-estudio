@@ -91,7 +91,7 @@ export default function PaginaConceitos() {
           <li key={c.slug}>
             <a
               className={s.card}
-              href={`/trabalhos/${c.slug}/`}
+              href={`/trabalhos/${c.slug}/index.html`}
               target="_blank"
               rel="noopener noreferrer"
             >
