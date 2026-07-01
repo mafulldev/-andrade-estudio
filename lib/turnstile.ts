@@ -22,8 +22,11 @@ export async function validarTurnstile(
     const dados = (await resposta.json()) as { success?: boolean };
     return dados.success === true;
   } catch {
-    // indisponibilidade da Cloudflare não pode derrubar a captação
-    console.log("[turnstile] siteverify indisponível: lead aceito sem checagem");
+    // indisponibilidade da Cloudflare não pode derrubar a captação; o rate-limit
+    // por IP em /api/lead limita o abuso enquanto o Turnstile fica cego
+    console.warn(
+      "[turnstile] siteverify indisponível: lead aceito sem checagem",
+    );
     return true;
   }
 }

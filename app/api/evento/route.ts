@@ -4,11 +4,19 @@
 
 import { NextResponse, type NextRequest } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase";
+import { checarLimite } from "@/lib/ratelimit";
 import { TIPOS_EVENTO } from "@/lib/eventos";
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 export async function POST(req: NextRequest) {
+  // rate-limit por IP: eventos são frequentes, mas um flood enche a tabela
+  // `eventos` no free tier. Acima do teto, descarta em silêncio (204).
+  const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? null;
+  if (ip && !checarLimite(`evento:${ip}`, 120, 60_000)) {
+    return new NextResponse(null, { status: 204 });
+  }
+
   let corpo: unknown;
   try {
     corpo = await req.json();
@@ -26,8 +34,7 @@ export async function POST(req: NextRequest) {
     return new NextResponse(null, { status: 204 });
   }
 
-  const pagina =
-    typeof c.pagina === "string" ? c.pagina.slice(0, 200) : null;
+  const pagina = typeof c.pagina === "string" ? c.pagina.slice(0, 200) : null;
   const meta =
     typeof c.meta === "object" && c.meta !== null && !Array.isArray(c.meta)
       ? (c.meta as Record<string, unknown>)

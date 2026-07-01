@@ -12,6 +12,7 @@ import { supabaseAdmin } from "@/lib/supabase";
 import { validarTurnstile } from "@/lib/turnstile";
 import { enviarEstimativaLead, enviarNotificacaoInterna } from "@/lib/emails";
 import { notificarTelegram } from "@/lib/telegram";
+import { checarLimite } from "@/lib/ratelimit";
 import {
   faixaPorExtenso,
   ROTULO_OBJETIVO,
@@ -19,17 +20,38 @@ import {
 } from "@/lib/rotulos";
 
 const SEGMENTOS = new Set([
-  "restaurante", "saude", "advocacia", "servicos",
-  "imobiliario", "loja", "startup", "outro",
+  "restaurante",
+  "saude",
+  "advocacia",
+  "servicos",
+  "imobiliario",
+  "loja",
+  "startup",
+  "outro",
 ]);
-const OBJETIVOS = new Set(["vender", "contatos", "presenca", "agendamentos", "sistema"]);
+const OBJETIVOS = new Set([
+  "vender",
+  "contatos",
+  "presenca",
+  "agendamentos",
+  "sistema",
+]);
 const FUNCS = new Set([
-  "pagamentos", "agendamento", "membros", "blogSeo",
-  "multiIdioma", "integracoes", "admin",
+  "pagamentos",
+  "agendamento",
+  "membros",
+  "blogSeo",
+  "multiIdioma",
+  "integracoes",
+  "admin",
 ]);
 const PRAZOS_SET = new Set(["urgente", "2a4", "flexivel"]);
 const INVESTIMENTOS = new Set([
-  "ate2500", "2500a6000", "6000a15000", "acima15000", "verEstimativa",
+  "ate2500",
+  "2500a6000",
+  "6000a15000",
+  "acima15000",
+  "verEstimativa",
 ]);
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
@@ -101,6 +123,13 @@ async function acaoCriar(req: NextRequest, c: Record<string, unknown>) {
     return erroJson(429, "Envio rápido demais. Tente novamente.");
   }
 
+  // rate-limit por IP: protege o banco e o free tier de flood, mesmo quando o
+  // Turnstile cai no fail-open durante uma indisponibilidade da Cloudflare
+  const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? null;
+  if (ip && !checarLimite(`lead:${ip}`, 5, 600_000)) {
+    return erroJson(429, "Muitas tentativas. Aguarde alguns minutos.");
+  }
+
   const respostas = validarRespostas(c.respostas);
   if (!respostas) return erroJson(400, "Respostas inválidas.");
 
@@ -112,7 +141,8 @@ async function acaoCriar(req: NextRequest, c: Record<string, unknown>) {
       : null;
   const consentimento = c.consentimento === true;
 
-  if (contato && !contatoTipo) return erroJson(400, "Tipo de contato inválido.");
+  if (contato && !contatoTipo)
+    return erroJson(400, "Tipo de contato inválido.");
   if (contato && contatoTipo === "email" && !EMAIL_RE.test(contato)) {
     return erroJson(400, "E-mail inválido.");
   }
@@ -120,8 +150,7 @@ async function acaoCriar(req: NextRequest, c: Record<string, unknown>) {
     return erroJson(400, "O consentimento é necessário para receber contato.");
   }
 
-  // Turnstile (pulado com aviso quando o env não existe)
-  const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? null;
+  // Turnstile (pulado com aviso quando o env não existe); reusa o ip acima
   const token = typeof c.turnstileToken === "string" ? c.turnstileToken : null;
   const humano = await validarTurnstile(token, ip);
   if (!humano) return erroJson(403, "Verificação anti-spam falhou.");
@@ -161,7 +190,10 @@ async function acaoCriar(req: NextRequest, c: Record<string, unknown>) {
       .single();
 
     if (error) {
-      console.log("[lead] falha ao salvar:", error.message);
+      console.error("[lead] falha ao salvar:", error.message);
+      void notificarTelegram(
+        `[ALERTA] Falha ao salvar lead no banco: ${error.message}`,
+      );
     } else if (data) {
       id = data.id as string;
       numero = data.numero as number;
@@ -210,7 +242,12 @@ async function acaoCriar(req: NextRequest, c: Record<string, unknown>) {
       }),
     );
   }
-  await Promise.allSettled(tarefas);
+  const resultados = await Promise.allSettled(tarefas);
+  for (const r of resultados) {
+    if (r.status === "rejected") {
+      console.error("[lead] automação falhou:", r.reason);
+    }
+  }
 
   return NextResponse.json({
     ok: true,
@@ -247,18 +284,26 @@ async function acaoEmail(c: Record<string, unknown>) {
   if (emailNovo) {
     if (!EMAIL_RE.test(emailNovo)) return erroJson(400, "E-mail inválido.");
     if (c.consentimento !== true) {
-      return erroJson(400, "O consentimento é necessário para receber o e-mail.");
+      return erroJson(
+        400,
+        "O consentimento é necessário para receber o e-mail.",
+      );
     }
     destino = emailNovo;
     if (!lead.contato) {
       await sb
         .from("leads")
-        .update({ contato: emailNovo, contato_tipo: "email", consentimento: true })
+        .update({
+          contato: emailNovo,
+          contato_tipo: "email",
+          consentimento: true,
+        })
         .eq("id", id);
     }
   }
 
-  if (!destino) return erroJson(400, "Informe um e-mail para receber a estimativa.");
+  if (!destino)
+    return erroJson(400, "Informe um e-mail para receber a estimativa.");
 
   await enviarEstimativaLead({
     para: destino,
