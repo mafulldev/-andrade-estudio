@@ -1,0 +1,2726 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>
+      TRAÇÃO — CRM de vendas com pipeline kanban · Conceito funcional ANDRADE
+    </title>
+    <meta
+      name="description"
+      content="TRAÇÃO: CRM de vendas brasileiro com funil kanban arrastável, alerta de negócios esquecidos, motivos de perda e WhatsApp direto no card. Demonstração funcional do ANDRADE Estúdio digital."
+    />
+    <meta
+      property="og:title"
+      content="TRAÇÃO — CRM de vendas com pipeline kanban"
+    />
+    <meta
+      property="og:description"
+      content="Funil kanban arrastável, negócios esquecidos em destaque, motivos de perda e WhatsApp no card. Demonstração funcional."
+    />
+    <meta
+      property="og:image"
+      content="https://www.andradestudio.dev.br/opengraph-image"
+    />
+    <meta property="og:type" content="website" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231D4ED8'/%3E%3Cpath d='M7 9h18l-6.5 8v8l-5-2.5V17z' fill='white'/%3E%3C/svg%3E"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #f6f7fb;
+        --col: #eef0f6;
+        --card: #ffffff;
+        --ink: #1b2036;
+        --mut: #68708c;
+        --azul: #1d4ed8;
+        --azul-esc: #1740b3;
+        --azul-cl: #eaf0fe;
+        --quente: #dc2626;
+        --quente-cl: #fdecec;
+        --morno: #d97706;
+        --morno-cl: #fcf1e1;
+        --frio: #2563eb;
+        --frio-cl: #e8effd;
+        --ganho: #15803d;
+        --ganho-cl: #e7f3ec;
+        --perdido: #6b7280;
+        --perdido-cl: #eeeff2;
+        --linha: #e2e5f0;
+        --zap: #16a34a;
+        --sombra:
+          0 1px 2px rgba(23, 32, 63, 0.06), 0 4px 14px rgba(23, 32, 63, 0.07);
+        --fonte: "DM Sans", system-ui, -apple-system, sans-serif;
+        --mono: "DM Mono", ui-monospace, SFMono-Regular, monospace;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      [hidden] {
+        display: none !important;
+      }
+      html {
+        scrollbar-gutter: stable;
+      }
+      body {
+        font-family: var(--fonte);
+        background: var(--bg);
+        color: var(--ink);
+        font-size: 14px;
+        line-height: 1.45;
+        -webkit-font-smoothing: antialiased;
+      }
+      button {
+        font: inherit;
+        color: inherit;
+        background: none;
+        border: 0;
+        cursor: pointer;
+      }
+      input,
+      select,
+      textarea {
+        font: inherit;
+        color: var(--ink);
+      }
+      a {
+        color: var(--azul);
+      }
+      :focus-visible {
+        outline: 2px solid var(--azul);
+        outline-offset: 2px;
+        border-radius: 6px;
+      }
+      .sem-motion *,
+      .sem-motion *::before,
+      .sem-motion *::after {
+        transition: none !important;
+        animation: none !important;
+      }
+      .num {
+        font-family: var(--mono);
+        font-variant-numeric: tabular-nums;
+      }
+      .visually-hidden {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        white-space: nowrap;
+      }
+
+      /* ---------- botões ---------- */
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 9px 15px;
+        border-radius: 9px;
+        font-weight: 600;
+        font-size: 13.5px;
+        border: 1px solid transparent;
+        transition:
+          background 0.18s,
+          border-color 0.18s,
+          box-shadow 0.18s,
+          transform 0.12s;
+        white-space: nowrap;
+      }
+      .btn:active {
+        transform: translateY(1px);
+      }
+      .btn-primario {
+        background: var(--azul);
+        color: #fff;
+        box-shadow: 0 2px 8px rgba(29, 78, 216, 0.3);
+      }
+      .btn-primario:hover {
+        background: var(--azul-esc);
+      }
+      .btn-fantasma {
+        background: #fff;
+        border-color: var(--linha);
+        color: var(--ink);
+      }
+      .btn-fantasma:hover {
+        border-color: #c6cce0;
+        background: #fbfbfe;
+      }
+      .btn-perigo {
+        background: var(--quente);
+        color: #fff;
+      }
+      .btn-perigo:hover {
+        background: #b91c1c;
+      }
+      .btn-icone {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
+        border-radius: 7px;
+        color: var(--mut);
+        transition:
+          background 0.15s,
+          color 0.15s;
+      }
+      .btn-icone:hover {
+        background: var(--col);
+        color: var(--ink);
+      }
+      .btn-icone svg {
+        width: 15px;
+        height: 15px;
+      }
+
+      /* ---------- login ---------- */
+      .login {
+        position: fixed;
+        inset: 0;
+        z-index: 100;
+        display: grid;
+        place-items: center;
+        padding: 20px;
+        background:
+          radial-gradient(900px 500px at 15% 0%, #e3eafb 0%, transparent 60%),
+          radial-gradient(700px 480px at 95% 100%, #e9edf9 0%, transparent 55%),
+          var(--bg);
+      }
+      .login-cartao {
+        width: min(400px, 100%);
+        background: #fff;
+        border: 1px solid var(--linha);
+        border-radius: 18px;
+        box-shadow: 0 20px 60px rgba(23, 32, 63, 0.14);
+        padding: 34px 32px 30px;
+        animation: surgir 0.35s ease both;
+      }
+      .login-marca {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        margin-bottom: 8px;
+      }
+      .login-marca .logo-quadro {
+        width: 42px;
+        height: 42px;
+      }
+      .login-nome {
+        font-size: 24px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+      }
+      .login-sub {
+        color: var(--mut);
+        font-size: 13px;
+        margin-bottom: 24px;
+      }
+      .campo {
+        margin-bottom: 14px;
+      }
+      .campo label {
+        display: block;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--mut);
+        margin-bottom: 5px;
+        letter-spacing: 0.02em;
+      }
+      .campo input,
+      .campo select,
+      .campo textarea {
+        width: 100%;
+        padding: 9px 12px;
+        border: 1px solid var(--linha);
+        border-radius: 9px;
+        background: #fbfbfe;
+        transition:
+          border-color 0.15s,
+          box-shadow 0.15s;
+      }
+      .campo input:focus,
+      .campo select:focus,
+      .campo textarea:focus {
+        outline: none;
+        border-color: var(--azul);
+        box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.14);
+      }
+      .login .btn-primario {
+        width: 100%;
+        justify-content: center;
+        padding: 12px;
+        font-size: 14.5px;
+        margin-top: 6px;
+      }
+      .login-nota {
+        margin-top: 18px;
+        font-size: 12px;
+        color: var(--mut);
+        text-align: center;
+      }
+      .logo-quadro {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 34px;
+        height: 34px;
+        border-radius: 9px;
+        background: var(--azul);
+        flex-shrink: 0;
+      }
+      .logo-quadro svg {
+        width: 60%;
+        height: 60%;
+      }
+
+      /* ---------- casca do app ---------- */
+      #app {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        padding-bottom: 44px;
+      }
+      .topo {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        padding: 10px 20px;
+        background: #fff;
+        border-bottom: 1px solid var(--linha);
+        position: sticky;
+        top: 0;
+        z-index: 30;
+      }
+      .topo-marca {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        font-weight: 700;
+        font-size: 17px;
+        letter-spacing: -0.01em;
+      }
+      .abas {
+        display: flex;
+        gap: 4px;
+        background: var(--col);
+        padding: 3px;
+        border-radius: 10px;
+      }
+      .aba {
+        padding: 6px 14px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 13px;
+        color: var(--mut);
+        transition:
+          background 0.18s,
+          color 0.18s;
+      }
+      .aba[aria-selected="true"] {
+        background: #fff;
+        color: var(--ink);
+        box-shadow: 0 1px 3px rgba(23, 32, 63, 0.12);
+      }
+      .topo-dir {
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .usuario {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 12.5px;
+        color: var(--mut);
+      }
+      .avatar {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: var(--azul-cl);
+        color: var(--azul);
+        display: grid;
+        place-items: center;
+        font-weight: 700;
+        font-size: 12px;
+      }
+
+      /* ---------- KPIs ---------- */
+      .kpis {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(170px, 1fr));
+        gap: 12px;
+        padding: 14px 20px 0;
+      }
+      .kpi {
+        background: #fff;
+        border: 1px solid var(--linha);
+        border-radius: 12px;
+        padding: 12px 16px;
+        box-shadow: var(--sombra);
+        animation: surgir 0.3s ease both;
+      }
+      .kpi:nth-child(2) {
+        animation-delay: 0.05s;
+      }
+      .kpi:nth-child(3) {
+        animation-delay: 0.1s;
+      }
+      .kpi:nth-child(4) {
+        animation-delay: 0.15s;
+      }
+      .kpi-rotulo {
+        font-size: 11.5px;
+        font-weight: 600;
+        color: var(--mut);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+      .kpi-valor {
+        font-family: var(--mono);
+        font-variant-numeric: tabular-nums;
+        font-size: 21px;
+        font-weight: 500;
+        margin-top: 3px;
+        letter-spacing: -0.01em;
+      }
+      .kpi-extra {
+        font-size: 11.5px;
+        color: var(--mut);
+        margin-top: 2px;
+      }
+      .kpi-meta-barra {
+        height: 5px;
+        background: var(--col);
+        border-radius: 99px;
+        margin-top: 8px;
+        overflow: hidden;
+      }
+      .kpi-meta-fill {
+        height: 100%;
+        background: var(--ganho);
+        border-radius: 99px;
+        transition: width 0.4s ease;
+      }
+
+      /* ---------- toolbar ---------- */
+      .toolbar {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 20px 4px;
+        flex-wrap: wrap;
+      }
+      .busca-wrap {
+        position: relative;
+        flex: 1 1 200px;
+        max-width: 320px;
+      }
+      .busca-wrap svg {
+        position: absolute;
+        left: 11px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 14px;
+        height: 14px;
+        color: var(--mut);
+        pointer-events: none;
+      }
+      .busca-wrap input {
+        width: 100%;
+        padding: 8px 12px 8px 33px;
+        border: 1px solid var(--linha);
+        border-radius: 9px;
+        background: #fff;
+        transition:
+          border-color 0.15s,
+          box-shadow 0.15s;
+      }
+      .busca-wrap input:focus {
+        outline: none;
+        border-color: var(--azul);
+        box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.14);
+      }
+      .filtro {
+        padding: 8px 30px 8px 12px;
+        border: 1px solid var(--linha);
+        border-radius: 9px;
+        background: #fff
+          url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%2368708C' stroke-width='1.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E")
+          no-repeat right 11px center;
+        appearance: none;
+        font-size: 13px;
+        font-weight: 500;
+      }
+      .filtro:focus {
+        outline: none;
+        border-color: var(--azul);
+        box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.14);
+      }
+      .toolbar .btn-primario {
+        margin-left: auto;
+      }
+
+      /* ---------- board kanban ---------- */
+      .board-wrap {
+        flex: 1;
+        overflow-x: auto;
+        padding: 12px 20px 18px;
+        scrollbar-width: thin;
+      }
+      .board {
+        display: flex;
+        gap: 12px;
+        min-width: max-content;
+        align-items: flex-start;
+      }
+      .coluna {
+        width: 284px;
+        flex-shrink: 0;
+        background: var(--col);
+        border-radius: 13px;
+        display: flex;
+        flex-direction: column;
+        max-height: calc(100vh - 302px);
+        min-height: 300px;
+        transition:
+          box-shadow 0.15s,
+          background 0.15s;
+      }
+      .coluna.drop-alvo {
+        background: #e4eafb;
+        box-shadow: inset 0 0 0 2px var(--azul);
+      }
+      .coluna-cab {
+        display: flex;
+        align-items: baseline;
+        gap: 8px;
+        padding: 11px 14px 8px;
+        border-bottom: 1px solid rgba(27, 32, 54, 0.06);
+      }
+      .coluna-titulo {
+        font-size: 12.5px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      .coluna-qtd {
+        font-size: 11.5px;
+        font-weight: 600;
+        color: var(--mut);
+        background: rgba(27, 32, 54, 0.07);
+        border-radius: 99px;
+        padding: 1px 8px;
+      }
+      .coluna-soma {
+        margin-left: auto;
+        font-family: var(--mono);
+        font-variant-numeric: tabular-nums;
+        font-size: 11.5px;
+        color: var(--mut);
+      }
+      .coluna-corpo {
+        overflow-y: auto;
+        padding: 9px;
+        display: flex;
+        flex-direction: column;
+        gap: 9px;
+        flex: 1;
+        scrollbar-width: thin;
+      }
+      .coluna-vazia {
+        border: 1.5px dashed #d4d9e8;
+        border-radius: 10px;
+        padding: 18px 10px;
+        text-align: center;
+        color: #9aa1b9;
+        font-size: 12px;
+      }
+
+      /* ---------- cartão ---------- */
+      .cartao {
+        background: var(--card);
+        border-radius: 11px;
+        box-shadow: var(--sombra);
+        padding: 11px 12px 9px;
+        border: 1px solid transparent;
+        border-left: 3px solid transparent;
+        cursor: grab;
+        animation: surgir 0.25s ease both;
+        transition:
+          box-shadow 0.18s,
+          border-color 0.18s;
+      }
+      .cartao:nth-child(2) {
+        animation-delay: 0.04s;
+      }
+      .cartao:nth-child(3) {
+        animation-delay: 0.08s;
+      }
+      .cartao:nth-child(4) {
+        animation-delay: 0.12s;
+      }
+      .cartao:nth-child(5) {
+        animation-delay: 0.16s;
+      }
+      .cartao:hover {
+        box-shadow:
+          0 3px 6px rgba(23, 32, 63, 0.09),
+          0 10px 24px rgba(23, 32, 63, 0.1);
+      }
+      .cartao.arrastando {
+        opacity: 0.45;
+        cursor: grabbing;
+      }
+      .cartao.esquecido {
+        border-left-color: var(--quente);
+      }
+      .cartao-topo {
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+      }
+      .cartao-nome {
+        font-weight: 600;
+        font-size: 13.5px;
+        line-height: 1.3;
+        flex: 1;
+      }
+      .temp {
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        flex-shrink: 0;
+        margin-top: 4px;
+      }
+      .temp-quente {
+        background: var(--quente);
+        box-shadow: 0 0 0 3px var(--quente-cl);
+      }
+      .temp-morno {
+        background: var(--morno);
+        box-shadow: 0 0 0 3px var(--morno-cl);
+      }
+      .temp-frio {
+        background: var(--frio);
+        box-shadow: 0 0 0 3px var(--frio-cl);
+      }
+      .cartao-empresa {
+        font-size: 12px;
+        color: var(--mut);
+        margin-top: 1px;
+      }
+      .cartao-valor {
+        font-family: var(--mono);
+        font-variant-numeric: tabular-nums;
+        font-size: 14.5px;
+        font-weight: 500;
+        margin-top: 6px;
+      }
+      .cartao-linha {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 11.5px;
+        color: var(--mut);
+        margin-top: 5px;
+      }
+      .cartao-linha svg {
+        width: 12px;
+        height: 12px;
+        flex-shrink: 0;
+      }
+      .cartao-linha.atrasada {
+        color: var(--quente);
+        font-weight: 600;
+      }
+      .tag-esquecido {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        background: var(--quente-cl);
+        color: var(--quente);
+        font-size: 10.5px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        padding: 2px 7px;
+        border-radius: 6px;
+        margin-top: 7px;
+      }
+      .cartao-rodape {
+        display: flex;
+        align-items: center;
+        gap: 2px;
+        margin-top: 8px;
+        padding-top: 7px;
+        border-top: 1px solid var(--col);
+      }
+      .tag-origem {
+        font-size: 10.5px;
+        color: var(--mut);
+        background: var(--col);
+        border-radius: 6px;
+        padding: 2px 7px;
+        font-weight: 600;
+        margin-right: auto;
+      }
+      .btn-zap {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
+        border-radius: 7px;
+        color: var(--zap);
+        transition: background 0.15s;
+      }
+      .btn-zap:hover {
+        background: #e9f7ee;
+      }
+      .btn-zap svg {
+        width: 15px;
+        height: 15px;
+      }
+
+      /* ---------- relatórios ---------- */
+      .paineis {
+        display: grid;
+        grid-template-columns: 1.35fr 1fr;
+        gap: 14px;
+        padding: 14px 20px 20px;
+        align-items: start;
+      }
+      .painel {
+        background: #fff;
+        border: 1px solid var(--linha);
+        border-radius: 13px;
+        box-shadow: var(--sombra);
+        padding: 18px 20px;
+        animation: surgir 0.3s ease both;
+        min-width: 0;
+        overflow: hidden;
+      }
+      .painel h2 {
+        font-size: 14.5px;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+      }
+      .painel-sub {
+        font-size: 12px;
+        color: var(--mut);
+        margin: 2px 0 14px;
+      }
+      .painel svg {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+      .resumo-fech {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 14px;
+      }
+      .resumo-chip {
+        min-width: 0;
+      }
+      .resumo-chip {
+        flex: 1;
+        border-radius: 10px;
+        padding: 10px 12px;
+        font-size: 12px;
+        font-weight: 600;
+      }
+      .resumo-chip .num {
+        display: block;
+        font-size: 18px;
+        margin-top: 1px;
+      }
+      .chip-ganho {
+        background: var(--ganho-cl);
+        color: var(--ganho);
+      }
+      .chip-perdido {
+        background: var(--perdido-cl);
+        color: #4b5563;
+      }
+
+      /* ---------- tarefas ---------- */
+      .tarefas-wrap {
+        padding: 14px 20px 20px;
+        max-width: 860px;
+      }
+      .tarefa-grupo {
+        font-size: 11.5px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+        color: var(--mut);
+        margin: 16px 0 8px;
+      }
+      .tarefa-grupo:first-child {
+        margin-top: 0;
+      }
+      .tarefa-grupo.atrasado {
+        color: var(--quente);
+      }
+      .tarefa {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: #fff;
+        border: 1px solid var(--linha);
+        border-radius: 11px;
+        padding: 11px 14px;
+        margin-bottom: 8px;
+        box-shadow: var(--sombra);
+        animation: surgir 0.25s ease both;
+      }
+      .tarefa-data {
+        font-family: var(--mono);
+        font-variant-numeric: tabular-nums;
+        font-size: 11.5px;
+        font-weight: 500;
+        padding: 4px 9px;
+        border-radius: 7px;
+        background: var(--col);
+        color: var(--mut);
+        flex-shrink: 0;
+      }
+      .tarefa-data.hoje {
+        background: var(--azul-cl);
+        color: var(--azul);
+      }
+      .tarefa-data.atrasada {
+        background: var(--quente-cl);
+        color: var(--quente);
+      }
+      .tarefa-desc {
+        flex: 1;
+        min-width: 0;
+      }
+      .tarefa-desc b {
+        display: block;
+        font-size: 13.5px;
+        font-weight: 600;
+      }
+      .tarefa-desc span {
+        font-size: 12px;
+        color: var(--mut);
+      }
+      .tarefa .cartao-valor {
+        margin: 0;
+        flex-shrink: 0;
+      }
+
+      /* ---------- estado vazio ---------- */
+      .vazio {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        padding: 44px 20px;
+        color: var(--mut);
+        text-align: center;
+      }
+      .vazio svg {
+        width: 88px;
+        height: 88px;
+      }
+      .vazio b {
+        font-size: 14.5px;
+        color: var(--ink);
+      }
+      .vazio p {
+        font-size: 12.5px;
+        max-width: 300px;
+      }
+
+      /* ---------- modais ---------- */
+      .veu {
+        position: fixed;
+        inset: 0;
+        z-index: 60;
+        background: rgba(20, 26, 48, 0.46);
+        display: grid;
+        place-items: center;
+        padding: 18px;
+        animation: veufade 0.2s ease both;
+      }
+      .modal {
+        background: #fff;
+        border-radius: 16px;
+        width: min(600px, 100%);
+        max-height: min(88vh, 760px);
+        overflow-y: auto;
+        box-shadow: 0 24px 70px rgba(15, 20, 40, 0.35);
+        animation: subir 0.22s ease both;
+      }
+      .modal-estreito {
+        width: min(420px, 100%);
+      }
+      .modal-cab {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 18px 22px 0;
+      }
+      .modal-cab h2 {
+        font-size: 16.5px;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+        flex: 1;
+      }
+      .modal-corpo {
+        padding: 14px 22px 22px;
+      }
+      .form-grade {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px 14px;
+      }
+      .form-grade .campo {
+        margin-bottom: 0;
+      }
+      .campo-cheio {
+        grid-column: 1 / -1;
+      }
+      .campo textarea {
+        resize: vertical;
+        min-height: 64px;
+      }
+      .form-erro {
+        display: none;
+        background: var(--quente-cl);
+        color: var(--quente);
+        font-size: 12.5px;
+        font-weight: 600;
+        border-radius: 9px;
+        padding: 9px 12px;
+        margin-bottom: 12px;
+      }
+      .form-erro.visivel {
+        display: block;
+      }
+      .modal-acoes {
+        display: flex;
+        justify-content: flex-end;
+        gap: 9px;
+        margin-top: 18px;
+      }
+      fieldset {
+        border: 0;
+      }
+      legend {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--mut);
+        margin-bottom: 8px;
+      }
+      .motivo-opcao {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        border: 1px solid var(--linha);
+        border-radius: 10px;
+        padding: 10px 13px;
+        margin-bottom: 8px;
+        cursor: pointer;
+        transition:
+          border-color 0.15s,
+          background 0.15s;
+        font-weight: 500;
+      }
+      .motivo-opcao:hover {
+        border-color: #c6cce0;
+      }
+      .motivo-opcao:has(input:checked) {
+        border-color: var(--quente);
+        background: var(--quente-cl);
+      }
+      .motivo-opcao input {
+        accent-color: var(--quente);
+        width: 15px;
+        height: 15px;
+      }
+      .mover-lista {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .mover-opcao {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        border: 1px solid var(--linha);
+        border-radius: 10px;
+        padding: 10px 13px;
+        font-weight: 600;
+        font-size: 13px;
+        text-align: left;
+        transition:
+          border-color 0.15s,
+          background 0.15s;
+      }
+      .mover-opcao:hover:not(:disabled) {
+        border-color: var(--azul);
+        background: var(--azul-cl);
+      }
+      .mover-opcao:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
+      .mover-opcao .ponto {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--azul);
+      }
+      .mover-opcao.op-ganho .ponto {
+        background: var(--ganho);
+      }
+      .mover-opcao.op-perdido .ponto {
+        background: var(--perdido);
+      }
+      .mover-sep {
+        border-top: 1px dashed var(--linha);
+        margin: 6px 0;
+      }
+
+      /* ---------- banner demonstração ---------- */
+      .banner-demo {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 40;
+        background: rgba(255, 255, 255, 0.92);
+        backdrop-filter: blur(6px);
+        border-top: 1px solid var(--linha);
+        padding: 7px 16px;
+        text-align: center;
+        font-size: 11.5px;
+        color: var(--mut);
+      }
+      .banner-demo a {
+        font-weight: 600;
+      }
+
+      /* ---------- animações ---------- */
+      @keyframes surgir {
+        from {
+          opacity: 0;
+          transform: translateY(7px);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+      @keyframes subir {
+        from {
+          opacity: 0;
+          transform: translateY(14px) scale(0.985);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+      @keyframes veufade {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      /* ---------- responsivo ---------- */
+      @media (max-width: 920px) {
+        .kpis {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .paineis {
+          grid-template-columns: 1fr;
+        }
+        .usuario span {
+          display: none;
+        }
+      }
+      @media (max-width: 720px) {
+        .topo {
+          flex-wrap: wrap;
+          gap: 10px;
+          padding: 10px 14px;
+        }
+        .abas {
+          order: 3;
+          width: 100%;
+          justify-content: stretch;
+        }
+        .aba {
+          flex: 1;
+          text-align: center;
+        }
+        .kpis {
+          padding: 12px 14px 0;
+          gap: 9px;
+        }
+        .kpi {
+          padding: 10px 13px;
+        }
+        .kpi-valor {
+          font-size: 17px;
+        }
+        .toolbar {
+          padding: 10px 14px 2px;
+        }
+        .toolbar .btn-primario {
+          margin-left: 0;
+          width: 100%;
+          justify-content: center;
+          order: 5;
+        }
+        .busca-wrap {
+          max-width: none;
+          flex: 1 1 100%;
+        }
+        .board-wrap {
+          padding: 10px 14px 16px;
+          scroll-snap-type: x mandatory;
+        }
+        .coluna {
+          width: 85vw;
+          scroll-snap-align: start;
+          max-height: calc(100vh - 380px);
+        }
+        .paineis,
+        .tarefas-wrap {
+          padding: 12px 14px 18px;
+        }
+        .form-grade {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ===== LOGIN ===== -->
+    <div class="login" id="telaLogin">
+      <div class="login-cartao">
+        <div class="login-marca">
+          <span class="logo-quadro" aria-hidden="true"
+            ><svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+              <path d="M3 5h26l-9.5 12v11l-7-3.5V17z" fill="#fff" /></svg
+          ></span>
+          <span class="login-nome">TRAÇÃO</span>
+        </div>
+        <p class="login-sub">
+          CRM de vendas · pipeline kanban para PMEs brasileiras
+        </p>
+        <form id="formLogin">
+          <div class="campo">
+            <label for="loginEmail">E-mail</label>
+            <input
+              id="loginEmail"
+              type="email"
+              value="demo@tracao-crm.com.br"
+              autocomplete="off"
+            />
+          </div>
+          <div class="campo">
+            <label for="loginSenha">Senha</label>
+            <input
+              id="loginSenha"
+              type="password"
+              value="demonstracao"
+              autocomplete="off"
+            />
+          </div>
+          <button
+            type="submit"
+            class="btn btn-primario"
+            data-testid="login-entrar"
+          >
+            Entrar na demonstração
+          </button>
+        </form>
+        <p class="login-nota">
+          Ambiente de demonstração — dados fictícios, nada sai do seu navegador.
+        </p>
+      </div>
+    </div>
+
+    <!-- ===== APP ===== -->
+    <div id="app" hidden>
+      <header class="topo">
+        <div class="topo-marca">
+          <span class="logo-quadro" aria-hidden="true"
+            ><svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+              <path d="M3 5h26l-9.5 12v11l-7-3.5V17z" fill="#fff" /></svg
+          ></span>
+          TRAÇÃO
+        </div>
+        <nav class="abas" role="tablist" aria-label="Seções">
+          <button
+            class="aba"
+            role="tab"
+            id="abaPipeline"
+            aria-selected="true"
+            data-view="pipeline"
+          >
+            Pipeline
+          </button>
+          <button
+            class="aba"
+            role="tab"
+            id="abaRelatorios"
+            aria-selected="false"
+            data-view="relatorios"
+          >
+            Relatórios
+          </button>
+          <button
+            class="aba"
+            role="tab"
+            id="abaTarefas"
+            aria-selected="false"
+            data-view="tarefas"
+          >
+            Tarefas do dia
+          </button>
+        </nav>
+        <div class="topo-dir">
+          <div class="usuario">
+            <span>Equipe Comercial</span
+            ><span class="avatar" aria-hidden="true">EC</span>
+          </div>
+        </div>
+      </header>
+
+      <section class="kpis" aria-label="Indicadores de vendas">
+        <div class="kpi">
+          <div class="kpi-rotulo">Pipeline aberto</div>
+          <div class="kpi-valor" data-testid="kpi-total" id="kpiTotal">—</div>
+          <div class="kpi-extra" id="kpiTotalExtra"></div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-rotulo">Fechadas no mês</div>
+          <div class="kpi-valor" id="kpiFechadas">—</div>
+          <div class="kpi-extra" id="kpiMetaExtra"></div>
+          <div
+            class="kpi-meta-barra"
+            role="img"
+            aria-label="Progresso da meta mensal"
+          >
+            <div class="kpi-meta-fill" id="kpiMetaFill" style="width: 0%"></div>
+          </div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-rotulo">Ticket médio</div>
+          <div class="kpi-valor" id="kpiTicket">—</div>
+          <div class="kpi-extra">sobre vendas ganhas</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-rotulo">Ciclo médio</div>
+          <div class="kpi-valor" id="kpiCiclo">—</div>
+          <div class="kpi-extra">da criação ao fechamento</div>
+        </div>
+      </section>
+
+      <div class="toolbar">
+        <div class="busca-wrap">
+          <svg
+            viewBox="0 0 16 16"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+          >
+            <circle
+              cx="7"
+              cy="7"
+              r="5"
+              stroke="currentColor"
+              stroke-width="1.6"
+            />
+            <path
+              d="M11 11l3.4 3.4"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"
+            />
+          </svg>
+          <input
+            type="search"
+            id="busca"
+            data-testid="busca"
+            placeholder="Buscar oportunidade, empresa ou contato…"
+            aria-label="Buscar oportunidade"
+          />
+        </div>
+        <select
+          class="filtro"
+          id="filtroOrigem"
+          aria-label="Filtrar por origem"
+        >
+          <option value="">Origem: todas</option>
+          <option value="site">Site</option>
+          <option value="indicação">Indicação</option>
+          <option value="Meta Ads">Meta Ads</option>
+          <option value="Google">Google</option>
+          <option value="evento">Evento</option>
+        </select>
+        <select
+          class="filtro"
+          id="filtroTemp"
+          aria-label="Filtrar por temperatura"
+        >
+          <option value="">Temperatura: todas</option>
+          <option value="quente">Quente</option>
+          <option value="morno">Morno</option>
+          <option value="frio">Frio</option>
+        </select>
+        <button
+          class="btn btn-fantasma"
+          data-testid="restaurar-demo"
+          id="btnRestaurar"
+          title="Volta os dados de demonstração ao estado original"
+        >
+          Restaurar demo
+        </button>
+        <button
+          class="btn btn-primario"
+          data-testid="novo-registro"
+          id="btnNovo"
+        >
+          <svg
+            viewBox="0 0 14 14"
+            width="13"
+            height="13"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="M7 1v12M1 7h12"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
+          </svg>
+          Nova oportunidade
+        </button>
+      </div>
+
+      <main>
+        <section
+          id="viewPipeline"
+          role="tabpanel"
+          aria-labelledby="abaPipeline"
+        >
+          <div class="board-wrap">
+            <div
+              class="board"
+              data-testid="lista-principal"
+              id="board"
+              aria-label="Funil de vendas"
+            ></div>
+          </div>
+        </section>
+
+        <section
+          id="viewRelatorios"
+          role="tabpanel"
+          aria-labelledby="abaRelatorios"
+          hidden
+        >
+          <div class="paineis">
+            <div class="painel">
+              <h2>Funil por etapa</h2>
+              <p class="painel-sub">
+                Valor em aberto por etapa e conversão etapa a etapa
+              </p>
+              <div id="graFunil"></div>
+            </div>
+            <div class="painel">
+              <h2>Motivos de perda</h2>
+              <p class="painel-sub">Por que as oportunidades foram perdidas</p>
+              <div id="graMotivos"></div>
+              <div class="resumo-fech" id="resumoFech"></div>
+            </div>
+          </div>
+        </section>
+
+        <section
+          id="viewTarefas"
+          role="tabpanel"
+          aria-labelledby="abaTarefas"
+          hidden
+        >
+          <div class="tarefas-wrap" id="listaTarefas"></div>
+        </section>
+      </main>
+    </div>
+
+    <!-- ===== MODAL: OPORTUNIDADE (criar/editar) ===== -->
+    <div class="veu" id="veuRegistro" hidden>
+      <div
+        class="modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="tituloRegistro"
+        data-testid="modal"
+      >
+        <div class="modal-cab">
+          <h2 id="tituloRegistro">Nova oportunidade</h2>
+          <button
+            type="button"
+            class="btn-icone"
+            id="btnFecharRegistro"
+            aria-label="Fechar (Esc)"
+          >
+            <svg viewBox="0 0 14 14" fill="none">
+              <path
+                d="M2 2l10 10M12 2L2 12"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+              />
+            </svg>
+          </button>
+        </div>
+        <div class="modal-corpo">
+          <div class="form-erro" id="erroRegistro" role="alert"></div>
+          <form id="formRegistro" data-testid="form-registro" novalidate>
+            <div class="form-grade">
+              <div class="campo campo-cheio">
+                <label for="fNome">Nome da oportunidade *</label>
+                <input
+                  id="fNome"
+                  name="nome"
+                  type="text"
+                  placeholder="Ex.: Implantação de sistema — Padaria Estrela"
+                />
+              </div>
+              <div class="campo">
+                <label for="fEmpresa">Empresa *</label>
+                <input
+                  id="fEmpresa"
+                  name="empresa"
+                  type="text"
+                  placeholder="Razão social ou fantasia"
+                />
+              </div>
+              <div class="campo">
+                <label for="fValor">Valor (R$) *</label>
+                <input
+                  id="fValor"
+                  name="valor"
+                  type="number"
+                  min="0"
+                  step="50"
+                  placeholder="0,00"
+                />
+              </div>
+              <div class="campo">
+                <label for="fContato">Contato — nome</label>
+                <input
+                  id="fContato"
+                  name="contato"
+                  type="text"
+                  placeholder="Quem decide"
+                />
+              </div>
+              <div class="campo">
+                <label for="fZap">Contato — WhatsApp</label>
+                <input
+                  id="fZap"
+                  name="zap"
+                  type="tel"
+                  placeholder="(11) 98765-4321"
+                />
+              </div>
+              <div class="campo">
+                <label for="fEmail">Contato — e-mail</label>
+                <input
+                  id="fEmail"
+                  name="email"
+                  type="email"
+                  placeholder="contato@empresa.com.br"
+                />
+              </div>
+              <div class="campo">
+                <label for="fEtapa">Etapa</label>
+                <select id="fEtapa" name="etapa">
+                  <option value="0">Sem contato</option>
+                  <option value="1">Contato feito</option>
+                  <option value="2">Qualificação</option>
+                  <option value="3">Proposta enviada</option>
+                  <option value="4">Negociação</option>
+                  <option value="5">Fechamento</option>
+                </select>
+              </div>
+              <div class="campo">
+                <label for="fOrigem">Origem</label>
+                <select id="fOrigem" name="origem">
+                  <option value="site">Site</option>
+                  <option value="indicação">Indicação</option>
+                  <option value="Meta Ads">Meta Ads</option>
+                  <option value="Google">Google</option>
+                  <option value="evento">Evento</option>
+                </select>
+              </div>
+              <div class="campo">
+                <label for="fTemp">Temperatura</label>
+                <select id="fTemp" name="temperatura">
+                  <option value="quente">Quente</option>
+                  <option value="morno" selected>Morno</option>
+                  <option value="frio">Frio</option>
+                </select>
+              </div>
+              <div class="campo">
+                <label for="fPrevisao">Previsão de fechamento</label>
+                <input id="fPrevisao" name="previsao" type="date" />
+              </div>
+              <div class="campo">
+                <label for="fTarefaDesc">Próxima tarefa — descrição</label>
+                <input
+                  id="fTarefaDesc"
+                  name="tarefaDesc"
+                  type="text"
+                  placeholder="Ex.: ligar para follow-up"
+                />
+              </div>
+              <div class="campo">
+                <label for="fTarefaData">Próxima tarefa — data</label>
+                <input id="fTarefaData" name="tarefaData" type="date" />
+              </div>
+              <div class="campo campo-cheio">
+                <label for="fNotas">Anotações</label>
+                <textarea
+                  id="fNotas"
+                  name="notas"
+                  placeholder="Contexto da negociação, objeções, combinados…"
+                ></textarea>
+              </div>
+            </div>
+            <div class="modal-acoes">
+              <button
+                type="button"
+                class="btn btn-fantasma"
+                id="btnCancelarRegistro"
+              >
+                Cancelar
+              </button>
+              <button
+                type="submit"
+                class="btn btn-primario"
+                data-testid="salvar-registro"
+              >
+                Salvar oportunidade
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== MODAL: MOTIVO DE PERDA ===== -->
+    <div class="veu" id="veuPerda" hidden>
+      <div
+        class="modal modal-estreito"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="tituloPerda"
+      >
+        <div class="modal-cab">
+          <h2 id="tituloPerda">Marcar como perdida</h2>
+          <button
+            type="button"
+            class="btn-icone"
+            id="btnFecharPerda"
+            aria-label="Fechar (Esc)"
+          >
+            <svg viewBox="0 0 14 14" fill="none">
+              <path
+                d="M2 2l10 10M12 2L2 12"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+              />
+            </svg>
+          </button>
+        </div>
+        <div class="modal-corpo">
+          <div class="form-erro" id="erroPerda" role="alert"></div>
+          <form id="formPerda" novalidate>
+            <fieldset>
+              <legend>Motivo da perda — obrigatório para fechar</legend>
+              <label class="motivo-opcao"
+                ><input type="radio" name="motivo" value="preço" /> Preço</label
+              >
+              <label class="motivo-opcao"
+                ><input type="radio" name="motivo" value="concorrente" /> Fechou
+                com concorrente</label
+              >
+              <label class="motivo-opcao"
+                ><input type="radio" name="motivo" value="sem orçamento" /> Sem
+                orçamento</label
+              >
+              <label class="motivo-opcao"
+                ><input type="radio" name="motivo" value="sumiu" /> Sumiu (sem
+                resposta)</label
+              >
+            </fieldset>
+            <div class="modal-acoes">
+              <button
+                type="button"
+                class="btn btn-fantasma"
+                id="btnCancelarPerda"
+              >
+                Cancelar
+              </button>
+              <button type="submit" class="btn btn-perigo">
+                Confirmar perda
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== MODAL: MOVER (fallback acessível do drag) ===== -->
+    <div class="veu" id="veuMover" hidden>
+      <div
+        class="modal modal-estreito"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="tituloMover"
+      >
+        <div class="modal-cab">
+          <h2 id="tituloMover">Mover oportunidade</h2>
+          <button
+            type="button"
+            class="btn-icone"
+            id="btnFecharMover"
+            aria-label="Fechar (Esc)"
+          >
+            <svg viewBox="0 0 14 14" fill="none">
+              <path
+                d="M2 2l10 10M12 2L2 12"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+              />
+            </svg>
+          </button>
+        </div>
+        <div class="modal-corpo">
+          <div class="mover-lista" id="moverLista"></div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="banner-demo" role="note">
+      Demonstração funcional · dados fictícios · tudo roda no seu navegador ·
+      <a href="/conceitos">ANDRADE, Estúdio digital</a>
+    </footer>
+    <script>
+      "use strict";
+      /* ===== determinismo p/ verificação ===== */
+      const E2E =
+        new URLSearchParams(location.search).has("e2e") ||
+        matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (E2E) document.documentElement.classList.add("sem-motion");
+
+      /* ===== segurança de interpolação ===== */
+      function esc(s) {
+        return String(s).replace(
+          /[&<>"']/g,
+          (c) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            })[c],
+        );
+      }
+
+      /* ===== constantes de domínio ===== */
+      const ETAPAS = [
+        "Sem contato",
+        "Contato feito",
+        "Qualificação",
+        "Proposta enviada",
+        "Negociação",
+        "Fechamento",
+      ];
+      const MOTIVOS = ["preço", "concorrente", "sem orçamento", "sumiu"];
+      const ORIGENS = ["site", "indicação", "Meta Ads", "Google", "evento"];
+      const TEMPS = ["quente", "morno", "frio"];
+      const META_MES = 60000;
+      const fmtBRL = new Intl.NumberFormat("pt-BR", {
+        style: "currency",
+        currency: "BRL",
+      });
+      const el = (id) => document.getElementById(id);
+
+      /* ===== datas (locais, yyyy-mm-dd) ===== */
+      const DIA = 86400000;
+      function isoDe(d) {
+        const p = (n) => String(n).padStart(2, "0");
+        return (
+          d.getFullYear() + "-" + p(d.getMonth() + 1) + "-" + p(d.getDate())
+        );
+      }
+      function hojeISO() {
+        return isoDe(new Date());
+      }
+      function isoMais(n) {
+        return isoDe(new Date(Date.now() + n * DIA));
+      }
+      function msDe(iso) {
+        const [a, m, d] = String(iso).split("-").map(Number);
+        return new Date(a, m - 1, d).getTime();
+      }
+      function hoje0() {
+        const h = new Date();
+        return new Date(h.getFullYear(), h.getMonth(), h.getDate()).getTime();
+      }
+      function diasDesde(iso) {
+        return Math.round((hoje0() - msDe(iso)) / DIA);
+      }
+      function dataBR(iso) {
+        const p = String(iso).split("-");
+        return p[2] + "/" + p[1];
+      }
+
+      /* ===== PRNG determinístico ===== */
+      function mulberry32(a) {
+        return function () {
+          a |= 0;
+          a = (a + 0x6d2b79f5) | 0;
+          let t = Math.imul(a ^ (a >>> 15), 1 | a);
+          t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+          return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+        };
+      }
+
+      /* ===== seed ===== */
+      function criarSeed() {
+        const rnd = mulberry32(20260702);
+        const sorte = (arr) => arr[Math.floor(rnd() * arr.length)];
+        const EMP = [
+          "Padaria Pão da Vila",
+          "Ótica Visão Clara",
+          "Auto Center Rodrigues",
+          "Clínica Sorriso Leve",
+          "Academia Corpo Forte",
+          "Restaurante Sabor Mineiro",
+          "Pet Shop Amigo Fiel",
+          "Imobiliária Horizonte",
+          "Farmácia Bem Estar",
+          "Escola Crescer",
+          "Transportadora Rota Sul",
+          "Mercado Bom Preço",
+          "Salão Bela Forma",
+          "Construtora Alicerce",
+          "Gráfica Impressa Já",
+          "Distribuidora São Jorge",
+          "Hotel Vista da Serra",
+          "Lavanderia Água Azul",
+          "Marcenaria Madeira Nobre",
+          "Contabilidade Exata",
+          "Buffet Festa Real",
+          "Vidraçaria Cristal",
+          "Doceria Doce Mel",
+          "Autoescola Direção Certa",
+          "Estética Pele Nova",
+          "Papelaria Ponto Certo",
+          "Serralheria Ferro Forte",
+          "Pizzaria Forno a Lenha",
+          "Loja Moda Urbana",
+          "Assistência TecCell",
+          "Clínica Vet Quatro Patas",
+          "Padaria Trigo Dourado",
+          "Barbearia Navalha de Ouro",
+          "Floricultura Jardim Sul",
+          "Agência Turismo Já",
+          "Oficina Motor e Peças",
+          "Sorveteria Gelato Fino",
+          "Studio Pilates Vida",
+          "Corretora Seguro Certo",
+          "Editora Página Viva",
+          "Cafeteria Grão Fino",
+          "Malharia Ponto Firme",
+          "Funilaria Paulista",
+          "Depósito Constrular",
+          "Advocacia Lima e Prado",
+        ];
+        const SERV = [
+          "Implantação de sistema",
+          "Plano anual",
+          "Automação de vendas",
+          "Site institucional",
+          "Sistema de agendamento",
+          "Consultoria comercial",
+          "Migração de CRM",
+          "Pacote de marketing",
+          "Gestão de tráfego",
+          "App de pedidos",
+          "Treinamento de equipe",
+          "Assinatura Pro",
+        ];
+        const NOMES = [
+          "Ana",
+          "Bruno",
+          "Carla",
+          "Diego",
+          "Elaine",
+          "Fábio",
+          "Gisele",
+          "Hugo",
+          "Íris",
+          "João",
+          "Karen",
+          "Léo",
+          "Marina",
+          "Nelson",
+          "Otávio",
+          "Paula",
+          "Rafael",
+          "Sofia",
+          "Tiago",
+          "Vera",
+        ];
+        const SOBRE = [
+          "Silva",
+          "Souza",
+          "Oliveira",
+          "Santos",
+          "Pereira",
+          "Costa",
+          "Almeida",
+          "Nunes",
+          "Barbosa",
+          "Rocha",
+          "Dias",
+          "Moraes",
+          "Teixeira",
+          "Cardoso",
+          "Farias",
+        ];
+        const TAREFAS = [
+          "Ligar para follow-up",
+          "Enviar proposta revisada",
+          "Agendar demonstração",
+          "Cobrar retorno no WhatsApp",
+          "Enviar contrato para assinatura",
+          "Marcar reunião de alinhamento",
+          "Mandar cases de clientes",
+          "Confirmar orçamento com o sócio",
+        ];
+        const DDDS = [
+          "11",
+          "21",
+          "31",
+          "41",
+          "47",
+          "51",
+          "61",
+          "71",
+          "81",
+          "85",
+        ];
+        const NOTAS = [
+          "Decisor pediu desconto no plano anual.",
+          "Concorrente ofereceu preço menor, reforçar diferencial.",
+          "Cliente quer começar no início do próximo mês.",
+          "Aguardando aprovação do sócio majoritário.",
+          "Já usa planilha, dor grande com retrabalho.",
+          "",
+        ];
+
+        let seq = 1;
+        const ops = [];
+        function fone() {
+          return (
+            "55" +
+            sorte(DDDS) +
+            "9" +
+            String(Math.floor(rnd() * 90000000) + 10000000)
+          );
+        }
+        function base() {
+          const emp = EMP[Math.floor(rnd() * EMP.length)];
+          const nomeC = sorte(NOMES) + " " + sorte(SOBRE);
+          return {
+            id: "op" + seq++,
+            nome: sorte(SERV) + " — " + emp,
+            empresa: emp,
+            contato: nomeC,
+            zap: fone(),
+            email:
+              nomeC
+                .toLowerCase()
+                .normalize("NFD")
+                .replace(/[̀-ͯ]/g, "")
+                .replace(/ /g, ".") +
+              "@" +
+              emp
+                .toLowerCase()
+                .normalize("NFD")
+                .replace(/[̀-ͯ]/g, "")
+                .replace(/[^a-z]/g, "")
+                .slice(0, 12) +
+              ".com.br",
+            valor: 800 + Math.round(rnd() * 884) * 50,
+            origem: sorte(ORIGENS),
+            temperatura:
+              rnd() < 0.3 ? "quente" : rnd() < 0.55 ? "morno" : "frio",
+            notas: sorte(NOTAS),
+            motivoPerda: null,
+            fechadoEm: null,
+          };
+        }
+        /* ~60 abertas distribuídas no funil */
+        const dist = [13, 12, 10, 9, 9, 7];
+        dist.forEach((qtd, etapa) => {
+          for (let i = 0; i < qtd; i++) {
+            const o = base();
+            o.status = "aberta";
+            o.etapa = etapa;
+            o.criadoEm = isoMais(-(5 + Math.floor(rnd() * 80)));
+            /* maioria movida há pouco; minoria parada 7+ dias => esquecida */
+            o.movidoEm = isoMais(
+              rnd() < 0.85
+                ? -Math.floor(rnd() * 7)
+                : -(7 + Math.floor(rnd() * 6)),
+            );
+            o.tarefa =
+              rnd() < 0.85
+                ? {
+                    desc: sorte(TAREFAS),
+                    data: isoMais(-2 + Math.floor(rnd() * 10)),
+                  }
+                : null;
+            o.previsao = isoMais(3 + Math.floor(rnd() * 45));
+            ops.push(o);
+          }
+        });
+        /* 10 ganhas (parte no mês corrente, p/ meta) */
+        const h = new Date();
+        for (let i = 0; i < 10; i++) {
+          const o = base();
+          o.status = "ganha";
+          o.etapa = 5;
+          o.tarefa = null;
+          o.fechadoEm =
+            i < 5
+              ? isoDe(
+                  new Date(
+                    h.getFullYear(),
+                    h.getMonth(),
+                    1 + Math.floor(rnd() * h.getDate()),
+                  ),
+                )
+              : isoMais(-(10 + Math.floor(rnd() * 40)));
+          o.criadoEm = isoDe(
+            new Date(msDe(o.fechadoEm) - (12 + Math.floor(rnd() * 48)) * DIA),
+          );
+          o.movidoEm = o.fechadoEm;
+          o.previsao = o.fechadoEm;
+          ops.push(o);
+        }
+        /* 8 perdidas com motivo (p/ relatório) */
+        for (let i = 0; i < 8; i++) {
+          const o = base();
+          o.status = "perdida";
+          o.etapa = 2 + (i % 3);
+          o.tarefa = null;
+          o.motivoPerda = MOTIVOS[i % 4];
+          o.fechadoEm = isoMais(-(3 + Math.floor(rnd() * 40)));
+          o.criadoEm = isoDe(
+            new Date(msDe(o.fechadoEm) - (8 + Math.floor(rnd() * 40)) * DIA),
+          );
+          o.movidoEm = o.fechadoEm;
+          o.previsao = o.fechadoEm;
+          ops.push(o);
+        }
+        return { ops, seq };
+      }
+
+      /* ===== armazenamento resiliente ===== */
+      const STORE_KEY = "andrade:tracao-crm:v1";
+      let _mem = null; /* fallback p/ modo privado */
+      function dadosValidos(o) {
+        return !!o && Array.isArray(o.ops) && typeof o.seq === "number";
+      }
+      function carregarDados() {
+        try {
+          const bruto = localStorage.getItem(STORE_KEY);
+          if (bruto) {
+            const o = JSON.parse(bruto);
+            if (dadosValidos(o)) return o;
+          }
+        } catch {}
+        return _mem ?? criarSeed();
+      }
+      function salvarDados(d) {
+        _mem = d;
+        try {
+          localStorage.setItem(STORE_KEY, JSON.stringify(d));
+        } catch {}
+      }
+      function restaurarDemo() {
+        /* limpa SÓ o próprio namespace */
+        try {
+          localStorage.removeItem(STORE_KEY);
+        } catch {}
+        _mem = null;
+        estado = criarSeed();
+        salvarDados(estado);
+        renderTudo();
+      }
+
+      let estado = carregarDados();
+      salvarDados(estado);
+
+      /* ===== helpers de domínio ===== */
+      const byId = (id) => estado.ops.find((o) => o.id === id);
+      function esquecida(op) {
+        return (
+          op.status === "aberta" && (!op.tarefa || diasDesde(op.movidoEm) >= 7)
+        );
+      }
+      function linkZap(z) {
+        const d = String(z || "").replace(/\D/g, "");
+        if (d.length < 10) return null;
+        return "https://wa.me/" + (d.startsWith("55") ? d : "55" + d);
+      }
+      function filtrar(ops) {
+        const q = el("busca").value.trim().toLowerCase();
+        const fo = el("filtroOrigem").value,
+          ft = el("filtroTemp").value;
+        return ops.filter((o) => {
+          if (fo && o.origem !== fo) return false;
+          if (ft && o.temperatura !== ft) return false;
+          if (
+            q &&
+            !(o.nome + " " + o.empresa + " " + (o.contato || ""))
+              .toLowerCase()
+              .includes(q)
+          )
+            return false;
+          return true;
+        });
+      }
+
+      /* ===== ícones ===== */
+      const icoRelogio =
+        '<svg viewBox="0 0 14 14" fill="none" aria-hidden="true"><circle cx="7" cy="7" r="5.4" stroke="currentColor" stroke-width="1.4"/><path d="M7 4.2V7l2 1.4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>';
+      const icoZap =
+        '<svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 1.8a6.2 6.2 0 0 0-5.3 9.4L1.8 14.2l3.1-.85A6.2 6.2 0 1 0 8 1.8z" stroke="currentColor" stroke-width="1.35"/><path d="M5.6 5.3c-.3 1 .5 2.6 1.5 3.6s2.6 1.8 3.6 1.5c.4-.12.5-.7.3-1l-.9-.9-1 .5c-.5-.2-1.5-1.2-1.7-1.7l.5-1-.9-.9c-.3-.2-.88-.1-1 .3z" fill="currentColor"/></svg>';
+      const icoMover =
+        '<svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2.5 8h11M10.5 4.5 14 8l-3.5 3.5M5.5 4.5 2 8l3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+      const icoEditar =
+        '<svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="m10.7 2.7 2.6 2.6L5.6 13 2.5 13.5 3 10.4zM9.5 4l2.5 2.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+      const icoExcluir =
+        '<svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2.5 4h11M6.5 2h3M4 4l.7 9.3a1 1 0 0 0 1 .7h4.6a1 1 0 0 0 1-.7L12 4M6.6 6.8v4.4M9.4 6.8v4.4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+      const svgVazio =
+        '<svg viewBox="0 0 96 96" fill="none" aria-hidden="true"><rect x="14" y="20" width="68" height="12" rx="6" fill="#DDE2EF"/><rect x="24" y="42" width="48" height="12" rx="6" fill="#E5E9F4"/><rect x="34" y="64" width="28" height="12" rx="6" fill="#EDF0F8"/><circle cx="72" cy="70" r="12" stroke="#9AA1B9" stroke-width="3"/><path d="m81 79 8 8" stroke="#9AA1B9" stroke-width="3" stroke-linecap="round"/></svg>';
+      const svgVazioTarefas =
+        '<svg viewBox="0 0 96 96" fill="none" aria-hidden="true"><rect x="18" y="14" width="60" height="70" rx="10" fill="#EDF0F8"/><rect x="30" y="30" width="36" height="6" rx="3" fill="#DDE2EF"/><rect x="30" y="44" width="28" height="6" rx="3" fill="#DDE2EF"/><path d="m32 64 6 6 12-13" stroke="#15803D" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+      /* ===== KPIs (sempre recomputados) ===== */
+      function renderKPIs() {
+        const abertas = estado.ops.filter((o) => o.status === "aberta");
+        const ganhas = estado.ops.filter((o) => o.status === "ganha");
+        const total = abertas.reduce((s, o) => s + o.valor, 0);
+        el("kpiTotal").textContent = fmtBRL.format(total);
+        el("kpiTotalExtra").textContent =
+          abertas.length + " oportunidades abertas";
+
+        const mes = hojeISO().slice(0, 7);
+        const noMes = ganhas
+          .filter((o) => String(o.fechadoEm).slice(0, 7) === mes)
+          .reduce((s, o) => s + o.valor, 0);
+        const pct = Math.round((100 * noMes) / META_MES);
+        el("kpiFechadas").textContent = fmtBRL.format(noMes);
+        el("kpiMetaExtra").textContent =
+          "meta " + fmtBRL.format(META_MES) + " · " + pct + "%";
+        el("kpiMetaFill").style.width = Math.min(100, pct) + "%";
+
+        el("kpiTicket").textContent = ganhas.length
+          ? fmtBRL.format(
+              Math.round(
+                ganhas.reduce((s, o) => s + o.valor, 0) / ganhas.length,
+              ),
+            )
+          : "—";
+        const ciclos = ganhas
+          .filter((o) => o.criadoEm && o.fechadoEm)
+          .map((o) =>
+            Math.max(
+              0,
+              Math.round((msDe(o.fechadoEm) - msDe(o.criadoEm)) / DIA),
+            ),
+          );
+        el("kpiCiclo").textContent = ciclos.length
+          ? Math.round(ciclos.reduce((s, n) => s + n, 0) / ciclos.length) +
+            " dias"
+          : "—";
+      }
+
+      /* ===== board kanban ===== */
+      function cartaoHTML(op) {
+        const esq = esquecida(op);
+        const zap = linkZap(op.zap);
+        const tarefa = op.tarefa
+          ? '<div class="cartao-linha' +
+            (diasDesde(op.tarefa.data) > 0 ? " atrasada" : "") +
+            '">' +
+            icoRelogio +
+            "<span>" +
+            esc(op.tarefa.desc) +
+            " · " +
+            esc(dataBR(op.tarefa.data)) +
+            "</span></div>"
+          : "";
+        const temp = TEMPS.includes(op.temperatura) ? op.temperatura : "morno";
+        return (
+          '<article class="cartao' +
+          (esq ? " esquecido" : "") +
+          '" data-item data-id="' +
+          esc(op.id) +
+          '" draggable="true">' +
+          '<div class="cartao-topo"><span class="temp temp-' +
+          temp +
+          '" title="Temperatura: ' +
+          temp +
+          '"></span>' +
+          '<div style="flex:1;min-width:0"><div class="cartao-nome">' +
+          esc(op.nome) +
+          "</div>" +
+          '<div class="cartao-empresa">' +
+          esc(op.empresa) +
+          (op.contato ? " · " + esc(op.contato) : "") +
+          "</div></div></div>" +
+          '<div class="cartao-valor">' +
+          fmtBRL.format(op.valor) +
+          "</div>" +
+          tarefa +
+          (esq ? '<span class="tag-esquecido">Esquecido</span>' : "") +
+          '<div class="cartao-rodape"><span class="tag-origem">' +
+          esc(op.origem) +
+          "</span>" +
+          (zap
+            ? '<a class="btn-zap" href="' +
+              esc(zap) +
+              '" target="_blank" rel="noopener" aria-label="Abrir WhatsApp de ' +
+              esc(op.contato || op.empresa) +
+              '">' +
+              icoZap +
+              "</a>"
+            : "") +
+          '<button type="button" class="btn-icone" data-acao="mover" aria-label="Mover: ' +
+          esc(op.nome) +
+          '">' +
+          icoMover +
+          "</button>" +
+          '<button type="button" class="btn-icone" data-testid="editar-item" data-acao="editar" aria-label="Editar: ' +
+          esc(op.nome) +
+          '">' +
+          icoEditar +
+          "</button>" +
+          '<button type="button" class="btn-icone" data-testid="excluir-item" data-acao="excluir" aria-label="Excluir: ' +
+          esc(op.nome) +
+          '">' +
+          icoExcluir +
+          "</button>" +
+          "</div></article>"
+        );
+      }
+      function renderBoard() {
+        const board = el("board");
+        const visiveis = filtrar(estado.ops).filter(
+          (o) => o.status === "aberta",
+        );
+        if (!visiveis.length) {
+          board.innerHTML =
+            '<div class="vazio" style="width:100%">' +
+            svgVazio +
+            "<b>Nenhuma oportunidade encontrada</b><p>Ajuste a busca ou os filtros — ou crie uma nova oportunidade para movimentar o funil.</p></div>";
+          return;
+        }
+        board.innerHTML = ETAPAS.map((nome, e) => {
+          const cards = visiveis.filter((o) => o.etapa === e);
+          const soma = cards.reduce((s, o) => s + o.valor, 0);
+          return (
+            '<section class="coluna" data-etapa="' +
+            e +
+            '" aria-label="Etapa: ' +
+            nome +
+            '">' +
+            '<header class="coluna-cab"><span class="coluna-titulo">' +
+            nome +
+            "</span>" +
+            '<span class="coluna-qtd num">' +
+            cards.length +
+            "</span>" +
+            '<span class="coluna-soma">' +
+            fmtBRL.format(soma) +
+            "</span></header>" +
+            '<div class="coluna-corpo">' +
+            (cards.map(cartaoHTML).join("") ||
+              '<div class="coluna-vazia">Solte um card aqui</div>') +
+            "</div></section>"
+          );
+        }).join("");
+      }
+
+      /* ===== relatórios (SVG à mão) ===== */
+      function renderRelatorios() {
+        const abertas = estado.ops.filter((o) => o.status === "aberta");
+        const porEtapa = ETAPAS.map((_, i) =>
+          abertas.filter((o) => o.etapa === i),
+        );
+        const somas = porEtapa.map((a) => a.reduce((s, o) => s + o.valor, 0));
+        const max = Math.max(...somas, 1);
+        const L = 580,
+          ROW = 46;
+        let s =
+          '<svg viewBox="0 0 ' +
+          L +
+          " " +
+          ETAPAS.length * ROW +
+          '" role="img" aria-label="Funil por etapa: valor e conversão">';
+        porEtapa.forEach((arr, i) => {
+          const y = i * ROW + 6;
+          const w = Math.max(5, Math.round((somas[i] / max) * (L - 300)));
+          s +=
+            '<text x="0" y="' +
+            (y + 15) +
+            '" font-size="11.5" font-weight="600" fill="#1B2036" font-family="DM Sans,sans-serif">' +
+            ETAPAS[i] +
+            "</text>";
+          s +=
+            '<rect x="140" y="' +
+            y +
+            '" width="' +
+            w +
+            '" height="22" rx="5" fill="#1D4ED8" opacity="' +
+            (0.36 + i * 0.12).toFixed(2) +
+            '"/>';
+          s +=
+            '<text x="' +
+            (148 + w) +
+            '" y="' +
+            (y + 15) +
+            '" font-size="11" fill="#68708C" font-family="DM Mono,monospace">' +
+            fmtBRL.format(somas[i]) +
+            " · " +
+            arr.length +
+            "</text>";
+          if (i < ETAPAS.length - 1) {
+            const conv = arr.length
+              ? Math.round((100 * porEtapa[i + 1].length) / arr.length)
+              : null;
+            s +=
+              '<text x="140" y="' +
+              (y + 36) +
+              '" font-size="10" fill="#9AA1B9" font-family="DM Sans,sans-serif">' +
+              (conv === null ? "—" : "↳ " + conv + "% avançam") +
+              "</text>";
+          }
+        });
+        el("graFunil").innerHTML = s + "</svg>";
+
+        const perdidas = estado.ops.filter((o) => o.status === "perdida");
+        const ganhas = estado.ops.filter((o) => o.status === "ganha");
+        if (!perdidas.length) {
+          el("graMotivos").innerHTML =
+            '<div class="vazio">' +
+            svgVazioTarefas +
+            "<b>Sem perdas registradas</b><p>Quando uma oportunidade for perdida, o motivo aparece aqui.</p></div>";
+        } else {
+          const cont = MOTIVOS.map(
+            (m) => perdidas.filter((o) => o.motivoPerda === m).length,
+          );
+          const mx = Math.max(...cont, 1);
+          const LM = 320,
+            RM = 40;
+          let g =
+            '<svg viewBox="0 0 ' +
+            LM +
+            " " +
+            MOTIVOS.length * RM +
+            '" role="img" aria-label="Motivos de perda">';
+          MOTIVOS.forEach((m, i) => {
+            const y = i * RM + 6;
+            const w = Math.max(4, Math.round((cont[i] / mx) * (LM - 160)));
+            g +=
+              '<text x="0" y="' +
+              (y + 14) +
+              '" font-size="11.5" font-weight="600" fill="#1B2036" font-family="DM Sans,sans-serif">' +
+              m +
+              "</text>";
+            g +=
+              '<rect x="110" y="' +
+              y +
+              '" width="' +
+              w +
+              '" height="20" rx="5" fill="#DC2626" opacity="' +
+              (cont[i] ? 0.78 : 0.15) +
+              '"/>';
+            g +=
+              '<text x="' +
+              (118 + w) +
+              '" y="' +
+              (y + 14) +
+              '" font-size="11" fill="#68708C" font-family="DM Mono,monospace">' +
+              cont[i] +
+              "</text>";
+          });
+          el("graMotivos").innerHTML = g + "</svg>";
+        }
+        el("resumoFech").innerHTML =
+          '<div class="resumo-chip chip-ganho">Ganhas<span class="num">' +
+          ganhas.length +
+          " · " +
+          fmtBRL.format(ganhas.reduce((s, o) => s + o.valor, 0)) +
+          "</span></div>" +
+          '<div class="resumo-chip chip-perdido">Perdidas<span class="num">' +
+          perdidas.length +
+          " · " +
+          fmtBRL.format(perdidas.reduce((s, o) => s + o.valor, 0)) +
+          "</span></div>";
+      }
+
+      /* ===== tarefas do dia ===== */
+      function renderTarefas() {
+        const wrap = el("listaTarefas");
+        const comTarefa = filtrar(estado.ops)
+          .filter((o) => o.status === "aberta" && o.tarefa)
+          .sort((a, b) => msDe(a.tarefa.data) - msDe(b.tarefa.data));
+        if (!comTarefa.length) {
+          wrap.innerHTML =
+            '<div class="vazio">' +
+            svgVazioTarefas +
+            "<b>Nenhuma tarefa por aqui</b><p>Cadastre a próxima tarefa nas oportunidades para não deixar nenhum negócio esfriar.</p></div>";
+          return;
+        }
+        const grupos = [
+          {
+            titulo: "Atrasadas",
+            cls: " atrasado",
+            itens: comTarefa.filter((o) => diasDesde(o.tarefa.data) > 0),
+          },
+          {
+            titulo: "Hoje",
+            cls: "",
+            itens: comTarefa.filter((o) => diasDesde(o.tarefa.data) === 0),
+          },
+          {
+            titulo: "Próximas",
+            cls: "",
+            itens: comTarefa.filter((o) => diasDesde(o.tarefa.data) < 0),
+          },
+        ];
+        wrap.innerHTML = grupos
+          .filter((g) => g.itens.length)
+          .map(
+            (g) =>
+              '<h2 class="tarefa-grupo' +
+              g.cls +
+              '">' +
+              g.titulo +
+              " · " +
+              g.itens.length +
+              "</h2>" +
+              g.itens
+                .map((o) => {
+                  const atras = diasDesde(o.tarefa.data) > 0,
+                    hoje = diasDesde(o.tarefa.data) === 0;
+                  const zap = linkZap(o.zap);
+                  return (
+                    '<div class="tarefa" data-id="' +
+                    esc(o.id) +
+                    '">' +
+                    '<span class="tarefa-data' +
+                    (atras ? " atrasada" : hoje ? " hoje" : "") +
+                    '">' +
+                    esc(dataBR(o.tarefa.data)) +
+                    "</span>" +
+                    '<div class="tarefa-desc"><b>' +
+                    esc(o.tarefa.desc) +
+                    "</b><span>" +
+                    esc(o.nome) +
+                    " · " +
+                    esc(o.empresa) +
+                    " · " +
+                    ETAPAS[o.etapa] +
+                    "</span></div>" +
+                    '<span class="cartao-valor">' +
+                    fmtBRL.format(o.valor) +
+                    "</span>" +
+                    (zap
+                      ? '<a class="btn-zap" href="' +
+                        esc(zap) +
+                        '" target="_blank" rel="noopener" aria-label="WhatsApp de ' +
+                        esc(o.contato || o.empresa) +
+                        '">' +
+                        icoZap +
+                        "</a>"
+                      : "") +
+                    '<button type="button" class="btn-icone" data-acao="editar" aria-label="Abrir: ' +
+                    esc(o.nome) +
+                    '">' +
+                    icoEditar +
+                    "</button></div>"
+                  );
+                })
+                .join(""),
+          )
+          .join("");
+      }
+
+      function renderTudo() {
+        renderKPIs();
+        renderBoard();
+        renderRelatorios();
+        renderTarefas();
+      }
+
+      /* ===== modais (abrir/fechar com devolução de foco) ===== */
+      const pilhaFoco = [];
+      function abrirVeu(v, foco) {
+        pilhaFoco.push(document.activeElement);
+        v.hidden = false;
+        const alvo = foco || v.querySelector("input,select,button");
+        if (alvo) alvo.focus();
+      }
+      function fecharVeu(v) {
+        v.hidden = true;
+        const f = pilhaFoco.pop();
+        if (f && f.focus) {
+          try {
+            f.focus();
+          } catch {}
+        }
+      }
+      const veuRegistro = el("veuRegistro"),
+        veuPerda = el("veuPerda"),
+        veuMover = el("veuMover");
+      document.addEventListener("keydown", (e) => {
+        if (e.key !== "Escape") return;
+        if (!veuMover.hidden) fecharVeu(veuMover);
+        else if (!veuPerda.hidden) fecharVeu(veuPerda);
+        else if (!veuRegistro.hidden) fecharVeu(veuRegistro);
+      });
+      [veuRegistro, veuPerda, veuMover].forEach((v) =>
+        v.addEventListener("click", (e) => {
+          if (e.target === v) fecharVeu(v);
+        }),
+      );
+
+      /* ===== CRUD ===== */
+      let edicaoId = null;
+      function abrirRegistro(op) {
+        edicaoId = op ? op.id : null;
+        el("tituloRegistro").textContent = op
+          ? "Editar oportunidade"
+          : "Nova oportunidade";
+        el("erroRegistro").classList.remove("visivel");
+        el("formRegistro").reset();
+        el("fNome").value = op ? op.nome : "";
+        el("fEmpresa").value = op ? op.empresa : "";
+        el("fValor").value = op ? op.valor : "";
+        el("fContato").value = op ? op.contato || "" : "";
+        el("fZap").value = op ? op.zap || "" : "";
+        el("fEmail").value = op ? op.email || "" : "";
+        el("fEtapa").value = op ? String(op.etapa) : "0";
+        el("fOrigem").value =
+          op && ORIGENS.includes(op.origem) ? op.origem : "site";
+        el("fTemp").value =
+          op && TEMPS.includes(op.temperatura) ? op.temperatura : "morno";
+        el("fPrevisao").value = op ? op.previsao || "" : isoMais(21);
+        el("fTarefaDesc").value = op && op.tarefa ? op.tarefa.desc : "";
+        el("fTarefaData").value = op && op.tarefa ? op.tarefa.data : "";
+        el("fNotas").value = op ? op.notas || "" : "";
+        abrirVeu(veuRegistro, el("fNome"));
+      }
+      el("formRegistro").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const nome = el("fNome").value.trim();
+        const empresa = el("fEmpresa").value.trim();
+        const valor = Number(el("fValor").value);
+        const erro = el("erroRegistro");
+        if (!nome || !empresa || !(valor > 0)) {
+          erro.textContent =
+            "Preencha nome da oportunidade, empresa e um valor maior que zero.";
+          erro.classList.add("visivel");
+          return;
+        }
+        erro.classList.remove("visivel");
+        const etapa = Math.min(5, Math.max(0, Number(el("fEtapa").value) || 0));
+        const tDesc = el("fTarefaDesc").value.trim();
+        const dados = {
+          nome,
+          empresa,
+          valor: Math.round(valor),
+          contato: el("fContato").value.trim(),
+          zap: el("fZap").value.trim(),
+          email: el("fEmail").value.trim(),
+          etapa,
+          origem: ORIGENS.includes(el("fOrigem").value)
+            ? el("fOrigem").value
+            : "site",
+          temperatura: TEMPS.includes(el("fTemp").value)
+            ? el("fTemp").value
+            : "morno",
+          previsao: el("fPrevisao").value || null,
+          tarefa: tDesc
+            ? { desc: tDesc, data: el("fTarefaData").value || hojeISO() }
+            : null,
+          notas: el("fNotas").value.trim(),
+        };
+        if (edicaoId) {
+          const op = byId(edicaoId);
+          if (op) {
+            if (op.etapa !== etapa) op.movidoEm = hojeISO();
+            Object.assign(op, dados);
+          }
+        } else {
+          estado.ops.push(
+            Object.assign(
+              {
+                id: "op" + estado.seq++,
+                status: "aberta",
+                criadoEm: hojeISO(),
+                movidoEm: hojeISO(),
+                motivoPerda: null,
+                fechadoEm: null,
+              },
+              dados,
+            ),
+          );
+        }
+        salvarDados(estado);
+        renderTudo();
+        fecharVeu(veuRegistro);
+      });
+      el("btnNovo").addEventListener("click", () => abrirRegistro(null));
+      el("btnCancelarRegistro").addEventListener("click", () =>
+        fecharVeu(veuRegistro),
+      );
+      el("btnFecharRegistro").addEventListener("click", () =>
+        fecharVeu(veuRegistro),
+      );
+      el("btnRestaurar").addEventListener("click", restaurarDemo);
+
+      /* ===== mover / ganhar / perder ===== */
+      let moverId = null,
+        perdaId = null;
+      function abrirMover(op) {
+        moverId = op.id;
+        el("moverLista").innerHTML =
+          ETAPAS.map(
+            (nome, e) =>
+              '<button type="button" class="mover-opcao" data-etapa="' +
+              e +
+              '"' +
+              (e === op.etapa ? " disabled" : "") +
+              '><span class="ponto"></span>' +
+              nome +
+              (e === op.etapa ? " (atual)" : "") +
+              "</button>",
+          ).join("") +
+          '<div class="mover-sep"></div>' +
+          '<button type="button" class="mover-opcao op-ganho" data-fim="ganha"><span class="ponto"></span>Marcar como ganha</button>' +
+          '<button type="button" class="mover-opcao op-perdido" data-fim="perdida"><span class="ponto"></span>Marcar como perdida…</button>';
+        abrirVeu(veuMover);
+      }
+      el("moverLista").addEventListener("click", (e) => {
+        const btn = e.target.closest("button[data-etapa],button[data-fim]");
+        if (!btn) return;
+        const op = byId(moverId);
+        if (!op) {
+          fecharVeu(veuMover);
+          return;
+        }
+        if (btn.dataset.etapa !== undefined) {
+          op.etapa = Number(btn.dataset.etapa);
+          op.movidoEm = hojeISO();
+          salvarDados(estado);
+          renderTudo();
+          fecharVeu(veuMover);
+        } else if (btn.dataset.fim === "ganha") {
+          op.status = "ganha";
+          op.fechadoEm = hojeISO();
+          op.tarefa = null;
+          salvarDados(estado);
+          renderTudo();
+          fecharVeu(veuMover);
+        } else {
+          fecharVeu(veuMover);
+          abrirPerda(op);
+        }
+      });
+      el("btnFecharMover").addEventListener("click", () => fecharVeu(veuMover));
+
+      function abrirPerda(op) {
+        perdaId = op.id;
+        el("formPerda").reset();
+        el("erroPerda").classList.remove("visivel");
+        abrirVeu(veuPerda, el("formPerda").querySelector("input"));
+      }
+      el("formPerda").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const sel = el("formPerda").querySelector(
+          'input[name="motivo"]:checked',
+        );
+        const erro = el("erroPerda");
+        if (!sel || !MOTIVOS.includes(sel.value)) {
+          erro.textContent =
+            "Escolha o motivo da perda — sem motivo, o funil não aprende.";
+          erro.classList.add("visivel");
+          return;
+        }
+        const op = byId(perdaId);
+        if (op) {
+          op.status = "perdida";
+          op.motivoPerda = sel.value;
+          op.fechadoEm = hojeISO();
+          op.tarefa = null;
+          salvarDados(estado);
+          renderTudo();
+        }
+        fecharVeu(veuPerda);
+      });
+      el("btnCancelarPerda").addEventListener("click", () =>
+        fecharVeu(veuPerda),
+      );
+      el("btnFecharPerda").addEventListener("click", () => fecharVeu(veuPerda));
+
+      /* ===== ações nos cards (delegação) ===== */
+      function acaoDoClique(e) {
+        const btn = e.target.closest("[data-acao]");
+        if (!btn) return;
+        const item = btn.closest("[data-id]");
+        if (!item) return;
+        const op = byId(item.dataset.id);
+        if (!op) return;
+        if (btn.dataset.acao === "editar") abrirRegistro(op);
+        else if (btn.dataset.acao === "mover") abrirMover(op);
+        else if (btn.dataset.acao === "excluir") {
+          estado.ops = estado.ops.filter((o) => o.id !== op.id);
+          salvarDados(estado);
+          renderTudo();
+        }
+      }
+      el("board").addEventListener("click", acaoDoClique);
+      el("listaTarefas").addEventListener("click", acaoDoClique);
+
+      /* ===== drag & drop nativo ===== */
+      let dragId = null;
+      const board = el("board");
+      board.addEventListener("dragstart", (e) => {
+        const c = e.target.closest("[data-item]");
+        if (!c) return;
+        dragId = c.dataset.id;
+        c.classList.add("arrastando");
+        e.dataTransfer.effectAllowed = "move";
+        try {
+          e.dataTransfer.setData("text/plain", dragId);
+        } catch {}
+      });
+      board.addEventListener("dragend", () => {
+        dragId = null;
+        board
+          .querySelectorAll(".arrastando")
+          .forEach((c) => c.classList.remove("arrastando"));
+        board
+          .querySelectorAll(".drop-alvo")
+          .forEach((c) => c.classList.remove("drop-alvo"));
+      });
+      board.addEventListener("dragover", (e) => {
+        const col = e.target.closest(".coluna");
+        if (!col || dragId === null) return;
+        e.preventDefault();
+        e.dataTransfer.dropEffect = "move";
+        board.querySelectorAll(".drop-alvo").forEach((c) => {
+          if (c !== col) c.classList.remove("drop-alvo");
+        });
+        col.classList.add("drop-alvo");
+      });
+      board.addEventListener("drop", (e) => {
+        const col = e.target.closest(".coluna");
+        if (!col || dragId === null) return;
+        e.preventDefault();
+        const op = byId(dragId);
+        const etapa = Number(col.dataset.etapa);
+        if (op && op.status === "aberta" && op.etapa !== etapa) {
+          op.etapa = etapa;
+          op.movidoEm = hojeISO();
+          salvarDados(estado);
+          renderTudo();
+        }
+        dragId = null;
+      });
+
+      /* ===== abas ===== */
+      const views = {
+        pipeline: el("viewPipeline"),
+        relatorios: el("viewRelatorios"),
+        tarefas: el("viewTarefas"),
+      };
+      document.querySelectorAll(".aba").forEach((aba) =>
+        aba.addEventListener("click", () => {
+          document
+            .querySelectorAll(".aba")
+            .forEach((a) =>
+              a.setAttribute("aria-selected", a === aba ? "true" : "false"),
+            );
+          Object.entries(views).forEach(([k, v]) => {
+            v.hidden = k !== aba.dataset.view;
+          });
+        }),
+      );
+
+      /* ===== filtros ===== */
+      ["busca", "filtroOrigem", "filtroTemp"].forEach((id) => {
+        el(id).addEventListener("input", () => {
+          renderBoard();
+          renderTarefas();
+        });
+      });
+
+      /* ===== login fake ===== */
+      el("formLogin").addEventListener("submit", (e) => {
+        e.preventDefault();
+        el("telaLogin").hidden = true;
+        el("app").hidden = false;
+        el("busca").focus();
+      });
+
+      renderTudo();
+    </script>
+  </body>
+</html>

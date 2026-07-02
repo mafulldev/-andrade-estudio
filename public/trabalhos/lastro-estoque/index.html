@@ -1,0 +1,2863 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>
+      LASTRO — Gestão de estoque que não deixa faltar · Conceito funcional
+      ANDRADE
+    </title>
+    <meta
+      name="description"
+      content="LASTRO: ERP-lite de gestão de estoque com curva ABC, ponto de pedido e lista de compra sugerida. Demonstração funcional — dados fictícios, tudo roda no navegador."
+    />
+    <meta
+      property="og:title"
+      content="LASTRO — Gestão de estoque que não deixa faltar"
+    />
+    <meta
+      property="og:description"
+      content="ERP-lite de estoque com curva ABC, ponto de pedido e compra sugerida. Conceito funcional do ANDRADE Estúdio digital."
+    />
+    <meta
+      property="og:image"
+      content="https://www.andradestudio.dev.br/opengraph-image"
+    />
+    <meta property="og:type" content="website" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231C1917'/%3E%3Crect x='7' y='18' width='18' height='4' rx='1' fill='%23B45309'/%3E%3Crect x='10' y='12' width='12' height='4' rx='1' fill='%23D97706'/%3E%3Crect x='13' y='6' width='6' height='4' rx='1' fill='%23FBBF24'/%3E%3C/svg%3E"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --ink: #1c1917;
+        --ink2: #44403c;
+        --mut: #78716c;
+        --line: #e7e5e4;
+        --line2: #f0efea;
+        --bg: #fafaf7;
+        --card: #ffffff;
+        --amb: #b45309;
+        --amb2: #92400e;
+        --ambbg: #fef3e2;
+        --azul: #0369a1;
+        --azulbg: #e8f4fb;
+        --cinza: #6b7280;
+        --cinzabg: #f1f2f4;
+        --rup: #b91c1c;
+        --rupbg: #fdecec;
+        --ok: #15803d;
+        --okbg: #e9f6ee;
+        --foco: #b45309;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+        /* o painel de detalhe off-canvas (translateX 105%) nao pode esticar o documento */
+        overflow-x: clip;
+      }
+      body {
+        font-family: "IBM Plex Sans", system-ui, sans-serif;
+        background: var(--bg);
+        color: var(--ink);
+        font-size: 14px;
+        line-height: 1.45;
+        -webkit-font-smoothing: antialiased;
+      }
+      .mono {
+        font-family: "IBM Plex Mono", ui-monospace, monospace;
+        font-variant-numeric: tabular-nums;
+      }
+      button {
+        font: inherit;
+        cursor: pointer;
+        border: none;
+        background: none;
+        color: inherit;
+      }
+      input,
+      select,
+      textarea {
+        font: inherit;
+        color: var(--ink);
+      }
+      a {
+        color: var(--amb);
+        text-decoration: none;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+      :focus-visible {
+        outline: 2.5px solid var(--foco);
+        outline-offset: 2px;
+        border-radius: 4px;
+      }
+      .sem-motion *,
+      .sem-motion *::before,
+      .sem-motion *::after {
+        transition: none !important;
+        animation: none !important;
+      }
+      .vh {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        white-space: nowrap;
+      }
+
+      /* ---------- LOGIN ---------- */
+      #telaLogin {
+        position: fixed;
+        inset: 0;
+        z-index: 90;
+        background: var(--ink);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        background-image:
+          radial-gradient(
+            ellipse 80% 60% at 70% -10%,
+            rgba(180, 83, 9, 0.22),
+            transparent
+          ),
+          repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 47px,
+            rgba(255, 255, 255, 0.03) 47px,
+            rgba(255, 255, 255, 0.03) 48px
+          ),
+          repeating-linear-gradient(
+            90deg,
+            transparent,
+            transparent 47px,
+            rgba(255, 255, 255, 0.03) 47px,
+            rgba(255, 255, 255, 0.03) 48px
+          );
+      }
+      #telaLogin.fechada {
+        display: none;
+      }
+      .login-card {
+        background: var(--card);
+        border-radius: 14px;
+        padding: 38px 36px 32px;
+        width: 100%;
+        max-width: 400px;
+        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+        animation: sobe 0.45s cubic-bezier(0.2, 0.8, 0.3, 1) both;
+      }
+      @keyframes sobe {
+        from {
+          opacity: 0;
+          transform: translateY(16px);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+      .login-logo {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 6px;
+      }
+      .marca {
+        width: 42px;
+        height: 42px;
+        border-radius: 10px;
+        background: var(--ink);
+        display: grid;
+        place-items: center;
+        flex: none;
+      }
+      .login-logo h1 {
+        font-size: 24px;
+        letter-spacing: 0.14em;
+        font-weight: 700;
+      }
+      .login-sub {
+        color: var(--mut);
+        font-size: 13px;
+        margin-bottom: 26px;
+      }
+      .campo {
+        margin-bottom: 14px;
+      }
+      .campo label {
+        display: block;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--ink2);
+        margin-bottom: 5px;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+      .campo input,
+      .campo select {
+        width: 100%;
+        border: 1.5px solid var(--line);
+        border-radius: 8px;
+        padding: 9px 11px;
+        background: #fcfcfa;
+        transition: border-color 0.18s;
+      }
+      .campo input:focus,
+      .campo select:focus {
+        border-color: var(--amb);
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(180, 83, 9, 0.14);
+      }
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        border-radius: 8px;
+        padding: 9px 16px;
+        font-weight: 600;
+        font-size: 13.5px;
+        transition:
+          background 0.18s,
+          transform 0.15s,
+          box-shadow 0.18s;
+        white-space: nowrap;
+      }
+      .btn:active {
+        transform: translateY(1px);
+      }
+      .btn-amb {
+        background: var(--amb);
+        color: #fff;
+        box-shadow: 0 2px 6px rgba(180, 83, 9, 0.35);
+      }
+      .btn-amb:hover {
+        background: var(--amb2);
+      }
+      .btn-escuro {
+        background: var(--ink);
+        color: #fff;
+      }
+      .btn-escuro:hover {
+        background: #2c2825;
+      }
+      .btn-borda {
+        border: 1.5px solid var(--line);
+        background: var(--card);
+        color: var(--ink2);
+      }
+      .btn-borda:hover {
+        border-color: var(--mut);
+        background: var(--bg);
+      }
+      .btn-perigo {
+        background: var(--rupbg);
+        color: var(--rup);
+      }
+      .btn-perigo:hover {
+        background: #fbdddd;
+      }
+      .btn-bloco {
+        width: 100%;
+        padding: 11px;
+      }
+      .login-nota {
+        margin-top: 18px;
+        font-size: 12px;
+        color: var(--mut);
+        text-align: center;
+      }
+
+      /* ---------- TOPBAR ---------- */
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 40;
+        background: var(--ink);
+        color: #e7e5e4;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 0 18px;
+        height: 54px;
+      }
+      .topbar .marca {
+        width: 30px;
+        height: 30px;
+        border-radius: 7px;
+      }
+      .top-nome {
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        font-size: 15px;
+        color: #fff;
+      }
+      .top-tag {
+        font-size: 11px;
+        color: #a8a29e;
+        border-left: 1px solid #44403c;
+        padding-left: 10px;
+        margin-left: 2px;
+      }
+      .abas {
+        display: flex;
+        gap: 2px;
+        margin-left: 22px;
+        height: 100%;
+      }
+      .aba {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        padding: 0 14px;
+        font-size: 13px;
+        font-weight: 500;
+        color: #a8a29e;
+        border-bottom: 3px solid transparent;
+        border-top: 3px solid transparent;
+        transition: color 0.18s;
+      }
+      .aba:hover {
+        color: #fff;
+      }
+      .aba[aria-selected="true"] {
+        color: #fff;
+        border-bottom-color: var(--amb);
+      }
+      .aba .selo {
+        background: var(--amb);
+        color: #fff;
+        font-size: 10.5px;
+        font-weight: 700;
+        border-radius: 99px;
+        padding: 1px 7px;
+        font-family: "IBM Plex Mono", monospace;
+      }
+      .top-dir {
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .top-user {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 12.5px;
+        color: #d6d3d1;
+      }
+      .avatar {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--amb), #fbbf24);
+        display: grid;
+        place-items: center;
+        font-weight: 700;
+        font-size: 12px;
+        color: #fff;
+      }
+      .btn-topo {
+        border: 1px solid #44403c;
+        border-radius: 7px;
+        padding: 6px 12px;
+        font-size: 12px;
+        color: #d6d3d1;
+        transition:
+          border-color 0.18s,
+          color 0.18s;
+      }
+      .btn-topo:hover {
+        border-color: #78716c;
+        color: #fff;
+      }
+
+      /* ---------- LAYOUT ---------- */
+      #app {
+        display: none;
+      }
+      #app.visivel {
+        display: block;
+      }
+      .wrap {
+        max-width: 1360px;
+        margin: 0 auto;
+        padding: 18px 18px 90px;
+      }
+      .kpis {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+      .kpi {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 11px;
+        padding: 14px 16px;
+        animation: sobe 0.4s both;
+      }
+      .kpi:nth-child(2) {
+        animation-delay: 0.05s;
+      }
+      .kpi:nth-child(3) {
+        animation-delay: 0.1s;
+      }
+      .kpi:nth-child(4) {
+        animation-delay: 0.15s;
+      }
+      .kpi-rotulo {
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--mut);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .kpi-num {
+        font-family: "IBM Plex Mono", monospace;
+        font-variant-numeric: tabular-nums;
+        font-size: 23px;
+        font-weight: 600;
+        margin-top: 5px;
+      }
+      .kpi-sub {
+        font-size: 11.5px;
+        color: var(--mut);
+        margin-top: 2px;
+      }
+      .kpi.alerta .kpi-num {
+        color: var(--amb);
+      }
+      .kpi.rupt .kpi-num {
+        color: var(--rup);
+      }
+      .ponto {
+        width: 8px;
+        height: 8px;
+        border-radius: 2px;
+        flex: none;
+      }
+
+      /* barra de ferramentas */
+      .ferramentas {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 9px;
+        margin-bottom: 12px;
+      }
+      .busca-box {
+        position: relative;
+        flex: 1;
+        min-width: 200px;
+        max-width: 340px;
+      }
+      .busca-box svg {
+        position: absolute;
+        left: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: none;
+      }
+      .busca-box input {
+        width: 100%;
+        border: 1.5px solid var(--line);
+        border-radius: 8px;
+        padding: 8px 11px 8px 32px;
+        background: var(--card);
+        transition: border-color 0.18s;
+      }
+      .busca-box input:focus {
+        border-color: var(--amb);
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(180, 83, 9, 0.12);
+      }
+      .filtro {
+        border: 1.5px solid var(--line);
+        border-radius: 8px;
+        padding: 8px 30px 8px 11px;
+        background: var(--card)
+          url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%2378716C' stroke-width='1.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E")
+          no-repeat right 10px center;
+        appearance: none;
+        font-size: 13px;
+        color: var(--ink2);
+      }
+      .filtro:focus {
+        border-color: var(--amb);
+        outline: none;
+      }
+      .cont-resultado {
+        font-size: 12px;
+        color: var(--mut);
+        margin-left: auto;
+        font-family: "IBM Plex Mono", monospace;
+      }
+
+      /* ---------- TABELA ---------- */
+      .painel-tabela {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        overflow: hidden;
+        animation: sobe 0.45s 0.1s both;
+      }
+      .rolagem {
+        overflow-x: auto;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 980px;
+      }
+      thead th {
+        position: sticky;
+        top: 0;
+        background: #f5f5f4;
+        font-size: 10.5px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+        color: var(--mut);
+        text-align: left;
+        padding: 9px 12px;
+        border-bottom: 1px solid var(--line);
+        white-space: nowrap;
+        z-index: 2;
+      }
+      thead th.num {
+        text-align: right;
+      }
+      tbody td {
+        padding: 9px 12px;
+        border-bottom: 1px solid var(--line2);
+        vertical-align: middle;
+      }
+      tbody tr {
+        cursor: pointer;
+        transition: background 0.15s;
+      }
+      tbody tr:hover {
+        background: #fbfaf6;
+      }
+      tbody tr.ativa {
+        background: var(--ambbg);
+      }
+      tbody tr:last-child td {
+        border-bottom: none;
+      }
+      td.num {
+        text-align: right;
+        font-family: "IBM Plex Mono", monospace;
+        font-variant-numeric: tabular-nums;
+        font-size: 13px;
+      }
+      .sku {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 12.5px;
+        color: var(--ink2);
+        font-weight: 500;
+      }
+      .td-desc {
+        max-width: 280px;
+      }
+      .desc-nome {
+        font-weight: 600;
+        font-size: 13.5px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .desc-meta {
+        font-size: 11.5px;
+        color: var(--mut);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .saldo-disp {
+        font-weight: 600;
+      }
+      .saldo-disp.zero {
+        color: var(--rup);
+      }
+      .saldo-res {
+        color: var(--mut);
+      }
+      .chip-curva {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 26px;
+        height: 22px;
+        border-radius: 6px;
+        font-family: "IBM Plex Mono", monospace;
+        font-weight: 600;
+        font-size: 12px;
+        color: #fff;
+      }
+      .curva-A .chip-curva {
+        background: var(--amb);
+      }
+      .curva-B .chip-curva {
+        background: var(--azul);
+      }
+      .curva-C .chip-curva {
+        background: var(--cinza);
+      }
+      td.td-curva {
+        border-left: 3px solid transparent;
+      }
+      tr.curva-A td.td-curva {
+        border-left-color: var(--amb);
+        background: linear-gradient(90deg, var(--ambbg), transparent);
+      }
+      tr.curva-B td.td-curva {
+        border-left-color: var(--azul);
+        background: linear-gradient(90deg, var(--azulbg), transparent);
+      }
+      tr.curva-C td.td-curva {
+        border-left-color: var(--cinza);
+        background: linear-gradient(90deg, var(--cinzabg), transparent);
+      }
+      .tag {
+        display: inline-block;
+        font-size: 10.5px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        border-radius: 5px;
+        padding: 2.5px 7px;
+        white-space: nowrap;
+      }
+      .tag-ok {
+        background: var(--okbg);
+        color: var(--ok);
+      }
+      .tag-repor {
+        background: var(--ambbg);
+        color: var(--amb2);
+        border: 1px solid #f3d9b6;
+      }
+      .tag-rup {
+        background: var(--rup);
+        color: #fff;
+        animation: pulsa 1.6s ease-in-out infinite;
+      }
+      @keyframes pulsa {
+        50% {
+          opacity: 0.75;
+        }
+      }
+      .acoes-td {
+        white-space: nowrap;
+        text-align: right;
+      }
+      .btn-mini {
+        width: 28px;
+        height: 28px;
+        border-radius: 7px;
+        display: inline-grid;
+        place-items: center;
+        color: var(--mut);
+        transition:
+          background 0.15s,
+          color 0.15s;
+      }
+      .btn-mini:hover {
+        background: var(--line2);
+        color: var(--ink);
+      }
+      .btn-mini.perigo:hover {
+        background: var(--rupbg);
+        color: var(--rup);
+      }
+
+      /* estado vazio */
+      .vazio {
+        padding: 56px 20px;
+        text-align: center;
+        color: var(--mut);
+      }
+      .vazio p {
+        margin-top: 12px;
+        font-size: 13.5px;
+      }
+      .vazio .sub {
+        font-size: 12px;
+        color: #a8a29e;
+        margin-top: 2px;
+      }
+
+      /* ---------- PAINEL LATERAL ---------- */
+      #painelDetalhe {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: 430px;
+        max-width: 100%;
+        background: var(--card);
+        border-left: 1px solid var(--line);
+        box-shadow: -18px 0 50px rgba(28, 25, 23, 0.14);
+        z-index: 60;
+        transform: translateX(105%);
+        transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.3, 1);
+        display: flex;
+        flex-direction: column;
+      }
+      #painelDetalhe.aberto {
+        transform: none;
+      }
+      .det-topo {
+        padding: 16px 20px 14px;
+        border-bottom: 1px solid var(--line);
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+      }
+      .det-topo h2 {
+        font-size: 16px;
+        line-height: 1.3;
+      }
+      .det-sku {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 12px;
+        color: var(--mut);
+      }
+      .det-fechar {
+        margin-left: auto;
+      }
+      .det-corpo {
+        overflow-y: auto;
+        padding: 16px 20px 30px;
+        flex: 1;
+      }
+      .det-saldos {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        margin-bottom: 14px;
+      }
+      .det-saldo {
+        border: 1px solid var(--line);
+        border-radius: 9px;
+        padding: 9px 10px;
+        text-align: center;
+      }
+      .det-saldo b {
+        display: block;
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 19px;
+        font-weight: 600;
+      }
+      .det-saldo span {
+        font-size: 10.5px;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--mut);
+        font-weight: 600;
+      }
+      .det-saldo.disp {
+        border-color: #d8cdbb;
+        background: var(--ambbg);
+      }
+      .det-saldo.disp.zero {
+        border-color: #efc7c7;
+        background: var(--rupbg);
+      }
+      .det-saldo.disp.zero b {
+        color: var(--rup);
+      }
+      .formula {
+        background: #fbf7ef;
+        border: 1px dashed #ddc49a;
+        border-radius: 9px;
+        padding: 11px 13px;
+        font-size: 12px;
+        margin-bottom: 14px;
+      }
+      .formula .titulo-formula {
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+        font-size: 10.5px;
+        color: var(--amb2);
+        margin-bottom: 5px;
+      }
+      .formula code {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 11.5px;
+        color: var(--ink2);
+        display: block;
+        line-height: 1.7;
+      }
+      .formula code b {
+        color: var(--amb2);
+      }
+      .det-grade {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 7px 14px;
+        font-size: 12.5px;
+        margin-bottom: 16px;
+      }
+      .det-grade dt {
+        color: var(--mut);
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        font-weight: 600;
+      }
+      .det-grade dd {
+        font-weight: 500;
+        margin-bottom: 5px;
+      }
+      .det-grade dd.mono {
+        font-size: 12.5px;
+      }
+      .det-acoes {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 18px;
+      }
+      .det-hist h3 {
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+        color: var(--mut);
+        margin-bottom: 8px;
+      }
+      .mov {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 0;
+        border-bottom: 1px solid var(--line2);
+        font-size: 12.5px;
+      }
+      .mov-ico {
+        width: 26px;
+        height: 26px;
+        border-radius: 7px;
+        display: grid;
+        place-items: center;
+        flex: none;
+      }
+      .mov-ico.ent {
+        background: var(--okbg);
+        color: var(--ok);
+      }
+      .mov-ico.sai {
+        background: var(--rupbg);
+        color: var(--rup);
+      }
+      .mov-info {
+        flex: 1;
+        min-width: 0;
+      }
+      .mov-doc {
+        color: var(--mut);
+        font-size: 11px;
+        font-family: "IBM Plex Mono", monospace;
+      }
+      .mov-qtd {
+        font-family: "IBM Plex Mono", monospace;
+        font-weight: 600;
+        white-space: nowrap;
+      }
+      .mov-qtd.ent {
+        color: var(--ok);
+      }
+      .mov-qtd.sai {
+        color: var(--rup);
+      }
+      .mov-data {
+        color: var(--mut);
+        font-size: 11px;
+        white-space: nowrap;
+      }
+
+      /* ---------- COMPRA SUGERIDA / ABC ---------- */
+      .secao-titulo {
+        display: flex;
+        align-items: baseline;
+        gap: 10px;
+        margin: 4px 0 12px;
+      }
+      .secao-titulo h2 {
+        font-size: 17px;
+      }
+      .secao-titulo span {
+        font-size: 12.5px;
+        color: var(--mut);
+      }
+      .cartao {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 18px;
+        animation: sobe 0.4s both;
+      }
+      .grade-abc {
+        display: grid;
+        grid-template-columns: 1.2fr 0.8fr;
+        gap: 14px;
+        align-items: start;
+      }
+      .legenda {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .leg-item {
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+        font-size: 12.5px;
+      }
+      .leg-item .ponto {
+        margin-top: 4px;
+        width: 10px;
+        height: 10px;
+      }
+      .leg-item b {
+        font-family: "IBM Plex Mono", monospace;
+      }
+      .barra-svg {
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+      .compra-total {
+        background: var(--ink);
+        color: #fff;
+        border-radius: 10px;
+        padding: 13px 16px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 14px;
+        flex-wrap: wrap;
+      }
+      .compra-total b {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 19px;
+      }
+      .compra-total span {
+        font-size: 12px;
+        color: #a8a29e;
+      }
+
+      /* ---------- MODAL ---------- */
+      .veu {
+        position: fixed;
+        inset: 0;
+        background: rgba(28, 25, 23, 0.5);
+        z-index: 70;
+        display: none;
+        align-items: flex-start;
+        justify-content: center;
+        padding: 5vh 16px;
+        overflow-y: auto;
+        backdrop-filter: blur(2px);
+      }
+      .veu.aberto {
+        display: flex;
+      }
+      .modal {
+        background: var(--card);
+        border-radius: 13px;
+        width: 100%;
+        max-width: 680px;
+        box-shadow: 0 30px 70px rgba(0, 0, 0, 0.35);
+        animation: sobe 0.3s both;
+      }
+      .modal-topo {
+        display: flex;
+        align-items: center;
+        padding: 16px 22px;
+        border-bottom: 1px solid var(--line);
+      }
+      .modal-topo h2 {
+        font-size: 16px;
+      }
+      .modal-corpo {
+        padding: 18px 22px;
+      }
+      .form-grade {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 12px;
+      }
+      .c2 {
+        grid-column: span 2;
+      }
+      .c3 {
+        grid-column: span 3;
+      }
+      .c4 {
+        grid-column: span 4;
+      }
+      .c6 {
+        grid-column: span 6;
+      }
+      .modal-pe {
+        display: flex;
+        justify-content: flex-end;
+        gap: 9px;
+        padding: 14px 22px;
+        border-top: 1px solid var(--line);
+        background: #fcfcfa;
+        border-radius: 0 0 13px 13px;
+      }
+      .erro-form {
+        display: none;
+        background: var(--rupbg);
+        color: var(--rup);
+        border-radius: 8px;
+        padding: 9px 12px;
+        font-size: 12.5px;
+        font-weight: 500;
+        margin-bottom: 13px;
+      }
+      .erro-form.visivel {
+        display: block;
+      }
+      .campo input.invalido {
+        border-color: var(--rup);
+        box-shadow: 0 0 0 3px rgba(185, 28, 28, 0.1);
+      }
+      .dica-campo {
+        font-size: 11px;
+        color: var(--mut);
+        margin-top: 3px;
+      }
+
+      /* toast */
+      #toast {
+        position: fixed;
+        left: 50%;
+        bottom: 64px;
+        transform: translateX(-50%) translateY(20px);
+        background: var(--ink);
+        color: #fff;
+        padding: 10px 18px;
+        border-radius: 9px;
+        font-size: 13px;
+        font-weight: 500;
+        opacity: 0;
+        pointer-events: none;
+        transition:
+          opacity 0.2s,
+          transform 0.2s;
+        z-index: 95;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      }
+      #toast.visivel {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+
+      /* banner demo */
+      .banner-demo {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 50;
+        background: var(--ink);
+        color: #a8a29e;
+        font-size: 11.5px;
+        text-align: center;
+        padding: 7px 14px;
+        border-top: 1px solid #2c2825;
+      }
+      .banner-demo a {
+        color: #fbbf24;
+        font-weight: 600;
+      }
+
+      /* ---------- MOBILE ---------- */
+      @media (max-width: 1023px) {
+        .kpis {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .grade-abc {
+          grid-template-columns: 1fr;
+        }
+      }
+      @media (max-width: 719px) {
+        .top-tag,
+        .top-user span {
+          display: none;
+        }
+        .topbar {
+          padding: 0 10px;
+          gap: 6px;
+        }
+        .abas {
+          margin-left: 6px;
+          /* as abas rolam DENTRO da barra: a topbar nunca forca o documento
+             alem da tela (regra do kit p/ mobile) */
+          flex: 1;
+          min-width: 0;
+          overflow-x: auto;
+          scrollbar-width: none;
+        }
+        .aba {
+          padding: 0 9px;
+          font-size: 12px;
+        }
+        .wrap {
+          padding: 12px 10px 100px;
+        }
+        .kpis {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 8px;
+        }
+        .kpi {
+          padding: 11px 12px;
+        }
+        .kpi-num {
+          font-size: 18px;
+        }
+        .cont-resultado {
+          width: 100%;
+          margin-left: 0;
+        }
+        .painel-tabela {
+          background: none;
+          border: none;
+          overflow: visible;
+        }
+        table {
+          min-width: 0;
+        }
+        thead {
+          display: none;
+        }
+        tbody,
+        tr,
+        td {
+          display: block;
+        }
+        tbody tr {
+          background: var(--card);
+          border: 1px solid var(--line);
+          border-radius: 11px;
+          margin-bottom: 10px;
+          padding: 12px 12px 6px;
+          position: relative;
+        }
+        tbody td {
+          border: none;
+          padding: 2px 0;
+        }
+        td.td-curva {
+          position: absolute;
+          top: 12px;
+          right: 12px;
+          border-left: none;
+          background: none !important;
+        }
+        tr.curva-A {
+          border-left: 4px solid var(--amb);
+        }
+        tr.curva-B {
+          border-left: 4px solid var(--azul);
+        }
+        tr.curva-C {
+          border-left: 4px solid var(--cinza);
+        }
+        .td-desc {
+          max-width: none;
+          padding-right: 40px !important;
+        }
+        td.num {
+          text-align: left;
+        }
+        td[data-rotulo] {
+          display: inline-block;
+          margin-right: 14px;
+        }
+        td[data-rotulo]::before {
+          content: attr(data-rotulo);
+          display: block;
+          font-size: 9.5px;
+          text-transform: uppercase;
+          letter-spacing: 0.06em;
+          color: var(--mut);
+          font-weight: 600;
+        }
+        .acoes-td {
+          text-align: right;
+          padding-top: 6px !important;
+        }
+        #painelDetalhe {
+          width: 100%;
+        }
+        .form-grade {
+          grid-template-columns: 1fr 1fr;
+        }
+        .c2,
+        .c3,
+        .c4,
+        .c6 {
+          grid-column: span 2;
+        }
+      }
+      @media (max-width: 479px) {
+        .kpis {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- LOGIN FAKE -->
+    <div id="telaLogin">
+      <div class="login-card">
+        <div class="login-logo">
+          <span class="marca" aria-hidden="true"
+            ><svg width="22" height="22" viewBox="0 0 32 32">
+              <rect x="7" y="20" width="18" height="4" rx="1" fill="#B45309" />
+              <rect x="10" y="13" width="12" height="4" rx="1" fill="#D97706" />
+              <rect
+                x="13"
+                y="6"
+                width="6"
+                height="4"
+                rx="1"
+                fill="#FBBF24"
+              /></svg
+          ></span>
+          <h1>LASTRO</h1>
+        </div>
+        <p class="login-sub">
+          Gestão de estoque que não deixa faltar. Curva ABC, ponto de pedido e
+          compra sugerida em um só painel.
+        </p>
+        <div class="campo">
+          <label for="loginEmail">E-mail</label>
+          <input
+            id="loginEmail"
+            type="email"
+            value="demo@lastro-estoque.com.br"
+            autocomplete="off"
+          />
+        </div>
+        <div class="campo">
+          <label for="loginSenha">Senha</label>
+          <input
+            id="loginSenha"
+            type="password"
+            value="demonstracao"
+            autocomplete="off"
+          />
+        </div>
+        <button
+          class="btn btn-amb btn-bloco"
+          data-testid="login-entrar"
+          id="btnEntrar"
+        >
+          Entrar na demonstração
+        </button>
+        <p class="login-nota">
+          Demonstração funcional · dados fictícios gerados no seu navegador
+        </p>
+      </div>
+    </div>
+
+    <!-- APP -->
+    <div id="app">
+      <header class="topbar">
+        <span class="marca" aria-hidden="true"
+          ><svg width="17" height="17" viewBox="0 0 32 32">
+            <rect x="7" y="20" width="18" height="4" rx="1" fill="#B45309" />
+            <rect x="10" y="13" width="12" height="4" rx="1" fill="#D97706" />
+            <rect
+              x="13"
+              y="6"
+              width="6"
+              height="4"
+              rx="1"
+              fill="#FBBF24"
+            /></svg
+        ></span>
+        <span class="top-nome">LASTRO</span>
+        <span class="top-tag">Gestão de estoque</span>
+        <nav class="abas" role="tablist" aria-label="Seções do sistema">
+          <button
+            class="aba"
+            role="tab"
+            aria-selected="true"
+            id="abaEstoque"
+            data-vista="estoque"
+          >
+            Estoque
+          </button>
+          <button
+            class="aba"
+            role="tab"
+            aria-selected="false"
+            id="abaCompra"
+            data-vista="compra"
+          >
+            Compra sugerida <span class="selo" id="seloCompra">0</span>
+          </button>
+          <button
+            class="aba"
+            role="tab"
+            aria-selected="false"
+            id="abaAbc"
+            data-vista="abc"
+          >
+            Curva ABC
+          </button>
+        </nav>
+        <div class="top-dir">
+          <button
+            class="btn-topo"
+            data-testid="restaurar-demo"
+            id="btnRestaurar"
+          >
+            Restaurar demo
+          </button>
+          <span class="top-user"
+            ><span>Marina Duarte · Almoxarifado</span
+            ><span class="avatar" aria-hidden="true">MD</span></span
+          >
+        </div>
+      </header>
+
+      <main class="wrap">
+        <!-- VISTA ESTOQUE -->
+        <section id="vistaEstoque" aria-labelledby="abaEstoque">
+          <div class="kpis" id="kpis">
+            <div class="kpi">
+              <div class="kpi-rotulo">
+                <span class="ponto" style="background: var(--ink)"></span>Valor
+                do estoque a custo
+              </div>
+              <div class="kpi-num" data-testid="kpi-total" id="kpiTotal">—</div>
+              <div class="kpi-sub" id="kpiTotalSub">—</div>
+            </div>
+            <div class="kpi alerta">
+              <div class="kpi-rotulo">
+                <span class="ponto" style="background: var(--amb)"></span>Abaixo
+                do ponto de pedido
+              </div>
+              <div class="kpi-num" id="kpiAbaixo">—</div>
+              <div class="kpi-sub" id="kpiAbaixoSub">—</div>
+            </div>
+            <div class="kpi">
+              <div class="kpi-rotulo">
+                <span class="ponto" style="background: var(--azul)"></span>Giro
+                médio (30 dias)
+              </div>
+              <div class="kpi-num" id="kpiGiro">—</div>
+              <div class="kpi-sub">saídas ÷ estoque médio a custo</div>
+            </div>
+            <div class="kpi rupt">
+              <div class="kpi-rotulo">
+                <span class="ponto" style="background: var(--rup)"></span>Taxa
+                de ruptura
+              </div>
+              <div class="kpi-num" id="kpiRuptura">—</div>
+              <div class="kpi-sub" id="kpiRupturaSub">—</div>
+            </div>
+          </div>
+
+          <div class="ferramentas">
+            <div class="busca-box">
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 16 16"
+                fill="none"
+                aria-hidden="true"
+              >
+                <circle
+                  cx="7"
+                  cy="7"
+                  r="5"
+                  stroke="#78716C"
+                  stroke-width="1.6"
+                />
+                <path
+                  d="M11 11l3.5 3.5"
+                  stroke="#78716C"
+                  stroke-width="1.6"
+                  stroke-linecap="round"
+                />
+              </svg>
+              <input
+                type="search"
+                id="campoBusca"
+                data-testid="busca"
+                placeholder="Buscar SKU, descrição, fornecedor…"
+                aria-label="Buscar produto por SKU, descrição ou fornecedor"
+              />
+            </div>
+            <select
+              class="filtro"
+              id="filtroCategoria"
+              aria-label="Filtrar por categoria"
+            >
+              <option value="">Todas as categorias</option>
+            </select>
+            <select
+              class="filtro"
+              id="filtroCurva"
+              aria-label="Filtrar por curva ABC"
+            >
+              <option value="">Curva A·B·C</option>
+              <option value="A">Curva A</option>
+              <option value="B">Curva B</option>
+              <option value="C">Curva C</option>
+            </select>
+            <select
+              class="filtro"
+              id="filtroStatus"
+              aria-label="Filtrar por status de reposição"
+            >
+              <option value="">Todos os status</option>
+              <option value="ok">Em nível</option>
+              <option value="repor">Abaixo do ponto</option>
+              <option value="ruptura">Ruptura</option>
+            </select>
+            <button
+              class="btn btn-escuro"
+              data-testid="novo-registro"
+              id="btnNovo"
+            >
+              + Novo produto
+            </button>
+            <span
+              class="cont-resultado"
+              id="contResultado"
+              role="status"
+            ></span>
+          </div>
+
+          <div class="painel-tabela">
+            <div class="rolagem">
+              <table aria-label="Produtos em estoque">
+                <thead>
+                  <tr>
+                    <th scope="col">Curva</th>
+                    <th scope="col">SKU</th>
+                    <th scope="col">Produto</th>
+                    <th scope="col" class="num">Físico</th>
+                    <th scope="col" class="num">Reservado</th>
+                    <th scope="col" class="num">Disponível</th>
+                    <th scope="col" class="num">Ponto de pedido</th>
+                    <th scope="col" class="num">Custo médio</th>
+                    <th scope="col">Status</th>
+                    <th scope="col"><span class="vh">Ações</span></th>
+                  </tr>
+                </thead>
+                <tbody
+                  id="listaPrincipal"
+                  data-testid="lista-principal"
+                ></tbody>
+              </table>
+            </div>
+            <div class="vazio" id="estadoVazio" hidden>
+              <svg
+                width="90"
+                height="64"
+                viewBox="0 0 90 64"
+                fill="none"
+                aria-hidden="true"
+              >
+                <rect
+                  x="14"
+                  y="22"
+                  width="62"
+                  height="36"
+                  rx="4"
+                  stroke="#D6D3D1"
+                  stroke-width="2"
+                />
+                <path d="M14 34h62" stroke="#D6D3D1" stroke-width="2" />
+                <path
+                  d="M38 22l7-12h14l-7 12"
+                  stroke="#D6D3D1"
+                  stroke-width="2"
+                  stroke-linejoin="round"
+                />
+                <rect
+                  x="24"
+                  y="42"
+                  width="16"
+                  height="8"
+                  rx="2"
+                  fill="#E7E5E4"
+                />
+                <circle
+                  cx="66"
+                  cy="46"
+                  r="6"
+                  stroke="#B45309"
+                  stroke-width="2"
+                />
+                <path
+                  d="M70.5 50.5l4 4"
+                  stroke="#B45309"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                />
+              </svg>
+              <p><strong>Nenhum resultado por aqui.</strong></p>
+              <p class="sub">
+                Ajuste a busca ou os filtros — ou cadastre um novo produto.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- VISTA COMPRA SUGERIDA -->
+        <section id="vistaCompra" hidden aria-labelledby="abaCompra">
+          <div class="secao-titulo">
+            <h2>Lista de compra sugerida</h2>
+            <span
+              >itens abaixo do ponto de pedido · qtd sugerida = ponto −
+              disponível</span
+            >
+          </div>
+          <div class="compra-total" id="compraTotal"></div>
+          <div class="painel-tabela">
+            <div class="rolagem">
+              <table aria-label="Lista de compra sugerida">
+                <thead>
+                  <tr>
+                    <th scope="col">Curva</th>
+                    <th scope="col">SKU</th>
+                    <th scope="col">Produto</th>
+                    <th scope="col">Fornecedor</th>
+                    <th scope="col" class="num">Disponível</th>
+                    <th scope="col" class="num">Ponto de pedido</th>
+                    <th scope="col" class="num">Qtd sugerida</th>
+                    <th scope="col" class="num">Custo estimado</th>
+                  </tr>
+                </thead>
+                <tbody id="listaCompra"></tbody>
+              </table>
+            </div>
+            <div class="vazio" id="compraVazia" hidden>
+              <svg
+                width="90"
+                height="64"
+                viewBox="0 0 90 64"
+                fill="none"
+                aria-hidden="true"
+              >
+                <rect
+                  x="18"
+                  y="14"
+                  width="54"
+                  height="40"
+                  rx="5"
+                  stroke="#D6D3D1"
+                  stroke-width="2"
+                />
+                <path
+                  d="M30 34l8 8 22-22"
+                  stroke="#15803D"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+              <p><strong>Nada a repor.</strong></p>
+              <p class="sub">Todos os itens estão acima do ponto de pedido.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- VISTA CURVA ABC -->
+        <section id="vistaAbc" hidden aria-labelledby="abaAbc">
+          <div class="secao-titulo">
+            <h2>Curva ABC por valor de saída</h2>
+            <span
+              >classificação recalculada a cada movimentação (janela de 30
+              dias)</span
+            >
+          </div>
+          <div class="cartao">
+            <div class="grade-abc">
+              <div
+                id="graficoAbc"
+                role="img"
+                aria-label="Gráfico de barras do valor de estoque por curva ABC"
+              ></div>
+              <div class="legenda" id="legendaAbc"></div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- PAINEL LATERAL DE DETALHE -->
+    <aside
+      id="painelDetalhe"
+      aria-label="Detalhe do produto"
+      aria-hidden="true"
+    >
+      <div class="det-topo">
+        <div>
+          <div class="det-sku" id="detSku"></div>
+          <h2 id="detNome"></h2>
+        </div>
+        <button
+          class="btn-mini det-fechar"
+          id="btnFecharDetalhe"
+          aria-label="Fechar painel de detalhe"
+        >
+          <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">
+            <path
+              d="M2 2l10 10M12 2L2 12"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            />
+          </svg>
+        </button>
+      </div>
+      <div class="det-corpo" id="detCorpo"></div>
+    </aside>
+
+    <!-- MODAL PRODUTO (CRUD) -->
+    <div
+      class="veu"
+      id="veuProduto"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="tituloModalProduto"
+      data-testid="modal"
+    >
+      <div class="modal">
+        <div class="modal-topo">
+          <h2 id="tituloModalProduto">Novo produto</h2>
+        </div>
+        <form id="formProduto" data-testid="form-registro" novalidate>
+          <div class="modal-corpo">
+            <p class="erro-form" id="erroProduto" role="alert"></p>
+            <div class="form-grade">
+              <div class="campo c2">
+                <label for="fSku">SKU *</label
+                ><input
+                  id="fSku"
+                  name="sku"
+                  class="mono"
+                  placeholder="ELP-0121"
+                />
+              </div>
+              <div class="campo c4">
+                <label for="fDesc">Descrição *</label
+                ><input
+                  id="fDesc"
+                  name="desc"
+                  placeholder="Cafeteira Italiana 6 xícaras"
+                />
+              </div>
+              <div class="campo c2">
+                <label for="fGtin">GTIN / EAN</label
+                ><input
+                  id="fGtin"
+                  name="gtin"
+                  class="mono"
+                  inputmode="numeric"
+                  placeholder="7891234567890"
+                />
+              </div>
+              <div class="campo c2">
+                <label for="fNcm">NCM</label
+                ><input
+                  id="fNcm"
+                  name="ncm"
+                  class="mono"
+                  placeholder="8516.71.00"
+                />
+              </div>
+              <div class="campo c2">
+                <label for="fUn">Unidade</label
+                ><select id="fUn" name="un" class="filtro" style="width: 100%">
+                  <option>UN</option>
+                  <option>CX</option>
+                  <option>KG</option>
+                </select>
+              </div>
+              <div class="campo c3">
+                <label for="fCat">Categoria</label
+                ><select
+                  id="fCat"
+                  name="cat"
+                  class="filtro"
+                  style="width: 100%"
+                ></select>
+              </div>
+              <div class="campo c3">
+                <label for="fForn">Fornecedor</label
+                ><select
+                  id="fForn"
+                  name="forn"
+                  class="filtro"
+                  style="width: 100%"
+                ></select>
+              </div>
+              <div class="campo c3">
+                <label for="fCusto">Custo médio (R$) *</label
+                ><input
+                  id="fCusto"
+                  name="custo"
+                  class="mono"
+                  inputmode="decimal"
+                  placeholder="42,90"
+                />
+              </div>
+              <div class="campo c3">
+                <label for="fPreco">Preço de venda (R$) *</label
+                ><input
+                  id="fPreco"
+                  name="preco"
+                  class="mono"
+                  inputmode="decimal"
+                  placeholder="89,90"
+                />
+              </div>
+              <div class="campo c2">
+                <label for="fFisico">Estoque físico</label
+                ><input
+                  id="fFisico"
+                  name="fis"
+                  class="mono"
+                  inputmode="numeric"
+                  value="0"
+                />
+              </div>
+              <div class="campo c2">
+                <label for="fReservado">Reservado</label
+                ><input
+                  id="fReservado"
+                  name="res"
+                  class="mono"
+                  inputmode="numeric"
+                  value="0"
+                />
+              </div>
+              <div class="campo c2">
+                <label for="fMinimo">Estoque de segurança</label
+                ><input
+                  id="fMinimo"
+                  name="min"
+                  class="mono"
+                  inputmode="numeric"
+                  value="5"
+                />
+              </div>
+              <div class="campo c3">
+                <label for="fLead">Lead time (dias)</label
+                ><input
+                  id="fLead"
+                  name="lead"
+                  class="mono"
+                  inputmode="numeric"
+                  value="7"
+                />
+                <p class="dica-campo">
+                  Prazo do fornecedor entre pedido e entrega.
+                </p>
+              </div>
+              <div class="campo c3">
+                <label for="fPonto">Ponto de pedido</label
+                ><input
+                  id="fPonto"
+                  class="mono"
+                  disabled
+                  value="calculado automaticamente"
+                />
+                <p class="dica-campo">
+                  (venda média diária × lead time) + segurança
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="modal-pe">
+            <button type="button" class="btn btn-borda" id="btnCancelarProduto">
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              class="btn btn-amb"
+              data-testid="salvar-registro"
+            >
+              Salvar produto
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- MODAL MOVIMENTAÇÃO -->
+    <div
+      class="veu"
+      id="veuMov"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="tituloModalMov"
+    >
+      <div class="modal" style="max-width: 460px">
+        <div class="modal-topo"><h2 id="tituloModalMov">Movimentação</h2></div>
+        <form id="formMov" novalidate>
+          <div class="modal-corpo">
+            <p class="erro-form" id="erroMov" role="alert"></p>
+            <div class="form-grade" style="grid-template-columns: 1fr 1fr">
+              <div class="campo">
+                <label for="mQtd">Quantidade *</label
+                ><input
+                  id="mQtd"
+                  class="mono"
+                  inputmode="numeric"
+                  placeholder="10"
+                />
+              </div>
+              <div class="campo" id="campoCustoMov">
+                <label for="mCusto">Custo unitário NF (R$) *</label
+                ><input
+                  id="mCusto"
+                  class="mono"
+                  inputmode="decimal"
+                  placeholder="38,50"
+                />
+              </div>
+              <div class="campo" style="grid-column: span 2">
+                <label for="mDoc">Documento</label
+                ><input id="mDoc" class="mono" placeholder="NF-e 45.812" />
+              </div>
+            </div>
+            <p class="dica-campo" id="dicaMov"></p>
+          </div>
+          <div class="modal-pe">
+            <button type="button" class="btn btn-borda" id="btnCancelarMov">
+              Cancelar
+            </button>
+            <button type="submit" class="btn btn-amb" id="btnSalvarMov">
+              Registrar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div id="toast" role="status" aria-live="polite"></div>
+
+    <footer class="banner-demo" role="note">
+      Demonstração funcional · dados fictícios · tudo roda no seu navegador ·
+      <a href="/conceitos">ANDRADE, Estúdio digital</a>
+    </footer>
+    <script>
+      "use strict";
+      /* ===== Determinismo p/ verificação ===== */
+      const E2E =
+        new URLSearchParams(location.search).has("e2e") ||
+        matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (E2E) document.documentElement.classList.add("sem-motion");
+
+      /* ===== Segurança de interpolação ===== */
+      function esc(s) {
+        return String(s).replace(
+          /[&<>"']/g,
+          (c) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            })[c],
+        );
+      }
+
+      /* ===== Utilidades ===== */
+      const $ = (id) => document.getElementById(id);
+      const fmtBRL = new Intl.NumberFormat("pt-BR", {
+        style: "currency",
+        currency: "BRL",
+      });
+      const fmtNum = new Intl.NumberFormat("pt-BR");
+      const HOJE = new Date();
+      function diasAtras(n) {
+        const d = new Date(HOJE);
+        d.setDate(d.getDate() - n);
+        return d.toISOString();
+      }
+      function fmtData(iso) {
+        const d = new Date(iso);
+        const dif = Math.floor((HOJE - d) / 864e5);
+        if (dif <= 0) return "hoje";
+        if (dif === 1) return "ontem";
+        if (dif < 30) return "há " + dif + " dias";
+        return d.toLocaleDateString("pt-BR");
+      }
+      function mulberry32(a) {
+        return function () {
+          a |= 0;
+          a = (a + 0x6d2b79f5) | 0;
+          let t = Math.imul(a ^ (a >>> 15), 1 | a);
+          t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+          return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+        };
+      }
+
+      /* ===== Seed determinístico ===== */
+      const CATS = [
+        "Eletroportáteis",
+        "Utilidades Domésticas",
+        "Áudio & Vídeo",
+        "Informática",
+        "Ferramentas",
+        "Cama, Mesa & Banho",
+      ];
+      const PREF = {
+        Eletroportáteis: "ELP",
+        "Utilidades Domésticas": "UTD",
+        "Áudio & Vídeo": "AUV",
+        Informática: "INF",
+        Ferramentas: "FER",
+        "Cama, Mesa & Banho": "CMB",
+      };
+      const NCMS = {
+        Eletroportáteis: "8516.71.00",
+        "Utilidades Domésticas": "7323.93.00",
+        "Áudio & Vídeo": "8518.30.00",
+        Informática: "8471.60.53",
+        Ferramentas: "8205.40.00",
+        "Cama, Mesa & Banho": "6302.60.00",
+      };
+      const FORNS = [
+        "Mondial Distribuidora",
+        "Eletro Norte Atacado",
+        "HDL Importadora",
+        "Casa & Cia Distribuição",
+        "TecSul Atacadista",
+        "Brasfort Comercial",
+      ];
+      const BASE = [
+        ["Eletroportáteis", "Cafeteira Italiana 6x", 42, 89],
+        ["Eletroportáteis", "Cafeteira Elétrica 30 Cafés", 88, 179],
+        ["Eletroportáteis", "Liquidificador Turbo 900W", 95, 189],
+        ["Eletroportáteis", "Air Fryer 4L Digital", 210, 399],
+        ["Eletroportáteis", "Sanduicheira Grill Inox", 62, 129],
+        ["Eletroportáteis", "Batedeira Planetária 5L", 175, 349],
+        ["Eletroportáteis", "Ferro a Vapor Ceramic", 58, 119],
+        ["Eletroportáteis", "Ventilador Mesa 40cm", 78, 159],
+        ["Eletroportáteis", "Aspirador Vertical 2 em 1", 145, 299],
+        ["Eletroportáteis", "Chaleira Elétrica 1,7L", 49, 99],
+        ["Utilidades Domésticas", "Jogo de Panelas Antiaderente 5pç", 128, 259],
+        ["Utilidades Domésticas", "Garrafa Térmica Pressão 1L", 32, 69],
+        ["Utilidades Domésticas", "Kit Potes Herméticos 10pç", 38, 79],
+        ["Utilidades Domésticas", "Escorredor de Louça Inox", 44, 89],
+        ["Utilidades Domésticas", "Tábua de Corte Bambu G", 18, 39],
+        ["Utilidades Domésticas", "Panela de Pressão 4,5L", 55, 115],
+        ["Utilidades Domésticas", "Assadeira Vidro Retangular", 24, 52],
+        ["Utilidades Domésticas", "Lixeira Pedal Inox 12L", 41, 85],
+        ["Utilidades Domésticas", "Varal de Chão Dobrável", 36, 75],
+        ["Utilidades Domésticas", "Organizador Multiuso 3 Níveis", 29, 62],
+        ["Áudio & Vídeo", "Fone BT An-300", 47, 99],
+        ["Áudio & Vídeo", "Caixa de Som BT 20W", 82, 169],
+        ["Áudio & Vídeo", "Soundbar 80W 2.1", 240, 479],
+        ["Áudio & Vídeo", "Fone TWS Bass+", 68, 139],
+        ["Áudio & Vídeo", "Microfone Condensador USB", 110, 229],
+        ["Áudio & Vídeo", "Suporte TV Articulado 32-55", 39, 82],
+        ["Áudio & Vídeo", "Conversor Digital HDTV", 45, 95],
+        ["Informática", "Mouse Sem Fio Silent", 22, 49],
+        ["Informática", "Teclado Mecânico TKL", 135, 269],
+        ["Informática", "Hub USB-C 6 em 1", 74, 155],
+        ["Informática", "Webcam Full HD 1080p", 89, 179],
+        ["Informática", "SSD Externo 512GB", 210, 419],
+        ["Informática", "Roteador Mesh AC1200", 168, 339],
+        ["Informática", "Cadeira Escritório Ergo", 380, 749],
+        ["Informática", "Suporte Notebook Alumínio", 48, 99],
+        ["Ferramentas", "Parafusadeira 12V Bivolt", 129, 259],
+        ["Ferramentas", "Jogo de Chaves 40pç", 52, 109],
+        ["Ferramentas", "Trena Laser 30m", 98, 199],
+        ["Ferramentas", "Furadeira Impacto 650W", 155, 315],
+        ["Ferramentas", "Kit Brocas Titânio 15pç", 27, 59],
+        ["Ferramentas", "Escada Alumínio 5 Degraus", 118, 239],
+        ["Cama, Mesa & Banho", "Jogo de Cama Queen 200 Fios", 96, 199],
+        ["Cama, Mesa & Banho", "Kit Toalhas Banhão 4pç", 58, 119],
+        ["Cama, Mesa & Banho", "Edredom Dupla Face Casal", 112, 229],
+        ["Cama, Mesa & Banho", "Travesseiro Nasa Visco", 46, 95],
+        ["Cama, Mesa & Banho", "Cortina Blackout 2,60m", 68, 139],
+      ];
+      const VARS = [
+        ["127V", "220V", "Bivolt"],
+        ["Preto", "Inox", "Vermelho"],
+        ["Branco", "Grafite", "Azul"],
+      ];
+      const STORE_KEY = "andrade:lastro-estoque:v1";
+      let _mem = null; // fallback p/ modo privado
+
+      function criarSeed() {
+        const rnd = mulberry32(20260702);
+        const produtos = [];
+        const movs = [];
+        let n = 1;
+        BASE.forEach((b, bi) => {
+          const nv = bi % 3 === 0 ? 3 : bi % 3 === 1 ? 3 : 2; // 46 bases -> ~122 SKUs
+          const vars = VARS[bi % VARS.length];
+          for (let v = 0; v < nv; v++) {
+            const [cat, nome, custoBase, precoBase] = b;
+            const custo =
+              Math.round(custoBase * (0.92 + rnd() * 0.16) * 100) / 100;
+            const fis = Math.floor(rnd() * 90);
+            const p = {
+              id: n,
+              sku: PREF[cat] + "-" + String(bi * 10 + v + 101).padStart(4, "0"),
+              desc: nome + " " + vars[v],
+              gtin: "789" + String(Math.floor(rnd() * 9e9) + 1e9),
+              ncm: NCMS[cat],
+              un:
+                cat === "Cama, Mesa & Banho"
+                  ? "CX"
+                  : bi % 7 === 0
+                    ? "CX"
+                    : "UN",
+              cat,
+              forn: FORNS[Math.floor(rnd() * FORNS.length)],
+              custo,
+              preco: Math.round(precoBase * (0.95 + rnd() * 0.12) * 100) / 100,
+              fis,
+              res: Math.min(fis, Math.floor(rnd() * 8)),
+              min: 4 + Math.floor(rnd() * 10),
+              lead: 3 + Math.floor(rnd() * 18),
+              criado: diasAtras(30 + Math.floor(rnd() * 300)),
+            };
+            // ~8% em ruptura proposital (disponível 0 com demanda)
+            if (rnd() < 0.08) {
+              p.res = 0;
+              p.fis = 0;
+            }
+            produtos.push(p);
+            // movimentações dos últimos 30 dias
+            const qm = 2 + Math.floor(rnd() * 6);
+            for (let m = 0; m < qm; m++) {
+              const ent = rnd() < 0.35;
+              movs.push({
+                pid: p.id,
+                tipo: ent ? "entrada" : "saida",
+                qtd: ent
+                  ? 10 + Math.floor(rnd() * 40)
+                  : 1 + Math.floor(rnd() * 9),
+                custo: ent
+                  ? Math.round(custo * (0.9 + rnd() * 0.2) * 100) / 100
+                  : null,
+                doc: ent
+                  ? "NF-e " + (40000 + Math.floor(rnd() * 9000))
+                  : "Venda #" + (78000 + Math.floor(rnd() * 9000)),
+                data: diasAtras(Math.floor(rnd() * 30)),
+              });
+            }
+            n++;
+          }
+        });
+        movs.sort((a, b) => (a.data < b.data ? -1 : 1));
+        return { produtos, movs, seq: n };
+      }
+
+      function dadosValidos(o) {
+        return (
+          !!o &&
+          Array.isArray(o.produtos) &&
+          Array.isArray(o.movs) &&
+          o.produtos.every(
+            (p) => p && typeof p.sku === "string" && typeof p.desc === "string",
+          )
+        );
+      }
+      function carregarDados() {
+        try {
+          const bruto = localStorage.getItem(STORE_KEY);
+          if (bruto) {
+            const o = JSON.parse(bruto);
+            if (dadosValidos(o)) return o;
+          }
+        } catch {}
+        return _mem ?? criarSeed();
+      }
+      function salvarDados(d) {
+        _mem = d;
+        try {
+          localStorage.setItem(STORE_KEY, JSON.stringify(d));
+        } catch {}
+      }
+      function restaurarDemo() {
+        // limpa SÓ o próprio namespace
+        try {
+          localStorage.removeItem(STORE_KEY);
+        } catch {}
+        _mem = null;
+        estado = criarSeed();
+        salvarDados(estado);
+        detalheAberto = null;
+        fecharDetalhe();
+        renderTudo();
+        toast("Demonstração restaurada ao estado inicial.");
+      }
+
+      let estado = carregarDados();
+
+      /* ===== Derivados (sempre recomputados) ===== */
+      function disp(p) {
+        return Math.max(0, p.fis - p.res);
+      }
+      function movsDoItem(id) {
+        return estado.movs.filter((m) => m.pid === id);
+      }
+      function vmd(p) {
+        // venda média diária, janela 30 dias
+        const corte = diasAtras(30);
+        const saidas = estado.movs.filter(
+          (m) => m.pid === p.id && m.tipo === "saida" && m.data >= corte,
+        );
+        return saidas.reduce((s, m) => s + m.qtd, 0) / 30;
+      }
+      function pontoPedido(p) {
+        return Math.ceil(vmd(p) * p.lead) + p.min;
+      }
+      function statusItem(p) {
+        const d = disp(p);
+        if (d === 0 && vmd(p) > 0) return "ruptura";
+        if (d < pontoPedido(p)) return "repor";
+        return "ok";
+      }
+      function calcCurvas() {
+        // ABC por valor de saída (30 dias, a preço de venda)
+        const corte = diasAtras(30);
+        const valor = new Map();
+        estado.produtos.forEach((p) => valor.set(p.id, 0));
+        estado.movs.forEach((m) => {
+          if (m.tipo === "saida" && m.data >= corte && valor.has(m.pid)) {
+            const p = estado.produtos.find((x) => x.id === m.pid);
+            valor.set(m.pid, valor.get(m.pid) + m.qtd * p.preco);
+          }
+        });
+        const ordem = [...valor.entries()].sort((a, b) => b[1] - a[1]);
+        const total = ordem.reduce((s, e) => s + e[1], 0) || 1;
+        const curva = new Map();
+        let acum = 0;
+        ordem.forEach(([id, v]) => {
+          acum += v;
+          curva.set(
+            id,
+            acum / total <= 0.8 ? "A" : acum / total <= 0.95 ? "B" : "C",
+          );
+        });
+        return curva;
+      }
+      let CURVAS = new Map();
+      function compraSugerida() {
+        return estado.produtos
+          .map((p) => ({ p, ponto: pontoPedido(p), d: disp(p) }))
+          .filter((x) => x.d < x.ponto)
+          .map((x) => ({
+            ...x,
+            qtd: x.ponto - x.d,
+            custoTot: (x.ponto - x.d) * x.p.custo,
+          }))
+          .sort(
+            (a, b) =>
+              (CURVAS.get(a.p.id) || "C").localeCompare(
+                CURVAS.get(b.p.id) || "C",
+              ) || b.custoTot - a.custoTot,
+          );
+      }
+
+      /* ===== Render ===== */
+      function renderKpis() {
+        const valorTotal = estado.produtos.reduce(
+          (s, p) => s + p.fis * p.custo,
+          0,
+        );
+        $("kpiTotal").textContent = fmtBRL.format(valorTotal);
+        $("kpiTotalSub").textContent =
+          fmtNum.format(estado.produtos.length) +
+          " SKUs ativos · " +
+          fmtNum.format(estado.produtos.reduce((s, p) => s + p.fis, 0)) +
+          " unidades físicas";
+        const abaixo = compraSugerida();
+        $("kpiAbaixo").textContent = fmtNum.format(abaixo.length);
+        $("kpiAbaixoSub").textContent =
+          "compra sugerida: " +
+          fmtBRL.format(abaixo.reduce((s, x) => s + x.custoTot, 0));
+        $("seloCompra").textContent = abaixo.length;
+        const corte = diasAtras(30);
+        const saidasVal = estado.movs.reduce((s, m) => {
+          if (m.tipo !== "saida" || m.data < corte) return s;
+          const p = estado.produtos.find((x) => x.id === m.pid);
+          return p ? s + m.qtd * p.custo : s;
+        }, 0);
+        $("kpiGiro").textContent =
+          valorTotal > 0
+            ? (saidasVal / valorTotal).toFixed(2).replace(".", ",") + "×"
+            : "—";
+        const comDemanda = estado.produtos.filter((p) => vmd(p) > 0);
+        const rup = comDemanda.filter((p) => disp(p) === 0);
+        $("kpiRuptura").textContent = comDemanda.length
+          ? ((100 * rup.length) / comDemanda.length)
+              .toFixed(1)
+              .replace(".", ",") + "%"
+          : "0%";
+        $("kpiRupturaSub").textContent =
+          fmtNum.format(rup.length) + " SKUs com demanda e saldo zero";
+      }
+
+      function itensFiltrados() {
+        const q = $("campoBusca").value.trim().toLowerCase();
+        const fc = $("filtroCategoria").value,
+          fv = $("filtroCurva").value,
+          fs = $("filtroStatus").value;
+        return estado.produtos.filter((p) => {
+          if (
+            q &&
+            !(p.sku + " " + p.desc + " " + p.forn + " " + p.gtin)
+              .toLowerCase()
+              .includes(q)
+          )
+            return false;
+          if (fc && p.cat !== fc) return false;
+          if (fv && (CURVAS.get(p.id) || "C") !== fv) return false;
+          if (fs && statusItem(p) !== fs) return false;
+          return true;
+        });
+      }
+
+      const TAGS = {
+        ok: '<span class="tag tag-ok">Em nível</span>',
+        repor: '<span class="tag tag-repor">Repor</span>',
+        ruptura: '<span class="tag tag-rup">Ruptura</span>',
+      };
+
+      function renderTabela() {
+        const itens = itensFiltrados();
+        const tb = $("listaPrincipal");
+        tb.innerHTML = itens
+          .map((p) => {
+            const cv = CURVAS.get(p.id) || "C";
+            const st = statusItem(p);
+            const d = disp(p);
+            return `<tr class="curva-${cv}${detalheAberto === p.id ? " ativa" : ""}" data-item data-id="${p.id}" tabindex="0" aria-label="Abrir detalhe de ${esc(p.desc)}">
+      <td class="td-curva"><span class="chip-curva" title="Curva ${cv}">${cv}</span></td>
+      <td class="sku" data-rotulo="SKU">${esc(p.sku)}</td>
+      <td class="td-desc"><div class="desc-nome">${esc(p.desc)}</div><div class="desc-meta">${esc(p.cat)} · ${esc(p.forn)} · ${esc(p.un)}</div></td>
+      <td class="num" data-rotulo="Físico">${fmtNum.format(p.fis)}</td>
+      <td class="num saldo-res" data-rotulo="Reservado">${fmtNum.format(p.res)}</td>
+      <td class="num saldo-disp${d === 0 ? " zero" : ""}" data-rotulo="Disponível">${fmtNum.format(d)}</td>
+      <td class="num" data-rotulo="Ponto">${fmtNum.format(pontoPedido(p))}</td>
+      <td class="num" data-rotulo="Custo médio">${fmtBRL.format(p.custo)}</td>
+      <td data-rotulo="Status">${TAGS[st]}</td>
+      <td class="acoes-td">
+        <button class="btn-mini" data-testid="editar-item" data-acao="editar" aria-label="Editar ${esc(p.desc)}"><svg width="13" height="13" viewBox="0 0 14 14" aria-hidden="true"><path d="M9.5 1.8l2.7 2.7L4.4 12.3l-3.2.5.5-3.2 7.8-7.8z" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linejoin="round"/></svg></button>
+        <button class="btn-mini perigo" data-testid="excluir-item" data-acao="excluir" aria-label="Excluir ${esc(p.desc)}"><svg width="13" height="13" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 3.5h10M5.5 3.5V2h3v1.5M3.5 3.5l.6 8.5h5.8l.6-8.5" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      </td>
+    </tr>`;
+          })
+          .join("");
+        $("estadoVazio").hidden = itens.length > 0;
+        $("contResultado").textContent =
+          fmtNum.format(itens.length) +
+          " de " +
+          fmtNum.format(estado.produtos.length) +
+          " SKUs";
+      }
+
+      function renderCompra() {
+        const lista = compraSugerida();
+        $("listaCompra").innerHTML = lista
+          .map((x) => {
+            const cv = CURVAS.get(x.p.id) || "C";
+            return `<tr class="curva-${cv}" data-id="${x.p.id}" tabindex="0">
+      <td class="td-curva"><span class="chip-curva">${cv}</span></td>
+      <td class="sku" data-rotulo="SKU">${esc(x.p.sku)}</td>
+      <td class="td-desc" data-rotulo="Produto"><div class="desc-nome">${esc(x.p.desc)}</div></td>
+      <td data-rotulo="Fornecedor">${esc(x.p.forn)}</td>
+      <td class="num${x.d === 0 ? " saldo-disp zero" : ""}" data-rotulo="Disponível">${fmtNum.format(x.d)}</td>
+      <td class="num" data-rotulo="Ponto">${fmtNum.format(x.ponto)}</td>
+      <td class="num" data-rotulo="Qtd sugerida"><strong>${fmtNum.format(x.qtd)} ${esc(x.p.un)}</strong></td>
+      <td class="num" data-rotulo="Custo estim.">${fmtBRL.format(x.custoTot)}</td>
+    </tr>`;
+          })
+          .join("");
+        $("compraVazia").hidden = lista.length > 0;
+        const tot = lista.reduce((s, x) => s + x.custoTot, 0);
+        $("compraTotal").innerHTML =
+          `<b>${fmtBRL.format(tot)}</b><span>investimento estimado para repor ${fmtNum.format(lista.length)} itens ao custo médio atual</span>`;
+      }
+
+      function renderAbc() {
+        const nomes = { A: "Curva A", B: "Curva B", C: "Curva C" };
+        const cores = { A: "var(--amb)", B: "var(--azul)", C: "var(--cinza)" };
+        const dados = {
+          A: { v: 0, n: 0 },
+          B: { v: 0, n: 0 },
+          C: { v: 0, n: 0 },
+        };
+        estado.produtos.forEach((p) => {
+          const c = CURVAS.get(p.id) || "C";
+          dados[c].v += p.fis * p.custo;
+          dados[c].n++;
+        });
+        const max = Math.max(dados.A.v, dados.B.v, dados.C.v, 1);
+        const NS = "http://www.w3.org/2000/svg";
+        const svg = document.createElementNS(NS, "svg");
+        svg.setAttribute("viewBox", "0 0 520 300");
+        svg.setAttribute("class", "barra-svg");
+        ["A", "B", "C"].forEach((c, i) => {
+          const h = Math.max(6, (dados[c].v / max) * 210);
+          const x = 60 + i * 150,
+            y = 250 - h;
+          const r = document.createElementNS(NS, "rect");
+          r.setAttribute("x", x);
+          r.setAttribute("y", y);
+          r.setAttribute("width", 100);
+          r.setAttribute("height", h);
+          r.setAttribute("rx", 6);
+          r.setAttribute("fill", cores[c]);
+          svg.appendChild(r);
+          const t = document.createElementNS(NS, "text");
+          t.setAttribute("x", x + 50);
+          t.setAttribute("y", y - 10);
+          t.setAttribute("text-anchor", "middle");
+          t.setAttribute(
+            "style",
+            "font:600 13px 'IBM Plex Mono',monospace;fill:#1C1917",
+          );
+          t.textContent = fmtBRL.format(Math.round(dados[c].v));
+          svg.appendChild(t);
+          const l = document.createElementNS(NS, "text");
+          l.setAttribute("x", x + 50);
+          l.setAttribute("y", 275);
+          l.setAttribute("text-anchor", "middle");
+          l.setAttribute(
+            "style",
+            "font:600 13px 'IBM Plex Sans',sans-serif;fill:#78716C",
+          );
+          l.textContent = nomes[c];
+          svg.appendChild(l);
+        });
+        const eixo = document.createElementNS(NS, "line");
+        eixo.setAttribute("x1", 30);
+        eixo.setAttribute("x2", 490);
+        eixo.setAttribute("y1", 250.5);
+        eixo.setAttribute("y2", 250.5);
+        eixo.setAttribute("stroke", "#E7E5E4");
+        eixo.setAttribute("stroke-width", 1);
+        svg.appendChild(eixo);
+        $("graficoAbc").replaceChildren(svg);
+        const descr = {
+          A: "80% do valor de saída — reposição prioritária, monitorar diariamente.",
+          B: "15% seguintes — revisão semanal do ponto de pedido.",
+          C: "cauda longa — revisão mensal, lote econômico maior.",
+        };
+        $("legendaAbc").innerHTML = ["A", "B", "C"]
+          .map(
+            (c) =>
+              `<div class="leg-item"><span class="ponto" style="background:${cores[c]}"></span><div><b>${nomes[c]}</b> · ${fmtNum.format(dados[c].n)} SKUs · ${fmtBRL.format(dados[c].v)} em estoque a custo<br /><span style="color:var(--mut)">${descr[c]}</span></div></div>`,
+          )
+          .join("");
+      }
+
+      function renderTudo() {
+        CURVAS = calcCurvas();
+        renderKpis();
+        renderTabela();
+        renderCompra();
+        renderAbc();
+        preencherSelects();
+        if (detalheAberto != null) renderDetalhe(detalheAberto);
+      }
+
+      function preencherSelects() {
+        const cats = [
+          ...new Set(estado.produtos.map((p) => p.cat).concat(CATS)),
+        ].sort();
+        const atual = $("filtroCategoria").value;
+        $("filtroCategoria").innerHTML =
+          '<option value="">Todas as categorias</option>' +
+          cats
+            .map(
+              (c) =>
+                `<option value="${esc(c)}"${c === atual ? " selected" : ""}>${esc(c)}</option>`,
+            )
+            .join("");
+        $("fCat").innerHTML = cats
+          .map((c) => `<option>${esc(c)}</option>`)
+          .join("");
+        const forns = [
+          ...new Set(estado.produtos.map((p) => p.forn).concat(FORNS)),
+        ].sort();
+        $("fForn").innerHTML = forns
+          .map((f) => `<option>${esc(f)}</option>`)
+          .join("");
+      }
+
+      /* ===== Painel lateral ===== */
+      let detalheAberto = null;
+      let focoAntesDetalhe = null;
+      function abrirDetalhe(id) {
+        detalheAberto = id;
+        focoAntesDetalhe = document.activeElement;
+        renderDetalhe(id);
+        renderTabela();
+        const p = $("painelDetalhe");
+        p.classList.add("aberto");
+        p.setAttribute("aria-hidden", "false");
+        $("btnFecharDetalhe").focus();
+      }
+      function fecharDetalhe() {
+        const p = $("painelDetalhe");
+        p.classList.remove("aberto");
+        p.setAttribute("aria-hidden", "true");
+        detalheAberto = null;
+        renderTabela();
+        if (focoAntesDetalhe && document.contains(focoAntesDetalhe))
+          focoAntesDetalhe.focus();
+      }
+      function renderDetalhe(id) {
+        const p = estado.produtos.find((x) => x.id === id);
+        if (!p) {
+          fecharDetalhe();
+          return;
+        }
+        const d = disp(p),
+          ponto = pontoPedido(p),
+          v = vmd(p),
+          st = statusItem(p);
+        $("detSku").textContent = p.sku + " · GTIN " + p.gtin;
+        $("detNome").textContent = p.desc;
+        const hist = movsDoItem(id).slice().reverse().slice(0, 40);
+        $("detCorpo").innerHTML = `
+    <div class="det-saldos">
+      <div class="det-saldo"><b>${fmtNum.format(p.fis)}</b><span>Físico</span></div>
+      <div class="det-saldo"><b>${fmtNum.format(p.res)}</b><span>Reservado</span></div>
+      <div class="det-saldo disp${d === 0 ? " zero" : ""}"><b>${fmtNum.format(d)}</b><span>Disponível</span></div>
+    </div>
+    <div style="margin-bottom:12px">${TAGS[st]}</div>
+    <div class="formula">
+      <div class="titulo-formula">Ponto de pedido — fórmula aplicada</div>
+      <code>ponto = (venda média diária × lead time) + estoque de segurança<br />ponto = (<b>${v.toFixed(2).replace(".", ",")}</b> × <b>${p.lead}d</b>) + <b>${p.min}</b> = <b>${fmtNum.format(ponto)} ${esc(p.un)}</b></code>
+    </div>
+    <dl class="det-grade">
+      <div><dt>Categoria</dt><dd>${esc(p.cat)}</dd></div>
+      <div><dt>Fornecedor</dt><dd>${esc(p.forn)}</dd></div>
+      <div><dt>NCM</dt><dd class="mono">${esc(p.ncm)}</dd></div>
+      <div><dt>Unidade</dt><dd>${esc(p.un)}</dd></div>
+      <div><dt>Custo médio</dt><dd class="mono">${fmtBRL.format(p.custo)}</dd></div>
+      <div><dt>Preço de venda</dt><dd class="mono">${fmtBRL.format(p.preco)}</dd></div>
+      <div><dt>Curva ABC</dt><dd>Curva ${CURVAS.get(p.id) || "C"}</dd></div>
+      <div><dt>Última movimentação</dt><dd>${hist.length ? fmtData(hist[0].data) : "sem registros"}</dd></div>
+    </dl>
+    <div class="det-acoes">
+      <button class="btn btn-amb" data-mov="entrada" data-id="${p.id}">↓ Entrada NF</button>
+      <button class="btn btn-borda" data-mov="saida" data-id="${p.id}">↑ Saída venda</button>
+      <button class="btn btn-borda" data-det-editar="${p.id}">Editar</button>
+      <button class="btn btn-perigo" data-det-excluir="${p.id}">Excluir</button>
+    </div>
+    <div class="det-hist">
+      <h3>Histórico de movimentações</h3>
+      ${
+        hist.length
+          ? hist
+              .map(
+                (m) => `
+        <div class="mov">
+          <span class="mov-ico ${m.tipo === "entrada" ? "ent" : "sai"}" aria-hidden="true">${m.tipo === "entrada" ? "↓" : "↑"}</span>
+          <span class="mov-info">${m.tipo === "entrada" ? "Entrada" : "Saída"}${m.tipo === "entrada" && m.custo != null ? " a " + fmtBRL.format(m.custo) : ""}<br /><span class="mov-doc">${esc(m.doc)}</span></span>
+          <span class="mov-qtd ${m.tipo === "entrada" ? "ent" : "sai"}">${m.tipo === "entrada" ? "+" : "−"}${fmtNum.format(m.qtd)}</span>
+          <span class="mov-data">${fmtData(m.data)}</span>
+        </div>`,
+              )
+              .join("")
+          : '<p style="color:var(--mut);font-size:12.5px">Nenhuma movimentação registrada.</p>'
+      }
+    </div>`;
+      }
+
+      /* ===== Modais (foco + Esc) ===== */
+      let focoAntesModal = null;
+      function abrirModal(veu, focoInicial) {
+        focoAntesModal = document.activeElement;
+        veu.classList.add("aberto");
+        if (focoInicial) focoInicial.focus();
+      }
+      function fecharModal(veu) {
+        veu.classList.remove("aberto");
+        if (focoAntesModal && document.contains(focoAntesModal))
+          focoAntesModal.focus();
+      }
+      document.addEventListener("keydown", (e) => {
+        if (e.key !== "Escape") return;
+        if ($("veuProduto").classList.contains("aberto")) {
+          fecharModal($("veuProduto"));
+          return;
+        }
+        if ($("veuMov").classList.contains("aberto")) {
+          fecharModal($("veuMov"));
+          return;
+        }
+        if ($("painelDetalhe").classList.contains("aberto")) fecharDetalhe();
+      });
+      [$("veuProduto"), $("veuMov")].forEach((v) =>
+        v.addEventListener("mousedown", (e) => {
+          if (e.target === v) fecharModal(v);
+        }),
+      );
+
+      /* ===== CRUD produto ===== */
+      let editandoId = null;
+      function numeroBR(s) {
+        const n = parseFloat(
+          String(s).trim().replace(/\./g, "").replace(",", "."),
+        );
+        return isNaN(n) ? NaN : n;
+      }
+      function abrirFormProduto(p) {
+        editandoId = p ? p.id : null;
+        $("tituloModalProduto").textContent = p
+          ? "Editar produto — " + p.sku
+          : "Novo produto";
+        $("erroProduto").classList.remove("visivel");
+        ["fSku", "fDesc", "fCusto", "fPreco"].forEach((i) =>
+          $(i).classList.remove("invalido"),
+        );
+        $("fSku").value = p ? p.sku : "";
+        $("fDesc").value = p ? p.desc : "";
+        $("fGtin").value = p ? p.gtin : "";
+        $("fNcm").value = p ? p.ncm : "";
+        $("fUn").value = p ? p.un : "UN";
+        preencherSelects();
+        $("fCat").value = p ? p.cat : CATS[0];
+        $("fForn").value = p ? p.forn : FORNS[0];
+        $("fCusto").value = p ? String(p.custo).replace(".", ",") : "";
+        $("fPreco").value = p ? String(p.preco).replace(".", ",") : "";
+        $("fFisico").value = p ? p.fis : 0;
+        $("fReservado").value = p ? p.res : 0;
+        $("fMinimo").value = p ? p.min : 5;
+        $("fLead").value = p ? p.lead : 7;
+        abrirModal($("veuProduto"), $("fSku"));
+      }
+      $("formProduto").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const sku = $("fSku").value.trim().toUpperCase();
+        const desc = $("fDesc").value.trim();
+        const custo = numeroBR($("fCusto").value);
+        const preco = numeroBR($("fPreco").value);
+        const erros = [];
+        ["fSku", "fDesc", "fCusto", "fPreco"].forEach((i) =>
+          $(i).classList.remove("invalido"),
+        );
+        if (!sku) {
+          erros.push("informe o SKU");
+          $("fSku").classList.add("invalido");
+        } else if (
+          estado.produtos.some((p) => p.sku === sku && p.id !== editandoId)
+        ) {
+          erros.push("já existe um produto com esse SKU");
+          $("fSku").classList.add("invalido");
+        }
+        if (!desc) {
+          erros.push("informe a descrição");
+          $("fDesc").classList.add("invalido");
+        }
+        if (isNaN(custo) || custo < 0) {
+          erros.push("custo médio inválido");
+          $("fCusto").classList.add("invalido");
+        }
+        if (isNaN(preco) || preco < 0) {
+          erros.push("preço de venda inválido");
+          $("fPreco").classList.add("invalido");
+        }
+        if (erros.length) {
+          const el = $("erroProduto");
+          el.textContent = "Não foi possível salvar: " + erros.join("; ") + ".";
+          el.classList.add("visivel");
+          return;
+        }
+        const campos = {
+          sku,
+          desc,
+          gtin: $("fGtin").value.trim() || "—",
+          ncm: $("fNcm").value.trim() || "—",
+          un: $("fUn").value,
+          cat: $("fCat").value,
+          forn: $("fForn").value,
+          custo,
+          preco,
+          fis: Math.max(0, Math.floor(numeroBR($("fFisico").value) || 0)),
+          res: Math.max(0, Math.floor(numeroBR($("fReservado").value) || 0)),
+          min: Math.max(0, Math.floor(numeroBR($("fMinimo").value) || 0)),
+          lead: Math.max(1, Math.floor(numeroBR($("fLead").value) || 7)),
+        };
+        campos.res = Math.min(campos.res, campos.fis);
+        if (editandoId != null) {
+          const p = estado.produtos.find((x) => x.id === editandoId);
+          Object.assign(p, campos);
+          toast("Produto " + sku + " atualizado.");
+        } else {
+          estado.produtos.push({
+            id: estado.seq++,
+            criado: new Date().toISOString(),
+            ...campos,
+          });
+          toast("Produto " + sku + " cadastrado.");
+        }
+        salvarDados(estado);
+        fecharModal($("veuProduto"));
+        renderTudo();
+      });
+      $("btnCancelarProduto").addEventListener("click", () =>
+        fecharModal($("veuProduto")),
+      );
+
+      function excluirProduto(id) {
+        const p = estado.produtos.find((x) => x.id === id);
+        if (!p) return;
+        estado.produtos = estado.produtos.filter((x) => x.id !== id);
+        estado.movs = estado.movs.filter((m) => m.pid !== id);
+        if (detalheAberto === id) fecharDetalhe();
+        salvarDados(estado);
+        renderTudo();
+        toast("Produto " + p.sku + " excluído.");
+      }
+
+      /* ===== Movimentações ===== */
+      let movCtx = null; // {id, tipo}
+      function abrirMov(id, tipo) {
+        const p = estado.produtos.find((x) => x.id === id);
+        if (!p) return;
+        movCtx = { id, tipo };
+        $("tituloModalMov").textContent =
+          (tipo === "entrada" ? "Entrada por NF — " : "Saída por venda — ") +
+          p.sku;
+        $("campoCustoMov").style.display = tipo === "entrada" ? "" : "none";
+        $("mQtd").value = "";
+        $("mCusto").value = "";
+        $("mDoc").value = "";
+        $("erroMov").classList.remove("visivel");
+        $("dicaMov").textContent =
+          tipo === "entrada"
+            ? "A entrada recalcula o custo médio ponderado: (saldo×custo + qtd×custo NF) ÷ novo saldo."
+            : "Disponível atual: " +
+              fmtNum.format(disp(p)) +
+              " " +
+              p.un +
+              ". A saída baixa o estoque físico.";
+        abrirModal($("veuMov"), $("mQtd"));
+      }
+      $("formMov").addEventListener("submit", (e) => {
+        e.preventDefault();
+        if (!movCtx) return;
+        const p = estado.produtos.find((x) => x.id === movCtx.id);
+        if (!p) {
+          fecharModal($("veuMov"));
+          return;
+        }
+        const qtd = Math.floor(numeroBR($("mQtd").value));
+        const erroEl = $("erroMov");
+        if (isNaN(qtd) || qtd <= 0) {
+          erroEl.textContent =
+            "Informe uma quantidade válida (inteiro maior que zero).";
+          erroEl.classList.add("visivel");
+          return;
+        }
+        if (movCtx.tipo === "entrada") {
+          const custoNF = numeroBR($("mCusto").value);
+          if (isNaN(custoNF) || custoNF < 0) {
+            erroEl.textContent = "Informe o custo unitário da NF.";
+            erroEl.classList.add("visivel");
+            return;
+          }
+          // custo médio ponderado
+          p.custo =
+            Math.round(
+              ((p.fis * p.custo + qtd * custoNF) / (p.fis + qtd)) * 100,
+            ) / 100;
+          p.fis += qtd;
+          registrarMov(
+            p.id,
+            "entrada",
+            qtd,
+            custoNF,
+            $("mDoc").value.trim() || "NF-e s/nº",
+          );
+          toast(
+            "+" +
+              fmtNum.format(qtd) +
+              " " +
+              p.un +
+              " em " +
+              p.sku +
+              " · novo custo médio " +
+              fmtBRL.format(p.custo),
+          );
+        } else {
+          if (qtd > p.fis) {
+            erroEl.textContent =
+              "Saída maior que o estoque físico (" +
+              fmtNum.format(p.fis) +
+              " " +
+              p.un +
+              ").";
+            erroEl.classList.add("visivel");
+            return;
+          }
+          p.fis -= qtd;
+          p.res = Math.min(p.res, p.fis);
+          registrarMov(
+            p.id,
+            "saida",
+            qtd,
+            null,
+            $("mDoc").value.trim() || "Venda balcão",
+          );
+          toast("−" + fmtNum.format(qtd) + " " + p.un + " em " + p.sku);
+        }
+        salvarDados(estado);
+        fecharModal($("veuMov"));
+        renderTudo();
+      });
+      function registrarMov(pid, tipo, qtd, custo, doc) {
+        estado.movs.push({
+          pid,
+          tipo,
+          qtd,
+          custo,
+          doc,
+          data: new Date().toISOString(),
+        });
+        if (estado.movs.length > 1500) estado.movs = estado.movs.slice(-1500);
+      }
+      $("btnCancelarMov").addEventListener("click", () =>
+        fecharModal($("veuMov")),
+      );
+
+      /* ===== Toast ===== */
+      let toastTimer = null;
+      function toast(msg) {
+        const t = $("toast");
+        t.textContent = msg;
+        t.classList.add("visivel");
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => t.classList.remove("visivel"), 2600);
+      }
+
+      /* ===== Delegação de eventos ===== */
+      $("listaPrincipal").addEventListener("click", (e) => {
+        const btn = e.target.closest("button[data-acao]");
+        const tr = e.target.closest("tr[data-id]");
+        if (!tr) return;
+        const id = Number(tr.dataset.id);
+        if (btn) {
+          e.stopPropagation();
+          if (btn.dataset.acao === "editar")
+            abrirFormProduto(estado.produtos.find((p) => p.id === id));
+          else if (btn.dataset.acao === "excluir") excluirProduto(id);
+          return;
+        }
+        abrirDetalhe(id);
+      });
+      $("listaPrincipal").addEventListener("keydown", (e) => {
+        if (e.key !== "Enter" && e.key !== " ") return;
+        const tr = e.target.closest("tr[data-id]");
+        if (tr && e.target === tr) {
+          e.preventDefault();
+          abrirDetalhe(Number(tr.dataset.id));
+        }
+      });
+      $("listaCompra").addEventListener("click", (e) => {
+        const tr = e.target.closest("tr[data-id]");
+        if (tr) {
+          trocarVista("estoque");
+          abrirDetalhe(Number(tr.dataset.id));
+        }
+      });
+      $("detCorpo").addEventListener("click", (e) => {
+        const mv = e.target.closest("button[data-mov]");
+        if (mv) {
+          abrirMov(Number(mv.dataset.id), mv.dataset.mov);
+          return;
+        }
+        const ed = e.target.closest("button[data-det-editar]");
+        if (ed) {
+          abrirFormProduto(
+            estado.produtos.find((p) => p.id === Number(ed.dataset.detEditar)),
+          );
+          return;
+        }
+        const ex = e.target.closest("button[data-det-excluir]");
+        if (ex) excluirProduto(Number(ex.dataset.detExcluir));
+      });
+      $("btnFecharDetalhe").addEventListener("click", fecharDetalhe);
+      $("btnNovo").addEventListener("click", () => abrirFormProduto(null));
+      $("btnRestaurar").addEventListener("click", restaurarDemo);
+      ["campoBusca", "filtroCategoria", "filtroCurva", "filtroStatus"].forEach(
+        (id) =>
+          $(id).addEventListener(
+            id === "campoBusca" ? "input" : "change",
+            renderTabela,
+          ),
+      );
+
+      /* ===== Abas ===== */
+      function trocarVista(v) {
+        document
+          .querySelectorAll(".aba")
+          .forEach((a) =>
+            a.setAttribute("aria-selected", String(a.dataset.vista === v)),
+          );
+        $("vistaEstoque").hidden = v !== "estoque";
+        $("vistaCompra").hidden = v !== "compra";
+        $("vistaAbc").hidden = v !== "abc";
+      }
+      document
+        .querySelectorAll(".aba")
+        .forEach((a) =>
+          a.addEventListener("click", () => trocarVista(a.dataset.vista)),
+        );
+
+      /* ===== Login fake ===== */
+      $("btnEntrar").addEventListener("click", () => {
+        $("telaLogin").classList.add("fechada");
+        $("app").classList.add("visivel");
+        $("campoBusca").focus();
+      });
+
+      /* ===== Boot ===== */
+      salvarDados(estado);
+      renderTudo();
+    </script>
+  </body>
+</html>

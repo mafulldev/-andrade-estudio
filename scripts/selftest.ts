@@ -3,7 +3,7 @@
 // Parte 2: verificações ESTÁTICAS da casa (doutrina de motion, eases,
 // cores OKLCH, travessão, honestidade das specs). Qualquer FAIL bloqueia.
 
-import { readFileSync, readdirSync, statSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { avaliar, type Respostas } from "../lib/motor";
 
@@ -27,7 +27,9 @@ function cenario(
   if (r.caminho !== esperado.caminho)
     erros.push(`caminho: esperado ${esperado.caminho}, obtido ${r.caminho}`);
   if (esperado.categoria && r.categoria !== esperado.categoria)
-    erros.push(`categoria: esperado ${esperado.categoria}, obtido ${r.categoria}`);
+    erros.push(
+      `categoria: esperado ${esperado.categoria}, obtido ${r.categoria}`,
+    );
   if (r.faixaMin !== esperado.faixaMin)
     erros.push(`faixaMin: esperado ${esperado.faixaMin}, obtido ${r.faixaMin}`);
   if (r.faixaMax !== esperado.faixaMax)
@@ -97,10 +99,14 @@ cenario("C", "startup, sistema, [admin, integracoes], urgente", C, {
     JSON.stringify(reidratado) === serializado &&
     JSON.stringify(avaliar(reidratado)) === JSON.stringify(avaliar(B));
   if (identico) {
-    console.log("[PASS] Cenário D: serialização e parse do payload B idênticos");
+    console.log(
+      "[PASS] Cenário D: serialização e parse do payload B idênticos",
+    );
   } else {
     falhas += 1;
-    console.log("[FAIL] Cenário D: payload B divergiu após serializar e parsear");
+    console.log(
+      "[FAIL] Cenário D: payload B divergiu após serializar e parsear",
+    );
   }
 }
 
@@ -155,8 +161,10 @@ console.log("\nVerificações estáticas da casa:");
 {
   const provider = ler(join(RAIZ, "components", "ScrollSceneProvider.tsx"));
   const problemas: string[] = [];
-  if (!provider.includes("autoRaf: false")) problemas.push("autoRaf: false ausente");
-  if (!provider.includes("syncTouch: false")) problemas.push("syncTouch: false ausente");
+  if (!provider.includes("autoRaf: false"))
+    problemas.push("autoRaf: false ausente");
+  if (!provider.includes("syncTouch: false"))
+    problemas.push("syncTouch: false ausente");
   checa("Lenis com autoRaf e syncTouch desligados no provider", problemas);
 }
 
@@ -169,8 +177,10 @@ console.log("\nVerificações estáticas da casa:");
       problemas.push(`${rel(f)}: importa CustomWiggle/CustomBounce`);
   }
   const registro = ler(join(RAIZ, "lib", "motion", "registro.ts"));
-  if (!registro.includes("MorphSVGPlugin")) problemas.push("MorphSVGPlugin ausente");
-  if (!registro.includes("MotionPathPlugin")) problemas.push("MotionPathPlugin ausente");
+  if (!registro.includes("MorphSVGPlugin"))
+    problemas.push("MorphSVGPlugin ausente");
+  if (!registro.includes("MotionPathPlugin"))
+    problemas.push("MotionPathPlugin ausente");
   checa("Registro GSAP sem Wiggle/Bounce e com Morph/MotionPath", problemas);
 }
 
@@ -181,14 +191,20 @@ console.log("\nVerificações estáticas da casa:");
     const t = ler(f);
     if (/from\s+["']framer-motion["']/.test(t))
       problemas.push(`${rel(f)}: import de framer-motion`);
-    const importMotion = t.match(/import\s*{([^}]*)}\s*from\s*["']motion\/react["']/);
+    const importMotion = t.match(
+      /import\s*{([^}]*)}\s*from\s*["']motion\/react["']/,
+    );
     if (importMotion) {
-      const nomes = importMotion[1].split(",").map((n) => n.trim().split(/\s+as\s+/)[0]);
+      const nomes = importMotion[1]
+        .split(",")
+        .map((n) => n.trim().split(/\s+as\s+/)[0]);
       const proibidos = nomes.filter((n) =>
         ["motion", "useScroll", "useAnimationFrame", "useSpring"].includes(n),
       );
       if (proibidos.length)
-        problemas.push(`${rel(f)}: importa ${proibidos.join(", ")} de motion/react`);
+        problemas.push(
+          `${rel(f)}: importa ${proibidos.join(", ")} de motion/react`,
+        );
     }
   }
   checa("Motion apenas via m.*, sem framer-motion nem useScroll", problemas);
@@ -206,7 +222,10 @@ console.log("\nVerificações estáticas da casa:");
         problemas.push(`${rel(f)}: ease "${m[1]}"`);
     }
   }
-  checa('Eases GSAP do estúdio restritas a "andrade", "cortina" e "none"', problemas);
+  checa(
+    'Eases GSAP do estúdio restritas a "andrade", "cortina" e "none"',
+    problemas,
+  );
 }
 
 // E5 · Travessão: proibido fora de comentário de código
@@ -267,8 +286,28 @@ console.log("\nVerificações estáticas da casa:");
   checa("Springs do Motion sempre com bounce zero", problemas);
 }
 
+// E9 · Galeria de conceitos: todo card aponta para arquivo que existe
+// (protege contra slug sem site publicado e thumbnail local quebrada)
+{
+  const problemas: string[] = [];
+  const galeria = ler(join(RAIZ, "app", "conceitos", "page.tsx"));
+  const slugs = [...galeria.matchAll(/slug:\s*"([^"]+)"/g)].map((m) => m[1]);
+  if (slugs.length === 0) problemas.push("nenhum slug encontrado na galeria");
+  for (const s of slugs) {
+    if (!existsSync(join(RAIZ, "public", "trabalhos", s, "index.html")))
+      problemas.push(`slug "${s}" sem public/trabalhos/${s}/index.html`);
+  }
+  for (const m of galeria.matchAll(/img:\s*"(\/[^"]+)"/g)) {
+    if (!existsSync(join(RAIZ, "public", m[1])))
+      problemas.push(`img local ausente: ${m[1]}`);
+  }
+  checa("Galeria de conceitos aponta para arquivos existentes", problemas);
+}
+
 if (falhasEstaticas > 0) {
-  console.log(`\n${falhasEstaticas} verificação(ões) estática(s) em FAIL. Nada é entregue com FAIL.`);
+  console.log(
+    `\n${falhasEstaticas} verificação(ões) estática(s) em FAIL. Nada é entregue com FAIL.`,
+  );
   process.exit(1);
 }
-console.log("Estático: 8 de 8 em PASS.");
+console.log("Estático: 9 de 9 em PASS.");

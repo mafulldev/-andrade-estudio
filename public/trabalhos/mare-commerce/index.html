@@ -1,0 +1,2885 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>
+      MARÉ — Admin de pedidos e-commerce · Conceito funcional ANDRADE
+    </title>
+    <meta
+      name="description"
+      content="Painel administrativo de pedidos para e-commerce de moda: PIX com expiração ao vivo, fila de expedição, rastreio Correios e KPIs recalculados em tempo real. Conceito funcional do ANDRADE, Estúdio digital."
+    />
+    <meta property="og:title" content="MARÉ — Admin de pedidos e-commerce" />
+    <meta
+      property="og:description"
+      content="Painel administrativo de pedidos: PIX expirando ao vivo, fila de expedição e rastreio Correios. Conceito funcional ANDRADE."
+    />
+    <meta
+      property="og:image"
+      content="https://www.andradestudio.dev.br/opengraph-image"
+    />
+    <meta property="og:type" content="website" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23064E3B'/%3E%3Cpath d='M5 21c4-8 7 3 11-4s7-3 11-8' stroke='%2334D399' stroke-width='3' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      [hidden] {
+        display: none !important;
+      }
+      :root {
+        --fundo: #f8faf9;
+        --painel: #ffffff;
+        --tinta: #12241e;
+        --tinta-2: #5b6e67;
+        --tinta-3: #8ca099;
+        --borda: #e3eae6;
+        --borda-forte: #cbd8d2;
+        --verde-950: #032e23;
+        --verde-900: #064e3b;
+        --verde-700: #047857;
+        --verde-600: #059669;
+        --verde-100: #d1fae5;
+        --verde-50: #ecfdf5;
+        --teal: #0d9488;
+        --teal-claro: #ccfbf1;
+        --ambar: #b45309;
+        --ambar-bg: #fef3c7;
+        --azul: #1d4ed8;
+        --azul-bg: #dbeafe;
+        --violeta: #6d28d9;
+        --violeta-bg: #ede9fe;
+        --vermelho: #b91c1c;
+        --vermelho-bg: #fee2e2;
+        --cinza: #475569;
+        --cinza-bg: #e7edea;
+        --raio: 14px;
+        --sombra:
+          0 1px 2px rgba(6, 78, 59, 0.05),
+          0 10px 28px -14px rgba(6, 78, 59, 0.18);
+        --ui: "Plus Jakarta Sans", system-ui, sans-serif;
+        --corpo: "Inter", system-ui, sans-serif;
+      }
+      html,
+      body {
+        height: 100%;
+      }
+      body {
+        font-family: var(--corpo);
+        font-size: 14px;
+        color: var(--tinta);
+        background: var(--fundo);
+        -webkit-font-smoothing: antialiased;
+      }
+      h1,
+      h2,
+      h3,
+      h4,
+      .num {
+        font-family: var(--ui);
+      }
+      .num,
+      td.vlr,
+      .kpi-valor,
+      .det-total-num,
+      .cd {
+        font-variant-numeric: tabular-nums;
+      }
+      button {
+        font: inherit;
+        cursor: pointer;
+        border: 0;
+        background: none;
+        color: inherit;
+      }
+      input,
+      select {
+        font: inherit;
+        color: inherit;
+      }
+      a {
+        color: var(--verde-700);
+      }
+      :focus-visible {
+        outline: 2px solid var(--verde-600);
+        outline-offset: 2px;
+        border-radius: 4px;
+      }
+      .sem-motion *,
+      .sem-motion *::before,
+      .sem-motion *::after {
+        transition: none !important;
+        animation: none !important;
+      }
+
+      /* ===== LOGIN ===== */
+      #telaLogin {
+        position: fixed;
+        inset: 0;
+        z-index: 60;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        background:
+          radial-gradient(120% 90% at 85% -10%, #0b6b51 0%, transparent 55%),
+          radial-gradient(90% 80% at 0% 110%, #053829 0%, transparent 60%),
+          linear-gradient(160deg, #064e3b 0%, #032e23 100%);
+      }
+      #telaLogin::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        opacity: 0.25;
+        pointer-events: none;
+        background:
+          radial-gradient(2px 2px at 12% 30%, #34d399 40%, transparent 41%),
+          radial-gradient(2px 2px at 78% 64%, #34d399 40%, transparent 41%),
+          radial-gradient(1.5px 1.5px at 42% 82%, #6ee7b7 40%, transparent 41%),
+          radial-gradient(1.5px 1.5px at 90% 18%, #6ee7b7 40%, transparent 41%);
+      }
+      .login-card {
+        position: relative;
+        width: 100%;
+        max-width: 400px;
+        background: var(--painel);
+        border-radius: 20px;
+        padding: 38px 34px 30px;
+        box-shadow: 0 24px 60px -18px rgba(0, 0, 0, 0.45);
+        animation: subir 0.45s cubic-bezier(0.2, 0.8, 0.3, 1) both;
+      }
+      @keyframes subir {
+        from {
+          opacity: 0;
+          transform: translateY(14px);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+      .login-marca {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 26px;
+      }
+      .login-marca .marca-nome {
+        font-family: var(--ui);
+        font-weight: 800;
+        font-size: 26px;
+        letter-spacing: -0.02em;
+      }
+      .login-marca .marca-sub {
+        display: block;
+        font-size: 11.5px;
+        font-weight: 500;
+        color: var(--tinta-2);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .login-card h1 {
+        font-size: 17px;
+        font-weight: 700;
+        margin-bottom: 4px;
+      }
+      .login-card .login-desc {
+        color: var(--tinta-2);
+        font-size: 13px;
+        margin-bottom: 22px;
+        line-height: 1.5;
+      }
+      .campo {
+        margin-bottom: 14px;
+      }
+      .campo label {
+        display: block;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--tinta-2);
+        margin-bottom: 6px;
+      }
+      .campo input,
+      .campo select {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1.5px solid var(--borda);
+        border-radius: 10px;
+        background: #fff;
+        transition:
+          border-color 0.18s ease,
+          box-shadow 0.18s ease;
+      }
+      .campo input:focus,
+      .campo select:focus {
+        border-color: var(--verde-600);
+        box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.14);
+        outline: none;
+      }
+      .btn-primario {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        background: var(--verde-600);
+        color: #fff;
+        font-family: var(--ui);
+        font-weight: 700;
+        font-size: 14px;
+        padding: 11px 18px;
+        border-radius: 10px;
+        transition:
+          background 0.18s ease,
+          transform 0.18s ease;
+      }
+      .btn-primario:hover {
+        background: var(--verde-700);
+      }
+      .btn-primario:active {
+        transform: scale(0.98);
+      }
+      .login-card .btn-primario {
+        width: 100%;
+        margin-top: 6px;
+        padding: 13px;
+      }
+      .login-nota {
+        margin-top: 18px;
+        text-align: center;
+        font-size: 12px;
+        color: var(--tinta-3);
+      }
+
+      /* ===== ESTRUTURA ===== */
+      #app {
+        height: 100dvh;
+        display: flex;
+        flex-direction: column;
+        padding-bottom: 38px;
+      }
+      @supports not (height: 100dvh) {
+        #app {
+          height: 100vh;
+        }
+      }
+
+      /* topo */
+      .topo {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 10px 20px;
+        background: var(--painel);
+        border-bottom: 1px solid var(--borda);
+        flex-wrap: wrap;
+      }
+      .marca {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-family: var(--ui);
+        font-weight: 800;
+        font-size: 19px;
+        letter-spacing: -0.02em;
+      }
+      .marca .tag {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        color: var(--verde-700);
+        background: var(--verde-50);
+        border: 1px solid var(--verde-100);
+        border-radius: 99px;
+        padding: 3px 8px;
+        text-transform: uppercase;
+      }
+      .busca-wrap {
+        position: relative;
+        flex: 1;
+        max-width: 420px;
+        min-width: 180px;
+      }
+      .busca-wrap svg {
+        position: absolute;
+        left: 11px;
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: none;
+      }
+      .busca-wrap input {
+        width: 100%;
+        padding: 9px 12px 9px 34px;
+        border: 1.5px solid var(--borda);
+        border-radius: 10px;
+        background: var(--fundo);
+        transition:
+          border-color 0.18s ease,
+          box-shadow 0.18s ease,
+          background 0.18s ease;
+      }
+      .busca-wrap input:focus {
+        border-color: var(--verde-600);
+        background: #fff;
+        box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.12);
+        outline: none;
+      }
+      .topo-acoes {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-left: auto;
+      }
+      .btn-fantasma {
+        font-family: var(--ui);
+        font-weight: 600;
+        font-size: 13px;
+        color: var(--tinta-2);
+        padding: 9px 13px;
+        border-radius: 10px;
+        border: 1.5px solid var(--borda);
+        transition:
+          color 0.18s ease,
+          border-color 0.18s ease,
+          background 0.18s ease;
+      }
+      .btn-fantasma:hover {
+        color: var(--verde-700);
+        border-color: var(--verde-600);
+        background: var(--verde-50);
+      }
+      .avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: var(--verde-900);
+        color: #6ee7b7;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: var(--ui);
+        font-weight: 700;
+        font-size: 13px;
+      }
+
+      /* KPIs */
+      .kpis {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+        padding: 14px 20px 4px;
+      }
+      .kpi {
+        background: var(--painel);
+        border: 1px solid var(--borda);
+        border-radius: var(--raio);
+        padding: 14px 16px;
+        box-shadow: var(--sombra);
+        animation: subir 0.4s ease both;
+      }
+      .kpi:nth-child(2) {
+        animation-delay: 0.05s;
+      }
+      .kpi:nth-child(3) {
+        animation-delay: 0.1s;
+      }
+      .kpi:nth-child(4) {
+        animation-delay: 0.15s;
+      }
+      .kpi-rotulo {
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+        color: var(--tinta-2);
+      }
+      .kpi-valor {
+        font-size: 22px;
+        font-weight: 800;
+        margin-top: 4px;
+        letter-spacing: -0.01em;
+      }
+      .kpi-extra {
+        font-size: 12px;
+        color: var(--tinta-3);
+        margin-top: 2px;
+      }
+      .kpi-extra strong {
+        color: var(--verde-700);
+        font-weight: 600;
+      }
+
+      /* split-pane */
+      .split {
+        flex: 1;
+        min-height: 0;
+        display: grid;
+        grid-template-columns: 380px 1fr;
+        gap: 14px;
+        padding: 12px 20px 16px;
+      }
+      .painel-lista {
+        background: var(--painel);
+        border: 1px solid var(--borda);
+        border-radius: var(--raio);
+        box-shadow: var(--sombra);
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+        overflow: hidden;
+      }
+      .abas {
+        display: flex;
+        gap: 6px;
+        padding: 12px 12px 10px;
+        border-bottom: 1px solid var(--borda);
+        overflow-x: auto;
+        scrollbar-width: none;
+      }
+      .abas::-webkit-scrollbar {
+        display: none;
+      }
+      .aba {
+        white-space: nowrap;
+        font-family: var(--ui);
+        font-weight: 600;
+        font-size: 12.5px;
+        color: var(--tinta-2);
+        padding: 7px 11px;
+        border-radius: 99px;
+        border: 1.5px solid transparent;
+        transition: all 0.18s ease;
+      }
+      .aba:hover {
+        background: var(--fundo);
+      }
+      .aba.ativa {
+        background: var(--verde-900);
+        color: #fff;
+      }
+      .aba .ct {
+        font-size: 11px;
+        opacity: 0.75;
+        margin-left: 3px;
+      }
+      .lista {
+        flex: 1;
+        overflow-y: auto;
+        min-height: 0;
+      }
+
+      /* item da lista */
+      .item {
+        position: relative;
+        padding: 12px 14px 12px 17px;
+        border-bottom: 1px solid var(--borda);
+        cursor: pointer;
+        transition: background 0.15s ease;
+      }
+      .item::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 3px;
+        background: transparent;
+        transition: background 0.15s ease;
+      }
+      .item:hover {
+        background: var(--fundo);
+      }
+      .item.sel {
+        background: var(--verde-50);
+      }
+      .item.sel::before {
+        background: var(--verde-600);
+      }
+      .item-topo {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+      }
+      .item .numero {
+        font-family: var(--ui);
+        font-weight: 700;
+        font-size: 13px;
+      }
+      .item-meio {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 8px;
+        margin-top: 5px;
+      }
+      .item .cliente {
+        font-size: 13.5px;
+        color: var(--tinta);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .item .total {
+        font-family: var(--ui);
+        font-weight: 700;
+        font-size: 13.5px;
+      }
+      .item-baixo {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 6px;
+        font-size: 11.5px;
+        color: var(--tinta-3);
+      }
+      .item-acoes {
+        margin-left: auto;
+        display: flex;
+        gap: 2px;
+        opacity: 0;
+        transition: opacity 0.15s ease;
+      }
+      .item:hover .item-acoes,
+      .item.sel .item-acoes,
+      .item:focus-within .item-acoes {
+        opacity: 1;
+      }
+      .btn-icone {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 26px;
+        height: 26px;
+        border-radius: 7px;
+        color: var(--tinta-2);
+        transition:
+          background 0.15s ease,
+          color 0.15s ease;
+      }
+      .btn-icone:hover {
+        background: #fff;
+        color: var(--verde-700);
+        box-shadow: inset 0 0 0 1px var(--borda-forte);
+      }
+      .btn-icone.perigo:hover {
+        color: var(--vermelho);
+        background: var(--vermelho-bg);
+      }
+
+      /* badges de status */
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        font-family: var(--ui);
+        font-weight: 700;
+        font-size: 10.5px;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        padding: 3px 8px;
+        border-radius: 99px;
+        white-space: nowrap;
+      }
+      .badge::before {
+        content: "";
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: currentColor;
+      }
+      .b-aguardando {
+        color: var(--ambar);
+        background: var(--ambar-bg);
+      }
+      .b-pago {
+        color: var(--verde-700);
+        background: var(--verde-100);
+      }
+      .b-separacao {
+        color: var(--azul);
+        background: var(--azul-bg);
+      }
+      .b-enviado {
+        color: var(--violeta);
+        background: var(--violeta-bg);
+      }
+      .b-entregue {
+        color: var(--verde-950);
+        background: #c7efe0;
+      }
+      .b-vencido {
+        color: var(--vermelho);
+        background: var(--vermelho-bg);
+      }
+      .b-cancelado {
+        color: var(--cinza);
+        background: var(--cinza-bg);
+      }
+      .chip-pg {
+        display: inline-flex;
+        align-items: center;
+        font-weight: 600;
+        font-size: 10.5px;
+        padding: 2px 7px;
+        border-radius: 6px;
+        background: var(--cinza-bg);
+        color: var(--cinza);
+      }
+      .chip-pg.pg-pix {
+        background: var(--teal-claro);
+        color: var(--teal);
+      }
+
+      /* countdown */
+      .cd {
+        font-family: var(--ui);
+        font-weight: 700;
+        color: var(--ambar);
+        font-size: 11.5px;
+      }
+      .cd::before {
+        content: "⏱ ";
+      }
+      .cd.critico {
+        color: var(--vermelho);
+      }
+
+      /* ===== painel detalhe ===== */
+      .painel-detalhe {
+        min-height: 0;
+        overflow-y: auto;
+        border-radius: var(--raio);
+      }
+      .det-cab {
+        background: linear-gradient(135deg, var(--verde-900), var(--verde-950));
+        color: #fff;
+        border-radius: var(--raio);
+        padding: 22px 24px;
+        box-shadow: var(--sombra);
+      }
+      .det-cab-linha1 {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .det-cab .det-num {
+        font-family: var(--ui);
+        font-weight: 800;
+        font-size: 20px;
+        letter-spacing: -0.01em;
+      }
+      .det-cab .badge {
+        filter: saturate(1.1);
+      }
+      .det-cab-linha2 {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 14px;
+        margin-top: 12px;
+        flex-wrap: wrap;
+      }
+      .det-cliente {
+        font-size: 15px;
+        font-weight: 600;
+      }
+      .det-meta {
+        font-size: 12.5px;
+        color: #a9d6c6;
+        margin-top: 3px;
+      }
+      .det-total-rot {
+        font-size: 11px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #a9d6c6;
+        text-align: right;
+      }
+      .det-total-num {
+        font-family: var(--ui);
+        font-weight: 800;
+        font-size: 26px;
+        text-align: right;
+      }
+      .det-acoes {
+        display: flex;
+        gap: 8px;
+        margin-top: 16px;
+        flex-wrap: wrap;
+      }
+      .det-acoes .btn-primario {
+        background: var(--verde-600);
+      }
+      .det-acoes .btn-primario:hover {
+        background: #0aae7c;
+      }
+      .btn-escuro {
+        font-family: var(--ui);
+        font-weight: 600;
+        font-size: 13px;
+        color: #cfede1;
+        padding: 10px 14px;
+        border-radius: 10px;
+        border: 1.5px solid rgba(255, 255, 255, 0.22);
+        transition: all 0.18s ease;
+      }
+      .btn-escuro:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+      }
+      .btn-escuro.perigo:hover {
+        background: rgba(220, 60, 60, 0.25);
+        border-color: rgba(255, 120, 120, 0.5);
+      }
+      .btn-voltar {
+        display: none;
+        align-items: center;
+        gap: 6px;
+        font-family: var(--ui);
+        font-weight: 700;
+        color: var(--verde-700);
+        margin-bottom: 10px;
+      }
+
+      .cartao {
+        background: var(--painel);
+        border: 1px solid var(--borda);
+        border-radius: var(--raio);
+        box-shadow: var(--sombra);
+        padding: 18px 20px;
+        margin-top: 14px;
+        animation: subir 0.35s ease both;
+      }
+      .cartao h3 {
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        color: var(--tinta-2);
+        margin-bottom: 12px;
+      }
+
+      /* cartão PIX */
+      .pix-cartao {
+        display: flex;
+        gap: 18px;
+        align-items: center;
+        border: 1.5px solid var(--teal);
+        background: linear-gradient(135deg, #f0fdfa, #fff);
+      }
+      .pix-qr {
+        flex: none;
+        width: 104px;
+        height: 104px;
+        border-radius: 10px;
+        background: #fff;
+        border: 1px solid var(--borda);
+        padding: 8px;
+      }
+      .pix-info {
+        flex: 1;
+        min-width: 0;
+      }
+      .pix-info .rot {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+        color: var(--teal);
+      }
+      .pix-cd {
+        font-family: var(--ui);
+        font-weight: 800;
+        font-size: 32px;
+        letter-spacing: 0;
+        color: var(--verde-950);
+        margin: 2px 0;
+      }
+      .pix-cd.critico {
+        color: var(--vermelho);
+      }
+      .pix-info .sub {
+        font-size: 12.5px;
+        color: var(--tinta-2);
+        line-height: 1.5;
+      }
+      .pix-barra {
+        height: 6px;
+        border-radius: 99px;
+        background: var(--cinza-bg);
+        margin-top: 10px;
+        overflow: hidden;
+      }
+      .pix-barra i {
+        display: block;
+        height: 100%;
+        border-radius: 99px;
+        background: var(--teal);
+        transition: width 1s linear;
+      }
+      .pix-barra i.critico {
+        background: var(--vermelho);
+      }
+
+      /* tabela de itens */
+      .tabela-wrap {
+        overflow-x: auto;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 430px;
+      }
+      th {
+        text-align: left;
+        font-family: var(--ui);
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--tinta-2);
+        padding: 8px 10px;
+        border-bottom: 1.5px solid var(--borda);
+      }
+      td {
+        padding: 10px;
+        border-bottom: 1px solid var(--borda);
+        font-size: 13.5px;
+      }
+      tr:last-child td {
+        border-bottom: 0;
+      }
+      td .sku {
+        display: block;
+        font-size: 11px;
+        color: var(--tinta-3);
+        font-family: var(--ui);
+      }
+      td.vlr,
+      th.vlr {
+        text-align: right;
+      }
+      .totais {
+        margin-top: 8px;
+        display: grid;
+        gap: 6px;
+        justify-content: end;
+      }
+      .totais div {
+        display: grid;
+        grid-template-columns: auto 120px;
+        gap: 20px;
+        font-size: 13px;
+        color: var(--tinta-2);
+      }
+      .totais div span:last-child {
+        text-align: right;
+        font-variant-numeric: tabular-nums;
+      }
+      .totais .tot-final {
+        font-family: var(--ui);
+        font-weight: 800;
+        font-size: 16px;
+        color: var(--tinta);
+        border-top: 1.5px solid var(--borda);
+        padding-top: 8px;
+        margin-top: 2px;
+      }
+      .totais .desc {
+        color: var(--verde-700);
+      }
+
+      /* grid de infos */
+      .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 14px;
+      }
+      .info-bloco .rot {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--tinta-3);
+      }
+      .info-bloco .val {
+        font-size: 13.5px;
+        margin-top: 4px;
+        line-height: 1.5;
+      }
+      .rastreio-cod {
+        display: inline-block;
+        font-family: var(--ui);
+        font-weight: 700;
+        background: var(--verde-50);
+        border: 1px dashed var(--verde-600);
+        color: var(--verde-900);
+        border-radius: 8px;
+        padding: 4px 10px;
+        letter-spacing: 0.05em;
+      }
+
+      /* timeline */
+      .timeline {
+        list-style: none;
+        position: relative;
+        padding-left: 22px;
+      }
+      .timeline::before {
+        content: "";
+        position: absolute;
+        left: 6px;
+        top: 6px;
+        bottom: 6px;
+        width: 2px;
+        background: var(--borda);
+      }
+      .timeline li {
+        position: relative;
+        padding: 0 0 16px;
+      }
+      .timeline li:last-child {
+        padding-bottom: 0;
+      }
+      .timeline li::before {
+        content: "";
+        position: absolute;
+        left: -21px;
+        top: 4px;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: #fff;
+        border: 3px solid var(--verde-600);
+      }
+      .timeline li:first-child::before {
+        background: var(--verde-600);
+        box-shadow: 0 0 0 4px var(--verde-100);
+      }
+      .timeline .tl-tit {
+        font-weight: 600;
+        font-size: 13.5px;
+      }
+      .timeline .tl-hora {
+        font-size: 11.5px;
+        color: var(--tinta-3);
+        font-variant-numeric: tabular-nums;
+      }
+      .timeline .tl-nota {
+        font-size: 12.5px;
+        color: var(--tinta-2);
+        margin-top: 2px;
+        line-height: 1.45;
+      }
+
+      /* vista geral (dashboard) */
+      .vg-cab {
+        background: linear-gradient(135deg, var(--verde-900), var(--verde-950));
+        color: #fff;
+        border-radius: var(--raio);
+        padding: 22px 24px;
+        box-shadow: var(--sombra);
+      }
+      .vg-cab h2 {
+        font-size: 19px;
+        font-weight: 800;
+        letter-spacing: -0.01em;
+      }
+      .vg-cab p {
+        color: #a9d6c6;
+        font-size: 13px;
+        margin-top: 5px;
+        max-width: 52ch;
+        line-height: 1.55;
+      }
+      .graficos {
+        display: grid;
+        grid-template-columns: 1.6fr 1fr;
+        gap: 14px;
+      }
+      .grafico-linha svg,
+      .grafico-donut svg {
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+      .legenda {
+        display: grid;
+        gap: 8px;
+        margin-top: 12px;
+      }
+      .legenda div {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 12.5px;
+        color: var(--tinta-2);
+      }
+      .legenda i {
+        width: 10px;
+        height: 10px;
+        border-radius: 3px;
+        flex: none;
+      }
+      .legenda .pct {
+        margin-left: auto;
+        font-family: var(--ui);
+        font-weight: 700;
+        color: var(--tinta);
+        font-variant-numeric: tabular-nums;
+      }
+
+      /* estado vazio */
+      .vazio {
+        padding: 44px 20px;
+        text-align: center;
+        color: var(--tinta-2);
+      }
+      .vazio svg {
+        margin: 0 auto 14px;
+        display: block;
+      }
+      .vazio p {
+        font-weight: 600;
+        font-family: var(--ui);
+      }
+      .vazio small {
+        display: block;
+        margin-top: 4px;
+        color: var(--tinta-3);
+      }
+
+      /* ===== modal ===== */
+      .modal-fundo {
+        position: fixed;
+        inset: 0;
+        z-index: 50;
+        background: rgba(3, 46, 35, 0.55);
+        backdrop-filter: blur(3px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+        animation: aparecer 0.2s ease both;
+      }
+      .modal-fundo[hidden] {
+        display: none;
+      }
+      @keyframes aparecer {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+      .modal {
+        width: 100%;
+        max-width: 560px;
+        max-height: calc(100dvh - 60px);
+        overflow-y: auto;
+        background: #fff;
+        border-radius: 18px;
+        padding: 26px 26px 22px;
+        box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.5);
+        animation: subir 0.28s cubic-bezier(0.2, 0.8, 0.3, 1) both;
+      }
+      .modal h2 {
+        font-size: 18px;
+        font-weight: 800;
+        margin-bottom: 2px;
+      }
+      .modal .modal-sub {
+        font-size: 12.5px;
+        color: var(--tinta-2);
+        margin-bottom: 18px;
+      }
+      .form-linha {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+      .item-form {
+        display: grid;
+        grid-template-columns: 1fr 74px 34px;
+        gap: 8px;
+        margin-bottom: 8px;
+        align-items: center;
+      }
+      .item-form select,
+      .item-form input {
+        padding: 9px 10px;
+        border: 1.5px solid var(--borda);
+        border-radius: 10px;
+        width: 100%;
+      }
+      .btn-add-item {
+        font-family: var(--ui);
+        font-weight: 700;
+        font-size: 12.5px;
+        color: var(--verde-700);
+        padding: 7px 10px;
+        border-radius: 8px;
+        border: 1.5px dashed var(--verde-600);
+        width: 100%;
+        margin: 2px 0 14px;
+        transition: background 0.15s ease;
+      }
+      .btn-add-item:hover {
+        background: var(--verde-50);
+      }
+      .erro {
+        background: var(--vermelho-bg);
+        color: var(--vermelho);
+        font-size: 13px;
+        font-weight: 500;
+        border-radius: 10px;
+        padding: 10px 12px;
+        margin-bottom: 12px;
+      }
+      .modal-rodape {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        margin-top: 6px;
+      }
+
+      /* toasts */
+      #toasts {
+        position: fixed;
+        right: 16px;
+        bottom: 52px;
+        z-index: 70;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        max-width: 340px;
+      }
+      .toast {
+        background: var(--verde-950);
+        color: #e7fbf2;
+        font-size: 13px;
+        line-height: 1.45;
+        border-radius: 12px;
+        padding: 12px 15px;
+        box-shadow: 0 12px 30px -8px rgba(0, 0, 0, 0.4);
+        animation: subir 0.3s ease both;
+        border-left: 3px solid var(--verde-600);
+      }
+      .toast.zap {
+        border-left-color: #25d366;
+      }
+      .toast.alerta {
+        border-left-color: var(--vermelho);
+      }
+      .toast strong {
+        font-family: var(--ui);
+      }
+
+      /* banner demo */
+      .banner-demo {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 40;
+        height: 38px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        background: var(--verde-950);
+        color: #9ed4c0;
+        font-size: 12px;
+        padding: 0 12px;
+        text-align: center;
+      }
+      .banner-demo a {
+        color: #6ee7b7;
+        font-weight: 600;
+        text-decoration-color: rgba(110, 231, 183, 0.4);
+      }
+
+      /* ===== responsivo ===== */
+      @media (max-width: 1060px) {
+        .graficos {
+          grid-template-columns: 1fr;
+        }
+        .kpis {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      @media (max-width: 900px) {
+        .split {
+          grid-template-columns: 1fr;
+          padding: 10px 12px 14px;
+        }
+        .kpis {
+          padding: 10px 12px 0;
+        }
+        .topo {
+          padding: 10px 12px;
+        }
+        .painel-detalhe {
+          position: fixed;
+          inset: 0;
+          z-index: 45;
+          background: var(--fundo);
+          padding: 12px 12px 50px;
+          display: none;
+        }
+        body.detalhe-aberto .painel-detalhe {
+          display: block;
+          animation: subir 0.25s ease both;
+        }
+        .btn-voltar {
+          display: inline-flex;
+        }
+      }
+      @media (max-width: 480px) {
+        .kpis {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 8px;
+        }
+        .kpi-valor {
+          font-size: 18px;
+        }
+        .topo {
+          gap: 8px;
+        }
+        .busca-wrap {
+          order: 3;
+          flex-basis: 100%;
+          max-width: none;
+        }
+        .pix-cartao {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+        .det-cab-linha2 {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+        .det-total-rot,
+        .det-total-num {
+          text-align: left;
+        }
+        .form-linha {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="telaLogin">
+      <div class="login-card">
+        <div class="login-marca">
+          <svg width="44" height="44" viewBox="0 0 44 44" aria-hidden="true">
+            <rect width="44" height="44" rx="11" fill="#064E3B" />
+            <path
+              d="M7 29c5-11 9 4 15-6s9-4 15-11"
+              stroke="#34D399"
+              stroke-width="3.5"
+              fill="none"
+              stroke-linecap="round"
+            />
+          </svg>
+          <div>
+            <span class="marca-nome">MARÉ</span>
+            <span class="marca-sub">Admin de pedidos</span>
+          </div>
+        </div>
+        <h1>Entrar no painel</h1>
+        <p class="login-desc">
+          Gestão de pedidos para e-commerce de moda — PIX com expiração ao vivo,
+          fila de expedição e rastreio Correios.
+        </p>
+        <div class="campo">
+          <label for="loginEmail">E-mail</label>
+          <input
+            id="loginEmail"
+            type="email"
+            value="demo@mare.com.br"
+            autocomplete="off"
+          />
+        </div>
+        <div class="campo">
+          <label for="loginSenha">Senha</label>
+          <input
+            id="loginSenha"
+            type="password"
+            value="demonstracao"
+            autocomplete="off"
+          />
+        </div>
+        <button
+          type="button"
+          class="btn-primario"
+          data-testid="login-entrar"
+          id="btnEntrar"
+        >
+          Entrar na demonstração
+        </button>
+        <p class="login-nota">
+          Demonstração com dados fictícios — 1 clique e você está dentro.
+        </p>
+      </div>
+    </div>
+
+    <div id="app" hidden>
+      <header class="topo">
+        <div class="marca">
+          <svg width="30" height="30" viewBox="0 0 44 44" aria-hidden="true">
+            <rect width="44" height="44" rx="11" fill="#064E3B" />
+            <path
+              d="M7 29c5-11 9 4 15-6s9-4 15-11"
+              stroke="#34D399"
+              stroke-width="3.5"
+              fill="none"
+              stroke-linecap="round"
+            />
+          </svg>
+          MARÉ <span class="tag">Pedidos</span>
+        </div>
+        <div class="busca-wrap">
+          <svg
+            width="15"
+            height="15"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#8CA099"
+            stroke-width="2.4"
+            aria-hidden="true"
+          >
+            <circle cx="11" cy="11" r="7" />
+            <path d="m20 20-3.5-3.5" />
+          </svg>
+          <input
+            type="search"
+            data-testid="busca"
+            id="campoBusca"
+            placeholder="Buscar por nº do pedido ou cliente…"
+            aria-label="Buscar por número do pedido ou cliente"
+          />
+        </div>
+        <div class="topo-acoes">
+          <button
+            type="button"
+            class="btn-fantasma"
+            data-testid="restaurar-demo"
+            id="btnRestaurar"
+          >
+            Restaurar demo
+          </button>
+          <button
+            type="button"
+            class="btn-primario"
+            data-testid="novo-registro"
+            id="btnNovo"
+          >
+            + Criar pedido
+          </button>
+          <div
+            class="avatar"
+            title="Ana Lucena — demo@mare.com.br"
+            aria-hidden="true"
+          >
+            AL
+          </div>
+        </div>
+      </header>
+
+      <section class="kpis" aria-label="Indicadores do mês">
+        <article class="kpi">
+          <div class="kpi-rotulo">Vendas do mês</div>
+          <div class="kpi-valor" data-testid="kpi-total" id="kpiTotal">—</div>
+          <div class="kpi-extra" id="kpiTotalExtra">—</div>
+        </article>
+        <article class="kpi">
+          <div class="kpi-rotulo">Ticket médio · 30 dias</div>
+          <div class="kpi-valor" id="kpiTicket">—</div>
+          <div class="kpi-extra" id="kpiTicketExtra">—</div>
+        </article>
+        <article class="kpi">
+          <div class="kpi-rotulo">Aguardando envio</div>
+          <div class="kpi-valor" id="kpiEnvio">—</div>
+          <div class="kpi-extra">pagos, prontos para expedição</div>
+        </article>
+        <article class="kpi">
+          <div class="kpi-rotulo">Participação PIX</div>
+          <div class="kpi-valor" id="kpiPix">—</div>
+          <div class="kpi-extra">dos pedidos dos últimos 30 dias</div>
+        </article>
+      </section>
+
+      <div class="split">
+        <aside class="painel-lista" aria-label="Lista de pedidos">
+          <nav
+            class="abas"
+            id="abas"
+            aria-label="Filtrar pedidos por status"
+          ></nav>
+          <div
+            class="lista"
+            data-testid="lista-principal"
+            id="lista"
+            role="list"
+          ></div>
+        </aside>
+
+        <section
+          class="painel-detalhe"
+          id="painelDetalhe"
+          aria-label="Detalhe do pedido"
+        >
+          <div id="vistaGeral">
+            <div class="vg-cab">
+              <h2>Visão geral da loja</h2>
+              <p>
+                Selecione um pedido na lista ao lado para ver itens, pagamento,
+                rastreio e a linha do tempo completa — ou acompanhe os números
+                dos últimos 30 dias abaixo.
+              </p>
+            </div>
+            <div class="graficos">
+              <div class="cartao grafico-linha">
+                <h3>Vendas — últimos 30 dias</h3>
+                <div id="graficoLinha"></div>
+              </div>
+              <div class="cartao grafico-donut">
+                <h3>Formas de pagamento</h3>
+                <div id="graficoDonut"></div>
+                <div class="legenda" id="legendaDonut"></div>
+              </div>
+            </div>
+          </div>
+          <div id="vistaPedido" hidden></div>
+        </section>
+      </div>
+    </div>
+
+    <div class="modal-fundo" id="modalFundo" hidden>
+      <div
+        class="modal"
+        data-testid="modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modalTitulo"
+      >
+        <form data-testid="form-registro" id="formRegistro" novalidate>
+          <h2 id="modalTitulo">Criar pedido manual</h2>
+          <p class="modal-sub" id="modalSub">
+            Pedido criado pela operação — telefone, WhatsApp ou balcão.
+          </p>
+          <div id="erroForm" class="erro" role="alert" hidden></div>
+          <div class="form-linha">
+            <div class="campo">
+              <label for="fNome">Nome do cliente *</label>
+              <input id="fNome" type="text" placeholder="Ex.: Marina Duarte" />
+            </div>
+            <div class="campo">
+              <label for="fCpf">CPF</label>
+              <input
+                id="fCpf"
+                type="text"
+                inputmode="numeric"
+                placeholder="000.000.000-00"
+              />
+            </div>
+          </div>
+          <div class="campo">
+            <label id="rotItens">Itens do pedido *</label>
+            <div id="itensForm" aria-labelledby="rotItens"></div>
+            <button type="button" class="btn-add-item" id="btnAddItem">
+              + Adicionar item
+            </button>
+          </div>
+          <div class="form-linha">
+            <div class="campo">
+              <label for="fPagamento">Pagamento</label>
+              <select id="fPagamento">
+                <option value="pix">PIX</option>
+                <option value="cartao3x">Cartão de crédito · 3x</option>
+                <option value="boleto">Boleto</option>
+              </select>
+            </div>
+            <div class="campo" id="campoStatus" hidden>
+              <label for="fStatus">Status</label>
+              <select id="fStatus"></select>
+            </div>
+          </div>
+          <div class="form-linha">
+            <div class="campo">
+              <label for="fTransp">Transportadora</label>
+              <select id="fTransp">
+                <option value="PAC">Correios · PAC</option>
+                <option value="SEDEX">Correios · SEDEX</option>
+                <option value="Motoboy">Motoboy (mesma cidade)</option>
+              </select>
+            </div>
+            <div class="campo">
+              <label for="fFrete">Frete (R$)</label>
+              <input
+                id="fFrete"
+                type="number"
+                min="0"
+                step="0.10"
+                value="19.90"
+              />
+            </div>
+          </div>
+          <div class="form-linha">
+            <div class="campo">
+              <label for="fCidade">Cidade</label>
+              <select id="fCidade"></select>
+            </div>
+            <div class="campo">
+              <label for="fEndereco">Endereço (rua, nº)</label>
+              <input
+                id="fEndereco"
+                type="text"
+                placeholder="Rua Augusta, 1245"
+              />
+            </div>
+          </div>
+          <div class="form-linha">
+            <div class="campo">
+              <label for="fCupom">Cupom (opcional)</label>
+              <input id="fCupom" type="text" placeholder="BEMVINDA10" />
+            </div>
+          </div>
+          <div class="modal-rodape">
+            <button type="button" class="btn-fantasma" id="btnCancelarModal">
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              class="btn-primario"
+              data-testid="salvar-registro"
+            >
+              Salvar pedido
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div id="toasts" aria-live="polite"></div>
+
+    <footer class="banner-demo" role="note">
+      Demonstração funcional · dados fictícios · tudo roda no seu navegador
+      ·&nbsp;<a href="/conceitos">ANDRADE, Estúdio digital</a>
+    </footer>
+    <script>
+      "use strict";
+      /* ===== determinismo p/ verificação ===== */
+      const E2E =
+        new URLSearchParams(location.search).has("e2e") ||
+        matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (E2E) document.documentElement.classList.add("sem-motion");
+
+      /* ===== segurança de interpolação ===== */
+      function esc(s) {
+        return String(s).replace(
+          /[&<>"']/g,
+          (c) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            })[c],
+        );
+      }
+
+      /* ===== formatadores ===== */
+      const fmtBRL = new Intl.NumberFormat("pt-BR", {
+        style: "currency",
+        currency: "BRL",
+      });
+      function fmtQuando(iso) {
+        const d = new Date(iso),
+          hoje = new Date();
+        const hm = d.toLocaleTimeString("pt-BR", {
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+        return d.toDateString() === hoje.toDateString()
+          ? "hoje " + hm
+          : d.toLocaleDateString("pt-BR", {
+              day: "2-digit",
+              month: "2-digit",
+            }) +
+              " " +
+              hm;
+      }
+      function fmtCompacto(v) {
+        return v >= 1000
+          ? (v / 1000).toLocaleString("pt-BR", { maximumFractionDigits: 1 }) +
+              " mil"
+          : String(Math.round(v));
+      }
+      function fmtCd(ms) {
+        const m = Math.floor(ms / 6e4),
+          s = Math.floor((ms % 6e4) / 1000);
+        return String(m).padStart(2, "0") + ":" + String(s).padStart(2, "0");
+      }
+
+      /* ===== PRNG determinístico ===== */
+      function mulberry32(a) {
+        return function () {
+          a |= 0;
+          a = (a + 0x6d2b79f5) | 0;
+          let t = Math.imul(a ^ (a >>> 15), 1 | a);
+          t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+          return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+        };
+      }
+
+      /* ===== dados de base ===== */
+      const CATALOGO = [
+        ["VST-102", "Vestido Midi Terracota", 289.9],
+        ["CAM-215", "Camisa Linho Off-White", 189.9],
+        ["BLS-330", "Bolsa Tiracolo Couro Caramelo", 349.9],
+        ["TEN-408", "Tênis Plataforma Branco", 259.9],
+        ["OCL-512", "Óculos de Sol Acetato Tartaruga", 219.9],
+        ["BRC-620", "Brinco Argola Banho Ouro", 89.9],
+        ["CLR-711", "Colar Corrente Prata 925", 149.9],
+        ["SAI-815", "Saia Plissada Verde-Musgo", 179.9],
+        ["CNT-902", "Cinto Couro Fivela Dourada", 119.9],
+        ["LEN-118", "Lenço de Seda Estampado", 99.9],
+        ["MCH-224", "Mochila Lona Encerada", 279.9],
+        ["SND-336", "Sandália Tira Fina Nude", 199.9],
+      ];
+      const CIDADES = [
+        ["São Paulo", "SP", "01310-100"],
+        ["Rio de Janeiro", "RJ", "22041-011"],
+        ["Belo Horizonte", "MG", "30130-010"],
+        ["Curitiba", "PR", "80020-320"],
+        ["Porto Alegre", "RS", "90010-150"],
+        ["Recife", "PE", "52011-000"],
+        ["Salvador", "BA", "40015-970"],
+        ["Fortaleza", "CE", "60160-230"],
+        ["Florianópolis", "SC", "88010-400"],
+        ["Campinas", "SP", "13015-100"],
+        ["Brasília", "DF", "70040-010"],
+        ["Niterói", "RJ", "24020-040"],
+      ];
+      const RUAS = [
+        "Rua Augusta",
+        "Av. Paulista",
+        "Rua das Laranjeiras",
+        "Av. Atlântica",
+        "Rua da Bahia",
+        "Rua XV de Novembro",
+        "Av. Ipiranga",
+        "Rua da Aurora",
+        "Av. Sete de Setembro",
+        "Av. Beira-Mar",
+        "Rua Bocaiúva",
+        "Rua Barão de Itapura",
+      ];
+      const NOMES = [
+        "Marina",
+        "Camila",
+        "Beatriz",
+        "Larissa",
+        "Fernanda",
+        "Juliana",
+        "Patrícia",
+        "Aline",
+        "Renata",
+        "Tatiane",
+        "Carolina",
+        "Vanessa",
+        "Gabriel",
+        "Lucas",
+        "Rafael",
+        "Thiago",
+        "André",
+        "Felipe",
+        "Bruno",
+        "Eduardo",
+      ];
+      const SOBRENOMES = [
+        "Silva",
+        "Souza",
+        "Oliveira",
+        "Santos",
+        "Pereira",
+        "Costa",
+        "Rodrigues",
+        "Almeida",
+        "Nascimento",
+        "Carvalho",
+        "Araújo",
+        "Ribeiro",
+        "Fernandes",
+        "Barbosa",
+        "Rocha",
+        "Duarte",
+      ];
+      const CUPONS = [
+        ["BEMVINDA10", 10],
+        ["MARE15", 15],
+        ["FRETEGRATIS", 0],
+      ];
+      const STATUS = {
+        aguardando: { label: "Aguardando pagamento", cls: "b-aguardando" },
+        pago: { label: "Pago", cls: "b-pago" },
+        separacao: { label: "Em separação", cls: "b-separacao" },
+        enviado: { label: "Enviado", cls: "b-enviado" },
+        entregue: { label: "Entregue", cls: "b-entregue" },
+        vencido: { label: "Vencido", cls: "b-vencido" },
+        cancelado: { label: "Cancelado", cls: "b-cancelado" },
+      };
+      const PAGAMENTOS = {
+        pix: "PIX",
+        cartao3x: "Cartão · 3x",
+        boleto: "Boleto",
+      };
+      const PIX_JANELA_MS = 30 * 6e4;
+
+      /* ===== seed determinístico ===== */
+      function criarSeed() {
+        const rng = mulberry32(20260702);
+        const ri = (a, b) => a + Math.floor(rng() * (b - a + 1));
+        const pk = (arr) => arr[Math.floor(rng() * arr.length)];
+        const agora = Date.now();
+        /* baralho determinístico: mix exato de pagamento (PIX dominante ~45%) */
+        const baralho = [].concat(
+          Array(33).fill("pix"),
+          Array(33).fill("cartao3x"),
+          Array(14).fill("boleto"),
+        );
+        for (let k = baralho.length - 1; k > 0; k--) {
+          const j = Math.floor(rng() * (k + 1));
+          [baralho[k], baralho[j]] = [baralho[j], baralho[k]];
+        }
+        const brutos = [];
+        for (let i = 0; i < 80; i++) {
+          const d = i < 6 ? 0 : ri(0, 29);
+          const criadoMs =
+            agora -
+            d * 864e5 -
+            ri(0, d === 0 ? 5 : 18) * 36e5 -
+            ri(1, 59) * 6e4;
+          let pagamento = i < 3 ? "pix" : baralho[i];
+          let status;
+          if (d === 0) {
+            if (i < 3) status = "aguardando";
+            else if (i < 6) status = rng() < 0.5 ? "pago" : "separacao";
+            else if (pagamento === "pix")
+              status = rng() < 0.6 ? "aguardando" : "pago";
+            else if (pagamento === "boleto") status = "aguardando";
+            else status = rng() < 0.8 ? "pago" : "separacao";
+          } else if (d <= 2) {
+            const r = rng();
+            status =
+              r < 0.3
+                ? "pago"
+                : r < 0.6
+                  ? "separacao"
+                  : r < 0.85
+                    ? "enviado"
+                    : r < 0.95
+                      ? "vencido"
+                      : "cancelado";
+          } else if (d <= 6) {
+            const r = rng();
+            status =
+              r < 0.15
+                ? "separacao"
+                : r < 0.55
+                  ? "enviado"
+                  : r < 0.87
+                    ? "entregue"
+                    : r < 0.94
+                      ? "vencido"
+                      : "cancelado";
+          } else {
+            const r = rng();
+            status =
+              r < 0.82
+                ? "entregue"
+                : r < 0.92
+                  ? "enviado"
+                  : r < 0.96
+                    ? "cancelado"
+                    : "vencido";
+          }
+          if (status === "vencido" && pagamento === "cartao3x")
+            pagamento = "pix";
+          const nItens = ri(1, 3),
+            usados = new Set(),
+            itens = [];
+          for (let k = 0; k < nItens; k++) {
+            let ci = ri(0, CATALOGO.length - 1);
+            if (usados.has(ci)) ci = (ci + 3) % CATALOGO.length;
+            if (usados.has(ci)) continue;
+            usados.add(ci);
+            itens.push({
+              sku: CATALOGO[ci][0],
+              nome: CATALOGO[ci][1],
+              valor: CATALOGO[ci][2],
+              qtd: ri(1, 2),
+            });
+          }
+          const cidade = pk(CIDADES);
+          const transportadora =
+            cidade[0] === "São Paulo" && rng() < 0.3
+              ? "Motoboy"
+              : rng() < 0.65
+                ? "PAC"
+                : "SEDEX";
+          const frete =
+            transportadora === "PAC"
+              ? ri(18, 26) + 0.9
+              : transportadora === "SEDEX"
+                ? ri(31, 42) + 0.9
+                : ri(12, 16) + 0.9;
+          const temCupom = rng() < 0.15 ? pk(CUPONS) : null;
+          const rastreio =
+            status === "enviado" || status === "entregue"
+              ? pk(["QB", "MR", "OL"]) + String(ri(100000000, 999999999)) + "BR"
+              : null;
+          /* timeline coerente com o status */
+          const tl = [
+            {
+              t: "Pedido criado",
+              quando: new Date(criadoMs).toISOString(),
+              nota: "Pedido realizado na loja virtual.",
+            },
+          ];
+          let t = criadoMs;
+          const cap = (ms) => Math.min(ms, agora - 6e4);
+          if (["pago", "separacao", "enviado", "entregue"].includes(status)) {
+            t = cap(t + ri(4, 110) * 6e4);
+            tl.push({
+              t: "Pagamento confirmado",
+              quando: new Date(t).toISOString(),
+              nota:
+                "Confirmação automática do provedor (" +
+                PAGAMENTOS[pagamento] +
+                ").",
+            });
+          }
+          if (["separacao", "enviado", "entregue"].includes(status)) {
+            t = cap(t + ri(2, 9) * 36e5);
+            tl.push({
+              t: "Em separação",
+              quando: new Date(t).toISOString(),
+              nota: "Pedido entrou na fila de picking do estoque.",
+            });
+          }
+          if (["enviado", "entregue"].includes(status)) {
+            t = cap(t + ri(4, 28) * 36e5);
+            tl.push({
+              t: "Enviado",
+              quando: new Date(t).toISOString(),
+              nota:
+                transportadora +
+                " · rastreio " +
+                rastreio +
+                ". Cliente avisado no WhatsApp.",
+            });
+          }
+          if (status === "entregue") {
+            t = cap(t + ri(2, 4) * 864e5);
+            tl.push({
+              t: "Entregue",
+              quando: new Date(t).toISOString(),
+              nota: "Entrega confirmada pela transportadora.",
+            });
+          }
+          if (status === "vencido") {
+            t = cap(t + ri(31, 95) * 6e4);
+            tl.push({
+              t: pagamento === "pix" ? "PIX expirado" : "Boleto vencido",
+              quando: new Date(t).toISOString(),
+              nota: "Estoque devolvido ao catálogo automaticamente.",
+            });
+          }
+          if (status === "cancelado") {
+            t = cap(t + ri(3, 40) * 36e5);
+            tl.push({
+              t: "Cancelado",
+              quando: new Date(t).toISOString(),
+              nota:
+                "Cancelado a pedido do cliente. Reembolso via " +
+                PAGAMENTOS[pagamento] +
+                ".",
+            });
+          }
+          brutos.push({
+            criadoMs,
+            cliente: {
+              nome: pk(NOMES) + " " + pk(SOBRENOMES),
+              cpf: "***." + ri(100, 999) + "." + ri(100, 999) + "-**",
+            },
+            itens,
+            frete: Math.round(frete * 100) / 100,
+            pagamento,
+            status,
+            transportadora,
+            rastreio,
+            endereco: {
+              rua: pk(RUAS) + ", " + ri(40, 2200),
+              cidade: cidade[0],
+              uf: cidade[1],
+              cep: cidade[2],
+            },
+            cupom: temCupom ? { codigo: temCupom[0], pct: temCupom[1] } : null,
+            pixExpira:
+              status === "aguardando" && pagamento === "pix"
+                ? agora + ri(4, 28) * 6e4
+                : null,
+            timeline: tl,
+          });
+        }
+        brutos.sort((a, b) => a.criadoMs - b.criadoMs);
+        const pedidos = brutos.map((p, i) => {
+          const { criadoMs, ...resto } = p;
+          return {
+            id: "p" + (1042 + i),
+            numero: 1042 + i,
+            criadoEm: new Date(criadoMs).toISOString(),
+            ...resto,
+          };
+        });
+        return { pedidos, seq: 1042 + pedidos.length };
+      }
+      function dadosValidos(o) {
+        return (
+          !!o &&
+          Array.isArray(o.pedidos) &&
+          typeof o.seq === "number" &&
+          o.pedidos.every(
+            (p) =>
+              p &&
+              typeof p.numero === "number" &&
+              Array.isArray(p.itens) &&
+              p.cliente,
+          )
+        );
+      }
+
+      /* ===== armazenamento resiliente ===== */
+      const STORE_KEY = "andrade:mare-commerce:v1";
+      let _mem = null; // fallback p/ modo privado
+      function carregarDados() {
+        try {
+          const bruto = localStorage.getItem(STORE_KEY);
+          if (bruto) {
+            const o = JSON.parse(bruto);
+            if (dadosValidos(o)) return o;
+          }
+        } catch {}
+        return _mem ?? criarSeed();
+      }
+      function salvarDados(d) {
+        _mem = d;
+        try {
+          localStorage.setItem(STORE_KEY, JSON.stringify(d));
+        } catch {}
+      }
+      function restaurarDemo() {
+        // limpa SÓ o próprio namespace
+        try {
+          localStorage.removeItem(STORE_KEY);
+        } catch {}
+        _mem = null;
+        estado = criarSeed();
+        salvarDados(estado);
+        renderTudo();
+      }
+
+      /* ===== estado ===== */
+      let estado = carregarDados();
+      salvarDados(estado);
+      let selecionadoId = null,
+        filtroAba = "todos",
+        filtroBusca = "";
+      let editandoId = null,
+        linhasForm = [],
+        abridorModal = null;
+
+      function porId(id) {
+        return estado.pedidos.find((p) => p.id === id);
+      }
+      function calcTotais(p) {
+        const subtotal = p.itens.reduce((s, it) => s + it.valor * it.qtd, 0);
+        const desconto = p.cupom
+          ? p.cupom.pct > 0
+            ? (subtotal * p.cupom.pct) / 100
+            : p.frete
+          : 0;
+        return { subtotal, desconto, total: subtotal + p.frete - desconto };
+      }
+      function addEvento(p, t, nota) {
+        p.timeline.push({ t, quando: new Date().toISOString(), nota });
+        p.timeline = p.timeline.slice(-200);
+      }
+      function gerarRastreio() {
+        let dig = "";
+        for (let i = 0; i < 9; i++) dig += Math.floor(Math.random() * 10);
+        return ["QB", "MR", "OL"][Math.floor(Math.random() * 3)] + dig + "BR";
+      }
+
+      /* ===== toasts ===== */
+      function toast(html, tipo) {
+        const box = document.getElementById("toasts");
+        const el = document.createElement("div");
+        el.className = "toast" + (tipo ? " " + tipo : "");
+        el.innerHTML = html;
+        box.appendChild(el);
+        setTimeout(() => el.remove(), 4200);
+        while (box.children.length > 4) box.firstChild.remove();
+      }
+
+      /* ===== filtros ===== */
+      function filtrar() {
+        let lista = [...estado.pedidos].sort(
+          (a, b) => new Date(b.criadoEm) - new Date(a.criadoEm),
+        );
+        if (filtroAba === "aguardando")
+          lista = lista.filter((p) => p.status === "aguardando");
+        else if (filtroAba === "prontos")
+          lista = lista.filter(
+            (p) => p.status === "pago" || p.status === "separacao",
+          );
+        else if (filtroAba === "enviados")
+          lista = lista.filter((p) => p.status === "enviado");
+        else if (filtroAba === "entregues")
+          lista = lista.filter((p) => p.status === "entregue");
+        const q = filtroBusca.trim().toLowerCase();
+        if (q)
+          lista = lista.filter(
+            (p) =>
+              ("#" + p.numero).includes(q) ||
+              String(p.numero).includes(q) ||
+              p.cliente.nome.toLowerCase().includes(q),
+          );
+        return lista;
+      }
+
+      /* ===== render: abas ===== */
+      function renderAbas() {
+        const defs = [
+          ["todos", "Todos", estado.pedidos.length],
+          [
+            "aguardando",
+            "Aguardando pgto.",
+            estado.pedidos.filter((p) => p.status === "aguardando").length,
+          ],
+          [
+            "prontos",
+            "Prontos p/ enviar",
+            estado.pedidos.filter(
+              (p) => p.status === "pago" || p.status === "separacao",
+            ).length,
+          ],
+          [
+            "enviados",
+            "Enviados",
+            estado.pedidos.filter((p) => p.status === "enviado").length,
+          ],
+          [
+            "entregues",
+            "Entregues",
+            estado.pedidos.filter((p) => p.status === "entregue").length,
+          ],
+        ];
+        document.getElementById("abas").innerHTML = defs
+          .map(
+            ([k, rot, n]) =>
+              `<button type="button" class="aba${filtroAba === k ? " ativa" : ""}" data-aba="${k}">${rot}<span class="ct">${n}</span></button>`,
+          )
+          .join("");
+      }
+
+      /* ===== render: lista ===== */
+      function renderLista() {
+        const lista = filtrar();
+        const el = document.getElementById("lista");
+        if (!lista.length) {
+          el.innerHTML = `<div class="vazio">
+      <svg width="110" height="84" viewBox="0 0 110 84" fill="none" aria-hidden="true">
+        <rect x="20" y="22" width="70" height="48" rx="8" stroke="#CBD8D2" stroke-width="2.5"/>
+        <path d="M20 38h70" stroke="#CBD8D2" stroke-width="2.5"/>
+        <path d="M8 76c8-10 12 4 20-4s12-4 20-8" stroke="#059669" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="78" cy="16" r="10" stroke="#CBD8D2" stroke-width="2.5"/>
+        <path d="m86 24 8 8" stroke="#CBD8D2" stroke-width="2.5" stroke-linecap="round"/>
+      </svg>
+      <p>Nenhum pedido encontrado</p>
+      <small>Ajuste a busca ou troque o filtro de status.</small>
+    </div>`;
+          return;
+        }
+        el.innerHTML = lista
+          .map((p) => {
+            const st = STATUS[p.status],
+              tot = calcTotais(p);
+            const cd =
+              p.status === "aguardando" && p.pagamento === "pix" && p.pixExpira
+                ? `<span class="cd" data-cd="${p.id}">${fmtCd(Math.max(0, p.pixExpira - Date.now()))}</span>`
+                : "";
+            return `<article class="item${p.id === selecionadoId ? " sel" : ""}" data-item data-id="${p.id}" role="listitem" tabindex="0" aria-label="Pedido ${p.numero}, ${esc(p.cliente.nome)}, ${st.label}">
+      <div class="item-topo"><span class="numero">#${p.numero}</span><span class="badge ${st.cls}">${st.label}</span></div>
+      <div class="item-meio"><span class="cliente">${esc(p.cliente.nome)}</span><span class="total num">${fmtBRL.format(tot.total)}</span></div>
+      <div class="item-baixo">
+        <span>${fmtQuando(p.criadoEm)}</span>
+        <span class="chip-pg${p.pagamento === "pix" ? " pg-pix" : ""}">${PAGAMENTOS[p.pagamento]}</span>
+        ${cd}
+        <span class="item-acoes">
+          <button type="button" class="btn-icone" data-testid="editar-item" data-editar="${p.id}" aria-label="Editar pedido ${p.numero}" title="Editar">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M17 3a2.8 2.8 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
+          </button>
+          <button type="button" class="btn-icone perigo" data-testid="excluir-item" data-excluir="${p.id}" aria-label="Excluir pedido ${p.numero}" title="Excluir">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2m1 0-1 14H8L7 6"/></svg>
+          </button>
+        </span>
+      </div>
+    </article>`;
+          })
+          .join("");
+      }
+
+      /* ===== render: KPIs ===== */
+      function renderKPIs() {
+        const agora = new Date();
+        const validos = (p) => !["cancelado", "vencido"].includes(p.status);
+        const doMes = estado.pedidos.filter((p) => {
+          const d = new Date(p.criadoEm);
+          return (
+            d.getMonth() === agora.getMonth() &&
+            d.getFullYear() === agora.getFullYear() &&
+            validos(p)
+          );
+        });
+        const vendasMes = doMes.reduce((s, p) => s + calcTotais(p).total, 0);
+        document.getElementById("kpiTotal").textContent =
+          fmtBRL.format(vendasMes);
+        document.getElementById("kpiTotalExtra").innerHTML =
+          `<strong>${doMes.length}</strong> pedidos em ${esc(agora.toLocaleDateString("pt-BR", { month: "long" }))}`;
+        const vals = estado.pedidos.filter(validos);
+        const ticket = vals.length
+          ? vals.reduce((s, p) => s + calcTotais(p).total, 0) / vals.length
+          : 0;
+        document.getElementById("kpiTicket").textContent =
+          fmtBRL.format(ticket);
+        document.getElementById("kpiTicketExtra").innerHTML =
+          `sobre <strong>${vals.length}</strong> pedidos válidos`;
+        document.getElementById("kpiEnvio").textContent = estado.pedidos.filter(
+          (p) => p.status === "pago" || p.status === "separacao",
+        ).length;
+        const pixPct = estado.pedidos.length
+          ? Math.round(
+              (100 *
+                estado.pedidos.filter((p) => p.pagamento === "pix").length) /
+                estado.pedidos.length,
+            )
+          : 0;
+        document.getElementById("kpiPix").textContent = pixPct + "%";
+      }
+
+      /* ===== render: gráficos SVG ===== */
+      function renderGraficos() {
+        /* linha — vendas 30 dias */
+        const dias = [];
+        for (let i = 29; i >= 0; i--) {
+          const d = new Date();
+          d.setHours(0, 0, 0, 0);
+          d.setDate(d.getDate() - i);
+          dias.push({
+            chave: d.toDateString(),
+            rotulo: d.toLocaleDateString("pt-BR", {
+              day: "2-digit",
+              month: "2-digit",
+            }),
+            total: 0,
+          });
+        }
+        const mapa = new Map(dias.map((d, i) => [d.chave, i]));
+        for (const p of estado.pedidos) {
+          if (["cancelado", "vencido"].includes(p.status)) continue;
+          const i = mapa.get(new Date(p.criadoEm).toDateString());
+          if (i !== undefined) dias[i].total += calcTotais(p).total;
+        }
+        const W = 640,
+          H = 240,
+          pl = 52,
+          pr = 12,
+          pt = 14,
+          pb = 30;
+        const max = Math.max(1, ...dias.map((d) => d.total)) * 1.08;
+        const px = (i) => pl + (i * (W - pl - pr)) / 29;
+        const py = (v) => pt + (H - pt - pb) * (1 - v / max);
+        let grade = "",
+          eixoX = "";
+        for (let k = 1; k <= 4; k++) {
+          const v = (max * k) / 4,
+            y = py(v).toFixed(1);
+          grade +=
+            `<line x1="${pl}" y1="${y}" x2="${W - pr}" y2="${y}" stroke="#E3EAE6" stroke-dasharray="3 4"/>` +
+            `<text x="${pl - 8}" y="${(py(v) + 3.5).toFixed(1)}" text-anchor="end" font-size="10" fill="#8CA099">${fmtCompacto(v)}</text>`;
+        }
+        dias.forEach((d, i) => {
+          if (i % 7 === 1 || i === 29)
+            eixoX += `<text x="${px(i).toFixed(1)}" y="${H - 8}" text-anchor="middle" font-size="10" fill="#8CA099">${d.rotulo}</text>`;
+        });
+        const pts = dias
+          .map((d, i) => px(i).toFixed(1) + "," + py(d.total).toFixed(1))
+          .join(" ");
+        const yBase = (H - pb).toFixed(1);
+        const bolhas = dias
+          .map(
+            (d, i) =>
+              `<circle cx="${px(i).toFixed(1)}" cy="${py(d.total).toFixed(1)}" r="2.6" fill="#059669"><title>${d.rotulo} — ${fmtBRL.format(d.total)}</title></circle>`,
+          )
+          .join("");
+        document.getElementById("graficoLinha").innerHTML =
+          `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Gráfico de linha: vendas diárias dos últimos 30 dias">
+      <defs><linearGradient id="gradArea" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#059669" stop-opacity=".26"/><stop offset="1" stop-color="#059669" stop-opacity="0"/>
+      </linearGradient></defs>
+      ${grade}${eixoX}
+      <polygon points="${pl},${yBase} ${pts} ${W - pr},${yBase}" fill="url(#gradArea)"/>
+      <polyline points="${pts}" fill="none" stroke="#059669" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/>
+      ${bolhas}
+    </svg>`;
+        /* donut — formas de pagamento */
+        const cont = { pix: 0, cartao3x: 0, boleto: 0 };
+        for (const p of estado.pedidos)
+          cont[p.pagamento] = (cont[p.pagamento] || 0) + 1;
+        const totalPg = estado.pedidos.length || 1;
+        const cores = {
+          pix: "#0D9488",
+          cartao3x: "#064E3B",
+          boleto: "#94A3B8",
+        };
+        const cx = 80,
+          cy = 80,
+          r = 58;
+        let ang = -Math.PI / 2,
+          arcos = "";
+        for (const k of ["pix", "cartao3x", "boleto"]) {
+          if (!cont[k]) continue;
+          const varre = (cont[k] / totalPg) * Math.PI * 2;
+          const a0 = ang + 0.03,
+            a1 = ang + varre - 0.03;
+          if (a1 > a0) {
+            const p0 = [cx + r * Math.cos(a0), cy + r * Math.sin(a0)];
+            const p1 = [cx + r * Math.cos(a1), cy + r * Math.sin(a1)];
+            arcos += `<path d="M ${p0[0].toFixed(1)} ${p0[1].toFixed(1)} A ${r} ${r} 0 ${a1 - a0 > Math.PI ? 1 : 0} 1 ${p1[0].toFixed(1)} ${p1[1].toFixed(1)}" fill="none" stroke="${cores[k]}" stroke-width="22" stroke-linecap="butt"/>`;
+          }
+          ang += varre;
+        }
+        const pixPct = Math.round((100 * cont.pix) / totalPg);
+        document.getElementById("graficoDonut").innerHTML =
+          `<svg viewBox="0 0 160 160" role="img" aria-label="Gráfico de rosca: participação das formas de pagamento" style="max-width:190px;margin:0 auto">
+      ${arcos}
+      <text x="80" y="78" text-anchor="middle" font-size="24" font-weight="800" font-family="Plus Jakarta Sans,sans-serif" fill="#12241E">${pixPct}%</text>
+      <text x="80" y="96" text-anchor="middle" font-size="10.5" fill="#5B6E67">via PIX</text>
+    </svg>`;
+        document.getElementById("legendaDonut").innerHTML = [
+          "pix",
+          "cartao3x",
+          "boleto",
+        ]
+          .map(
+            (k) =>
+              `<div><i style="background:${cores[k]}"></i>${PAGAMENTOS[k]}<span class="pct">${Math.round((100 * cont[k]) / totalPg)}% · ${cont[k]} ped.</span></div>`,
+          )
+          .join("");
+      }
+
+      /* ===== QR fictício determinístico ===== */
+      function qrSvg(n) {
+        const r = mulberry32(n * 7919);
+        const N = 13,
+          cs = 88 / N;
+        let cels = "";
+        for (let y = 0; y < N; y++)
+          for (let x = 0; x < N; x++) {
+            const canto =
+              (x < 4 && y < 4) ||
+              (x >= N - 4 && y < 4) ||
+              (x < 4 && y >= N - 4);
+            if (!canto && r() < 0.45)
+              cels += `<rect x="${(x * cs).toFixed(1)}" y="${(y * cs).toFixed(1)}" width="${cs.toFixed(1)}" height="${cs.toFixed(1)}" fill="#0B3B2E"/>`;
+          }
+        const olho = (ox, oy) =>
+          `<rect x="${ox}" y="${oy}" width="${(cs * 4 - 3).toFixed(1)}" height="${(cs * 4 - 3).toFixed(1)}" fill="none" stroke="#0B3B2E" stroke-width="2.6"/>` +
+          `<rect x="${(ox + cs).toFixed(1)}" y="${(oy + cs).toFixed(1)}" width="${(cs * 2 - 3).toFixed(1)}" height="${(cs * 2 - 3).toFixed(1)}" fill="#0B3B2E"/>`;
+        return `<svg viewBox="0 0 88 88" width="100%" height="100%" aria-hidden="true">${cels}${olho(1.5, 1.5)}${olho(88 - cs * 4 + 1.5, 1.5)}${olho(1.5, 88 - cs * 4 + 1.5)}</svg>`;
+      }
+
+      /* ===== render: detalhe ===== */
+      function renderDetalhe() {
+        const vg = document.getElementById("vistaGeral");
+        const vp = document.getElementById("vistaPedido");
+        const p = selecionadoId ? porId(selecionadoId) : null;
+        if (!p) {
+          selecionadoId = null;
+          vg.hidden = false;
+          vp.hidden = true;
+          document.body.classList.remove("detalhe-aberto");
+          return;
+        }
+        vg.hidden = true;
+        vp.hidden = false;
+        document.body.classList.add("detalhe-aberto");
+        const st = STATUS[p.status],
+          tot = calcTotais(p);
+        const acoes = [];
+        if (p.status === "aguardando")
+          acoes.push(
+            `<button type="button" class="btn-primario" data-avancar="pago">Confirmar pagamento</button>`,
+          );
+        if (p.status === "pago") {
+          acoes.push(
+            `<button type="button" class="btn-primario" data-avancar="separacao">Iniciar separação</button>`,
+          );
+          acoes.push(
+            `<button type="button" class="btn-escuro" data-avancar="enviado">Marcar como Enviado</button>`,
+          );
+        }
+        if (p.status === "separacao")
+          acoes.push(
+            `<button type="button" class="btn-primario" data-avancar="enviado">Marcar como Enviado</button>`,
+          );
+        if (p.status === "enviado")
+          acoes.push(
+            `<button type="button" class="btn-primario" data-avancar="entregue">Confirmar entrega</button>`,
+          );
+        acoes.push(
+          `<button type="button" class="btn-escuro" data-det-editar>Editar</button>`,
+        );
+        if (!["cancelado", "vencido", "entregue"].includes(p.status))
+          acoes.push(
+            `<button type="button" class="btn-escuro perigo" data-avancar="cancelado">Cancelar pedido</button>`,
+          );
+        acoes.push(
+          `<button type="button" class="btn-escuro perigo" data-det-excluir>Excluir</button>`,
+        );
+        const pixCard =
+          p.status === "aguardando" && p.pagamento === "pix" && p.pixExpira
+            ? `
+    <div class="cartao pix-cartao">
+      <div class="pix-qr">${qrSvg(p.numero)}</div>
+      <div class="pix-info">
+        <div class="rot">QR Code PIX aguardando pagamento</div>
+        <div class="pix-cd" data-cd="${p.id}" data-cdpix>${fmtCd(Math.max(0, p.pixExpira - Date.now()))}</div>
+        <div class="sub">O cliente tem até <strong>${new Date(p.pixExpira).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}</strong> para pagar. Se expirar, o pedido vence e o estoque volta ao catálogo automaticamente.</div>
+        <div class="pix-barra"><i data-cdbar="${p.id}" style="width:${Math.min(100, ((p.pixExpira - Date.now()) / PIX_JANELA_MS) * 100).toFixed(1)}%"></i></div>
+      </div>
+    </div>`
+            : "";
+        const boletoNota =
+          p.status === "aguardando" && p.pagamento === "boleto"
+            ? `<div class="cartao"><h3>Boleto emitido</h3><p style="font-size:13px;color:var(--tinta-2);line-height:1.5">Aguardando compensação bancária — vence em até 3 dias úteis após a emissão.</p></div>`
+            : "";
+        const linhasItens = p.itens
+          .map(
+            (it) =>
+              `<tr><td>${esc(it.nome)}<span class="sku">${esc(it.sku)}</span></td><td class="vlr">${it.qtd}</td><td class="vlr">${fmtBRL.format(it.valor)}</td><td class="vlr">${fmtBRL.format(it.valor * it.qtd)}</td></tr>`,
+          )
+          .join("");
+        const tl = [...p.timeline]
+          .reverse()
+          .map(
+            (ev) =>
+              `<li><div class="tl-tit">${esc(ev.t)}</div><div class="tl-hora">${fmtQuando(ev.quando)}</div>${ev.nota ? `<div class="tl-nota">${esc(ev.nota)}</div>` : ""}</li>`,
+          )
+          .join("");
+        vp.innerHTML = `
+    <button type="button" class="btn-voltar" id="btnVoltar">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg> Voltar à lista
+    </button>
+    <div class="det-cab">
+      <div class="det-cab-linha1">
+        <span class="det-num">Pedido #${p.numero}</span>
+        <span class="badge ${st.cls}">${st.label}</span>
+      </div>
+      <div class="det-cab-linha2">
+        <div>
+          <div class="det-cliente">${esc(p.cliente.nome)}</div>
+          <div class="det-meta">CPF ${esc(p.cliente.cpf)} · criado ${fmtQuando(p.criadoEm)}</div>
+        </div>
+        <div>
+          <div class="det-total-rot">Total do pedido</div>
+          <div class="det-total-num">${fmtBRL.format(tot.total)}</div>
+        </div>
+      </div>
+      <div class="det-acoes">${acoes.join("")}</div>
+    </div>
+    ${pixCard}${boletoNota}
+    <div class="cartao">
+      <h3>Itens do pedido</h3>
+      <div class="tabela-wrap">
+        <table>
+          <thead><tr><th scope="col">Produto</th><th scope="col" class="vlr">Qtd</th><th scope="col" class="vlr">Valor unit.</th><th scope="col" class="vlr">Subtotal</th></tr></thead>
+          <tbody>${linhasItens}</tbody>
+        </table>
+      </div>
+      <div class="totais">
+        <div><span>Subtotal</span><span>${fmtBRL.format(tot.subtotal)}</span></div>
+        <div><span>Frete · ${esc(p.transportadora)}</span><span>${fmtBRL.format(p.frete)}</span></div>
+        ${p.cupom ? `<div class="desc"><span>Cupom ${esc(p.cupom.codigo)}</span><span>− ${fmtBRL.format(tot.desconto)}</span></div>` : ""}
+        <div class="tot-final"><span>Total</span><span>${fmtBRL.format(tot.total)}</span></div>
+      </div>
+    </div>
+    <div class="cartao">
+      <h3>Entrega e pagamento</h3>
+      <div class="info-grid">
+        <div class="info-bloco"><div class="rot">Pagamento</div><div class="val"><span class="chip-pg${p.pagamento === "pix" ? " pg-pix" : ""}">${PAGAMENTOS[p.pagamento]}</span></div></div>
+        <div class="info-bloco"><div class="rot">Transportadora</div><div class="val">${esc(p.transportadora)}</div></div>
+        <div class="info-bloco"><div class="rot">Rastreio</div><div class="val">${p.rastreio ? `<span class="rastreio-cod">${esc(p.rastreio)}</span>` : "—"}</div></div>
+        <div class="info-bloco"><div class="rot">Endereço</div><div class="val">${esc(p.endereco.rua)}<br>${esc(p.endereco.cidade)}/${esc(p.endereco.uf)} · CEP ${esc(p.endereco.cep)}</div></div>
+      </div>
+    </div>
+    <div class="cartao">
+      <h3>Linha do tempo</h3>
+      <ul class="timeline">${tl}</ul>
+    </div>`;
+      }
+
+      function renderTudo() {
+        renderKPIs();
+        renderAbas();
+        renderLista();
+        renderDetalhe();
+        renderGraficos();
+      }
+
+      /* ===== transições de status ===== */
+      function mudarStatus(p, novo) {
+        p.status = novo;
+        if (novo === "pago") {
+          p.pixExpira = null;
+          addEvento(
+            p,
+            "Pagamento confirmado",
+            "Confirmação automática do provedor (" +
+              PAGAMENTOS[p.pagamento] +
+              ").",
+          );
+          toast(
+            `<strong>#${p.numero} pago</strong> — pedido entrou na fila "Prontos para enviar".`,
+          );
+        } else if (novo === "separacao") {
+          addEvento(
+            p,
+            "Em separação",
+            "Pedido entrou na fila de picking do estoque.",
+          );
+          toast(`<strong>#${p.numero}</strong> em separação.`);
+        } else if (novo === "enviado") {
+          if (!p.rastreio) p.rastreio = gerarRastreio();
+          addEvento(
+            p,
+            "Enviado",
+            p.transportadora +
+              " · rastreio " +
+              p.rastreio +
+              ". Cliente avisado no WhatsApp.",
+          );
+          toast(
+            `<strong>WhatsApp enviado</strong> para ${esc(p.cliente.nome)}: "Seu pedido #${p.numero} saiu para entrega — rastreio ${esc(p.rastreio)}."`,
+            "zap",
+          );
+        } else if (novo === "entregue") {
+          addEvento(p, "Entregue", "Entrega confirmada pela transportadora.");
+          toast(`<strong>#${p.numero} entregue.</strong> Pedido concluído.`);
+        } else if (novo === "cancelado") {
+          p.pixExpira = null;
+          addEvento(
+            p,
+            "Cancelado",
+            "Cancelado pela operação. Reembolso via " +
+              PAGAMENTOS[p.pagamento] +
+              ".",
+          );
+          toast(
+            `<strong>#${p.numero} cancelado.</strong> Estoque devolvido ao catálogo.`,
+            "alerta",
+          );
+        } else if (novo === "vencido") {
+          p.pixExpira = null;
+          addEvento(
+            p,
+            "PIX expirado",
+            "Estoque devolvido ao catálogo automaticamente.",
+          );
+        }
+        salvarDados(estado);
+        renderTudo();
+      }
+      function excluirPedido(id) {
+        const p = porId(id);
+        estado.pedidos = estado.pedidos.filter((x) => x.id !== id);
+        if (selecionadoId === id) selecionadoId = null;
+        salvarDados(estado);
+        renderTudo();
+        if (p) toast(`Pedido <strong>#${p.numero}</strong> excluído.`);
+      }
+      function selecionar(id) {
+        selecionadoId = id;
+        renderLista();
+        renderDetalhe();
+      }
+
+      /* ===== countdown PIX (1s) ===== */
+      setInterval(() => {
+        const agora = Date.now();
+        let venceu = false;
+        for (const p of estado.pedidos) {
+          if (
+            p.status === "aguardando" &&
+            p.pagamento === "pix" &&
+            p.pixExpira &&
+            p.pixExpira - agora <= 0
+          ) {
+            mudarStatus(p, "vencido");
+            toast(
+              `<strong>#${p.numero} venceu</strong> — PIX não pago no prazo. Estoque devolvido.`,
+              "alerta",
+            );
+            venceu = true;
+          }
+        }
+        if (venceu) return;
+        document.querySelectorAll("[data-cd]").forEach((el) => {
+          const p = porId(el.getAttribute("data-cd"));
+          if (!p || !p.pixExpira) return;
+          const rem = Math.max(0, p.pixExpira - agora);
+          el.textContent = fmtCd(rem);
+          el.classList.toggle("critico", rem < 3e5);
+        });
+        document.querySelectorAll("[data-cdbar]").forEach((el) => {
+          const p = porId(el.getAttribute("data-cdbar"));
+          if (!p || !p.pixExpira) return;
+          const rem = Math.max(0, p.pixExpira - agora);
+          el.style.width =
+            Math.min(100, (rem / PIX_JANELA_MS) * 100).toFixed(1) + "%";
+          el.classList.toggle("critico", rem < 3e5);
+        });
+      }, 1000);
+
+      /* ===== modal ===== */
+      const modalFundo = document.getElementById("modalFundo");
+      function preencherSelects() {
+        document.getElementById("fCidade").innerHTML = CIDADES.map(
+          (c, i) =>
+            `<option value="${i}">${esc(c[0])}/${c[1]} · ${c[2]}</option>`,
+        ).join("");
+        document.getElementById("fStatus").innerHTML = Object.keys(STATUS)
+          .map((k) => `<option value="${k}">${STATUS[k].label}</option>`)
+          .join("");
+      }
+      function renderItensForm() {
+        const opcoes = (sel) =>
+          CATALOGO.map(
+            (c) =>
+              `<option value="${c[0]}"${c[0] === sel ? " selected" : ""}>${esc(c[1])} — ${fmtBRL.format(c[2])}</option>`,
+          ).join("");
+        document.getElementById("itensForm").innerHTML = linhasForm
+          .map(
+            (l, i) => `
+    <div class="item-form">
+      <select data-lsku="${i}" aria-label="Produto do item ${i + 1}">${opcoes(l.sku)}</select>
+      <input type="number" min="1" step="1" value="${l.qtd}" data-lqtd="${i}" aria-label="Quantidade do item ${i + 1}" />
+      <button type="button" class="btn-icone perigo" data-lrm="${i}" aria-label="Remover item ${i + 1}" title="Remover">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+    </div>`,
+          )
+          .join("");
+      }
+      function abrirModal(id) {
+        editandoId = id || null;
+        abridorModal = document.activeElement;
+        const p = id ? porId(id) : null;
+        document.getElementById("modalTitulo").textContent = p
+          ? "Editar pedido #" + p.numero
+          : "Criar pedido manual";
+        document.getElementById("modalSub").textContent = p
+          ? "Ajuste os dados ou mova o status — cada mudança vira um evento na linha do tempo."
+          : "Pedido criado pela operação — telefone, WhatsApp ou balcão.";
+        document.getElementById("erroForm").hidden = true;
+        document.getElementById("campoStatus").hidden = !p;
+        document.getElementById("fNome").value = p ? p.cliente.nome : "";
+        document.getElementById("fCpf").value = p ? p.cliente.cpf : "";
+        document.getElementById("fPagamento").value = p ? p.pagamento : "pix";
+        document.getElementById("fTransp").value = p ? p.transportadora : "PAC";
+        document.getElementById("fFrete").value = p ? p.frete : "19.90";
+        document.getElementById("fEndereco").value = p ? p.endereco.rua : "";
+        document.getElementById("fCupom").value =
+          p && p.cupom ? p.cupom.codigo : "";
+        if (p) document.getElementById("fStatus").value = p.status;
+        const idx = p
+          ? Math.max(
+              0,
+              CIDADES.findIndex(
+                (c) => c[0] === p.endereco.cidade && c[2] === p.endereco.cep,
+              ),
+            )
+          : 0;
+        document.getElementById("fCidade").value = String(idx);
+        linhasForm = p
+          ? p.itens.map((it) => ({ sku: it.sku, qtd: it.qtd }))
+          : [{ sku: CATALOGO[0][0], qtd: 1 }];
+        renderItensForm();
+        modalFundo.hidden = false;
+        document.getElementById("fNome").focus();
+      }
+      function fecharModal() {
+        modalFundo.hidden = true;
+        if (abridorModal && document.contains(abridorModal))
+          abridorModal.focus();
+        abridorModal = null;
+      }
+      function mascararCpf(v) {
+        const d = v.replace(/\D/g, "");
+        if (d.length >= 9)
+          return "***." + d.slice(3, 6) + "." + d.slice(6, 9) + "-**";
+        return v.trim() ? esc(v.trim()).slice(0, 14) : "***.***.***-**";
+      }
+      document
+        .getElementById("formRegistro")
+        .addEventListener("submit", (ev) => {
+          ev.preventDefault();
+          const nome = document.getElementById("fNome").value.trim();
+          const linhas = linhasForm.filter((l) => l.sku && Number(l.qtd) >= 1);
+          const erro = document.getElementById("erroForm");
+          if (!nome || !linhas.length) {
+            erro.textContent =
+              "Informe o nome do cliente e pelo menos um item com quantidade válida.";
+            erro.hidden = false;
+            return;
+          }
+          const codCupom = document
+            .getElementById("fCupom")
+            .value.trim()
+            .toUpperCase();
+          let cupom = null;
+          if (codCupom) {
+            const achado = CUPONS.find((c) => c[0] === codCupom);
+            if (!achado) {
+              erro.textContent =
+                "Cupom inválido. Cupons ativos: BEMVINDA10, MARE15 e FRETEGRATIS.";
+              erro.hidden = false;
+              return;
+            }
+            cupom = { codigo: achado[0], pct: achado[1] };
+          }
+          erro.hidden = true;
+          const itens = linhas.map((l) => {
+            const c = CATALOGO.find((x) => x[0] === l.sku);
+            return {
+              sku: c[0],
+              nome: c[1],
+              valor: c[2],
+              qtd: Math.floor(Number(l.qtd)),
+            };
+          });
+          const cid =
+            CIDADES[Number(document.getElementById("fCidade").value)] ||
+            CIDADES[0];
+          const pagamento = document.getElementById("fPagamento").value;
+          const base = {
+            cliente: {
+              nome,
+              cpf: mascararCpf(document.getElementById("fCpf").value),
+            },
+            itens,
+            frete: Math.max(
+              0,
+              Number(document.getElementById("fFrete").value) || 0,
+            ),
+            pagamento,
+            transportadora: document.getElementById("fTransp").value,
+            endereco: {
+              rua:
+                document.getElementById("fEndereco").value.trim() ||
+                "Retirada em loja",
+              cidade: cid[0],
+              uf: cid[1],
+              cep: cid[2],
+            },
+            cupom,
+          };
+          if (editandoId) {
+            const p = porId(editandoId);
+            if (p) {
+              Object.assign(p, base);
+              const novoStatus = document.getElementById("fStatus").value;
+              salvarDados(estado);
+              fecharModal();
+              selecionadoId = p.id;
+              if (novoStatus !== p.status) {
+                if (
+                  novoStatus === "aguardando" &&
+                  p.pagamento === "pix" &&
+                  !p.pixExpira
+                )
+                  p.pixExpira = Date.now() + PIX_JANELA_MS;
+                mudarStatus(p, novoStatus);
+              } else {
+                renderTudo();
+                toast(`Pedido <strong>#${p.numero}</strong> atualizado.`);
+              }
+            }
+          } else {
+            const numero = estado.seq++;
+            const novo = {
+              id: "p" + numero + "-" + Date.now().toString(36),
+              numero,
+              criadoEm: new Date().toISOString(),
+              status: "aguardando",
+              rastreio: null,
+              pixExpira:
+                pagamento === "pix" ? Date.now() + PIX_JANELA_MS : null,
+              timeline: [
+                {
+                  t: "Pedido criado",
+                  quando: new Date().toISOString(),
+                  nota: "Pedido manual criado pela operação.",
+                },
+              ],
+              ...base,
+            };
+            estado.pedidos.push(novo);
+            salvarDados(estado);
+            fecharModal();
+            selecionadoId = novo.id;
+            renderTudo();
+            toast(
+              `Pedido <strong>#${numero}</strong> criado${pagamento === "pix" ? " — QR PIX válido por 30 min" : ""}.`,
+            );
+          }
+        });
+
+      /* ===== eventos globais ===== */
+      document.getElementById("btnEntrar").addEventListener("click", () => {
+        document.getElementById("telaLogin").hidden = true;
+        document.getElementById("app").hidden = false;
+        renderTudo();
+        document.getElementById("campoBusca").focus();
+      });
+      document
+        .getElementById("btnNovo")
+        .addEventListener("click", () => abrirModal(null));
+      document.getElementById("btnRestaurar").addEventListener("click", () => {
+        selecionadoId = null;
+        restaurarDemo();
+        toast("Demonstração restaurada para os dados originais.");
+      });
+      document.getElementById("campoBusca").addEventListener("input", (ev) => {
+        filtroBusca = ev.target.value;
+        renderLista();
+      });
+      document.getElementById("abas").addEventListener("click", (ev) => {
+        const b = ev.target.closest("[data-aba]");
+        if (!b) return;
+        filtroAba = b.getAttribute("data-aba");
+        renderAbas();
+        renderLista();
+      });
+      document.getElementById("lista").addEventListener("click", (ev) => {
+        const ed = ev.target.closest("[data-editar]");
+        if (ed) {
+          abrirModal(ed.getAttribute("data-editar"));
+          return;
+        }
+        const ex = ev.target.closest("[data-excluir]");
+        if (ex) {
+          excluirPedido(ex.getAttribute("data-excluir"));
+          return;
+        }
+        const item = ev.target.closest("[data-item]");
+        if (item) selecionar(item.getAttribute("data-id"));
+      });
+      document.getElementById("lista").addEventListener("keydown", (ev) => {
+        if (
+          (ev.key === "Enter" || ev.key === " ") &&
+          ev.target.matches("[data-item]")
+        ) {
+          ev.preventDefault();
+          selecionar(ev.target.getAttribute("data-id"));
+        }
+      });
+      document
+        .getElementById("painelDetalhe")
+        .addEventListener("click", (ev) => {
+          const p = selecionadoId ? porId(selecionadoId) : null;
+          if (ev.target.closest("#btnVoltar")) {
+            selecionadoId = null;
+            renderLista();
+            renderDetalhe();
+            return;
+          }
+          if (!p) return;
+          const av = ev.target.closest("[data-avancar]");
+          if (av) {
+            mudarStatus(p, av.getAttribute("data-avancar"));
+            return;
+          }
+          if (ev.target.closest("[data-det-editar]")) {
+            abrirModal(p.id);
+            return;
+          }
+          if (ev.target.closest("[data-det-excluir]")) excluirPedido(p.id);
+        });
+      document
+        .getElementById("btnCancelarModal")
+        .addEventListener("click", fecharModal);
+      modalFundo.addEventListener("click", (ev) => {
+        if (ev.target === modalFundo) fecharModal();
+      });
+      document.addEventListener("keydown", (ev) => {
+        if (ev.key === "Escape" && !modalFundo.hidden) fecharModal();
+      });
+      document.getElementById("btnAddItem").addEventListener("click", () => {
+        linhasForm.push({
+          sku: CATALOGO[Math.min(linhasForm.length, CATALOGO.length - 1)][0],
+          qtd: 1,
+        });
+        renderItensForm();
+      });
+      document.getElementById("itensForm").addEventListener("change", (ev) => {
+        const s = ev.target.closest("[data-lsku]");
+        if (s) linhasForm[Number(s.getAttribute("data-lsku"))].sku = s.value;
+        const q = ev.target.closest("[data-lqtd]");
+        if (q)
+          linhasForm[Number(q.getAttribute("data-lqtd"))].qtd = Number(q.value);
+      });
+      document.getElementById("itensForm").addEventListener("click", (ev) => {
+        const rm = ev.target.closest("[data-lrm]");
+        if (!rm) return;
+        linhasForm.splice(Number(rm.getAttribute("data-lrm")), 1);
+        renderItensForm();
+      });
+
+      /* ===== init ===== */
+      preencherSelects();
+      renderTudo();
+    </script>
+  </body>
+</html>

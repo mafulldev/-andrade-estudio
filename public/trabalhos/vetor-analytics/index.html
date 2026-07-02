@@ -1,0 +1,2602 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>VETOR — Analytics de assinaturas · Conceito funcional ANDRADE</title>
+    <meta
+      name="description"
+      content="BI de receita recorrente para SaaS: MRR, churn, waterfall, cohort e cobrança de inadimplentes. Demonstração funcional com dados fictícios."
+    />
+    <meta property="og:title" content="VETOR — Analytics de assinaturas" />
+    <meta
+      property="og:description"
+      content="BI de receita recorrente para SaaS: MRR, churn, waterfall, cohort e cobrança de inadimplentes. Demonstração funcional."
+    />
+    <meta
+      property="og:image"
+      content="https://www.andradestudio.dev.br/opengraph-image"
+    />
+    <meta property="og:type" content="website" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%234F46E5'/%3E%3Cpath d='M8 10h5l3 6 3-6h5l-8 13z' fill='white'/%3E%3C/svg%3E"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --indigo: #4f46e5;
+        --indigo-escuro: #3730a3;
+        --indigo-claro: #eef2ff;
+        --fundo: #f7f8fa;
+        --lateral: #0e1526;
+        --lateral-2: #161f35;
+        --texto: #111827;
+        --texto-2: #6b7280;
+        --texto-3: #9ca3af;
+        --borda: #e5e7eb;
+        --card: #ffffff;
+        --pos: #047857;
+        --pos-claro: #ecfdf5;
+        --neg: #b91c1c;
+        --neg-claro: #fef2f2;
+        --ambar: #b45309;
+        --ambar-claro: #fffbeb;
+        --raio: 12px;
+        --sombra:
+          0 1px 2px rgba(17, 24, 39, 0.05), 0 4px 16px rgba(17, 24, 39, 0.06);
+        --ui: "Inter", system-ui, sans-serif;
+        --display: "Sora", "Inter", sans-serif;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        font-family: var(--ui);
+        background: var(--fundo);
+        color: var(--texto);
+        font-size: 14px;
+        line-height: 1.5;
+        -webkit-font-smoothing: antialiased;
+      }
+      button {
+        font: inherit;
+        cursor: pointer;
+        border: 0;
+        background: none;
+        color: inherit;
+      }
+      input,
+      select,
+      textarea {
+        font: inherit;
+        color: var(--texto);
+      }
+      :focus-visible {
+        outline: 2px solid var(--indigo);
+        outline-offset: 2px;
+        border-radius: 4px;
+      }
+      .sem-motion *,
+      .sem-motion *::before,
+      .sem-motion *::after {
+        transition: none !important;
+        animation: none !important;
+      }
+      .num {
+        font-variant-numeric: tabular-nums;
+      }
+      .oculto {
+        display: none !important;
+      }
+
+      /* ===== Login ===== */
+      .login-tela {
+        position: fixed;
+        inset: 0;
+        z-index: 60;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        background:
+          radial-gradient(
+            1100px 600px at 75% -10%,
+            rgba(79, 70, 229, 0.35),
+            transparent 60%
+          ),
+          linear-gradient(160deg, #0e1526 0%, #111b33 55%, #0e1526 100%);
+      }
+      .login-card {
+        width: 100%;
+        max-width: 400px;
+        background: var(--card);
+        border-radius: 16px;
+        padding: 36px 32px 30px;
+        box-shadow: 0 24px 70px rgba(0, 0, 0, 0.45);
+        animation: subir 0.45s ease both;
+      }
+      @keyframes subir {
+        from {
+          opacity: 0;
+          transform: translateY(14px);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+      .login-logo {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        margin-bottom: 8px;
+      }
+      .login-logo svg {
+        flex: none;
+      }
+      .login-logo strong {
+        font-family: var(--display);
+        font-size: 22px;
+        letter-spacing: 0.08em;
+      }
+      .login-sub {
+        color: var(--texto-2);
+        font-size: 13px;
+        margin-bottom: 24px;
+      }
+      .campo {
+        margin-bottom: 14px;
+      }
+      .campo label {
+        display: block;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--texto-2);
+        margin-bottom: 5px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      .campo input,
+      .campo select,
+      .campo textarea {
+        width: 100%;
+        border: 1px solid var(--borda);
+        border-radius: 8px;
+        padding: 9px 12px;
+        background: #fff;
+        transition:
+          border-color 0.18s,
+          box-shadow 0.18s;
+      }
+      .campo input:focus,
+      .campo select:focus,
+      .campo textarea:focus {
+        border-color: var(--indigo);
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.14);
+        outline: none;
+      }
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        font-weight: 600;
+        border-radius: 8px;
+        padding: 9px 16px;
+        transition:
+          background 0.18s,
+          transform 0.18s,
+          box-shadow 0.18s;
+        white-space: nowrap;
+      }
+      .btn:active {
+        transform: translateY(1px);
+      }
+      .btn-primario {
+        background: var(--indigo);
+        color: #fff;
+        box-shadow: 0 2px 8px rgba(79, 70, 229, 0.35);
+      }
+      .btn-primario:hover {
+        background: var(--indigo-escuro);
+      }
+      .btn-fantasma {
+        border: 1px solid var(--borda);
+        background: var(--card);
+        color: var(--texto);
+      }
+      .btn-fantasma:hover {
+        border-color: var(--texto-3);
+        background: var(--fundo);
+      }
+      .btn-perigo {
+        background: var(--neg-claro);
+        color: var(--neg);
+      }
+      .btn-perigo:hover {
+        background: #fce0e0;
+      }
+      .login-card .btn {
+        width: 100%;
+        padding: 11px;
+        margin-top: 6px;
+      }
+      .login-nota {
+        margin-top: 18px;
+        font-size: 12px;
+        color: var(--texto-3);
+        text-align: center;
+      }
+
+      /* ===== Estrutura ===== */
+      .app {
+        display: flex;
+        min-height: 100vh;
+      }
+      .sidebar {
+        width: 232px;
+        flex: none;
+        background: var(--lateral);
+        color: #c7cddc;
+        display: flex;
+        flex-direction: column;
+        position: sticky;
+        top: 0;
+        height: 100vh;
+      }
+      .sidebar-logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 20px 20px 18px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+      }
+      .sidebar-logo strong {
+        font-family: var(--display);
+        font-size: 17px;
+        letter-spacing: 0.1em;
+        color: #fff;
+      }
+      .sidebar-logo span {
+        font-size: 10px;
+        color: #7c86a2;
+        display: block;
+        letter-spacing: 0.04em;
+      }
+      .nav {
+        padding: 14px 10px;
+        flex: 1;
+        overflow-y: auto;
+      }
+      .nav-titulo {
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: #66708c;
+        padding: 12px 12px 6px;
+      }
+      .nav a {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #aeb6cb;
+        text-decoration: none;
+        padding: 8px 12px;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 500;
+        transition:
+          background 0.15s,
+          color 0.15s;
+        margin-bottom: 2px;
+      }
+      .nav a svg {
+        flex: none;
+        opacity: 0.75;
+      }
+      .nav a:hover {
+        background: var(--lateral-2);
+        color: #fff;
+      }
+      .nav a.ativo {
+        background: var(--indigo);
+        color: #fff;
+      }
+      .nav a.ativo svg {
+        opacity: 1;
+      }
+      .sidebar-user {
+        border-top: 1px solid rgba(255, 255, 255, 0.07);
+        padding: 14px 16px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--indigo), #7c6ff0);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 12px;
+        color: #fff;
+        flex: none;
+      }
+      .sidebar-user b {
+        color: #fff;
+        font-size: 12.5px;
+        font-weight: 600;
+        display: block;
+      }
+      .sidebar-user span {
+        font-size: 11px;
+        color: #7c86a2;
+      }
+
+      .principal {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        padding-bottom: 64px;
+      }
+      .topo {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        background: rgba(247, 248, 250, 0.92);
+        backdrop-filter: blur(8px);
+        border-bottom: 1px solid var(--borda);
+        padding: 14px 28px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        flex-wrap: wrap;
+      }
+      .topo h1 {
+        font-family: var(--display);
+        font-size: 19px;
+        font-weight: 700;
+      }
+      .topo .periodo {
+        font-size: 12.5px;
+        color: var(--texto-2);
+        background: var(--card);
+        border: 1px solid var(--borda);
+        border-radius: 99px;
+        padding: 4px 12px;
+      }
+      .topo-acoes {
+        margin-left: auto;
+        display: flex;
+        gap: 9px;
+      }
+      .hamburger {
+        display: none;
+        width: 38px;
+        height: 38px;
+        border: 1px solid var(--borda);
+        border-radius: 8px;
+        background: var(--card);
+        align-items: center;
+        justify-content: center;
+      }
+      .conteudo {
+        padding: 24px 28px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        max-width: 1320px;
+        width: 100%;
+        margin: 0 auto;
+      }
+
+      /* ===== KPIs ===== */
+      .kpis {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 14px;
+      }
+      .kpi {
+        background: var(--card);
+        border: 1px solid var(--borda);
+        border-radius: var(--raio);
+        padding: 16px 18px;
+        box-shadow: var(--sombra);
+        animation: subir 0.4s ease both;
+      }
+      .kpi:nth-child(2) {
+        animation-delay: 0.05s;
+      }
+      .kpi:nth-child(3) {
+        animation-delay: 0.1s;
+      }
+      .kpi:nth-child(4) {
+        animation-delay: 0.15s;
+      }
+      .kpi:nth-child(5) {
+        animation-delay: 0.2s;
+      }
+      .kpi-rotulo {
+        font-size: 11.5px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--texto-2);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .kpi-valor {
+        font-family: var(--display);
+        font-size: 24px;
+        font-weight: 700;
+        margin-top: 6px;
+        letter-spacing: -0.01em;
+      }
+      .kpi-extra {
+        font-size: 12px;
+        color: var(--texto-2);
+        margin-top: 3px;
+      }
+      .delta {
+        display: inline-flex;
+        align-items: center;
+        gap: 3px;
+        font-weight: 600;
+        font-size: 12px;
+        border-radius: 99px;
+        padding: 1px 8px;
+      }
+      .delta.pos {
+        color: var(--pos);
+        background: var(--pos-claro);
+      }
+      .delta.neg {
+        color: var(--neg);
+        background: var(--neg-claro);
+      }
+
+      /* ===== Cards / grades ===== */
+      .card {
+        background: var(--card);
+        border: 1px solid var(--borda);
+        border-radius: var(--raio);
+        box-shadow: var(--sombra);
+      }
+      .card-cab {
+        display: flex;
+        align-items: baseline;
+        gap: 10px;
+        padding: 16px 20px 0;
+        flex-wrap: wrap;
+      }
+      .card-cab h2 {
+        font-family: var(--display);
+        font-size: 15px;
+        font-weight: 700;
+      }
+      .card-cab .sub {
+        font-size: 12px;
+        color: var(--texto-2);
+      }
+      .card-corpo {
+        padding: 12px 20px 18px;
+      }
+      .grade-2 {
+        display: grid;
+        grid-template-columns: 1.9fr 1.1fr;
+        gap: 20px;
+      }
+      svg.grafico {
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+      .legenda {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+        font-size: 12px;
+        color: var(--texto-2);
+        padding-top: 8px;
+      }
+      .legenda i {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        border-radius: 3px;
+        margin-right: 5px;
+        vertical-align: -1px;
+      }
+
+      /* ===== Inadimplentes ===== */
+      .inad-total {
+        padding: 14px 20px;
+        border-bottom: 1px solid var(--borda);
+        display: flex;
+        align-items: baseline;
+        gap: 10px;
+      }
+      .inad-total strong {
+        font-family: var(--display);
+        font-size: 22px;
+        color: var(--neg);
+      }
+      .inad-lista {
+        list-style: none;
+        max-height: 298px;
+        overflow-y: auto;
+      }
+      .inad-lista li {
+        padding: 11px 20px;
+        border-bottom: 1px solid var(--fundo);
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+      }
+      .inad-lista li:last-child {
+        border-bottom: 0;
+      }
+      .inad-linha1 {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        align-items: baseline;
+      }
+      .inad-linha1 b {
+        font-size: 13px;
+      }
+      .inad-linha1 .num {
+        font-weight: 600;
+        color: var(--neg);
+      }
+      .inad-meta {
+        font-size: 11.5px;
+        color: var(--texto-2);
+      }
+      .regua {
+        display: flex;
+        gap: 5px;
+        flex-wrap: wrap;
+      }
+      .regua span {
+        font-size: 10.5px;
+        font-weight: 600;
+        border-radius: 5px;
+        padding: 2px 7px;
+        border: 1px dashed var(--borda);
+        color: var(--texto-3);
+      }
+      .regua span.feito {
+        border-style: solid;
+        border-color: transparent;
+        background: var(--ambar-claro);
+        color: var(--ambar);
+      }
+      .regua span.critico {
+        background: var(--neg-claro);
+        color: var(--neg);
+      }
+
+      /* ===== Cohort ===== */
+      .tabela-wrap {
+        overflow-x: auto;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+      }
+      th {
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--texto-2);
+        font-weight: 600;
+        text-align: left;
+        padding: 10px 12px;
+        border-bottom: 1px solid var(--borda);
+        white-space: nowrap;
+      }
+      td {
+        padding: 10px 12px;
+        border-bottom: 1px solid var(--fundo);
+        vertical-align: middle;
+      }
+      tr:last-child td {
+        border-bottom: 0;
+      }
+      .cohort td.cel {
+        text-align: center;
+        font-weight: 600;
+        font-size: 12px;
+        border-radius: 6px;
+        min-width: 58px;
+      }
+      .cohort th.c {
+        text-align: center;
+      }
+      .cohort td:first-child {
+        font-weight: 600;
+        white-space: nowrap;
+      }
+      .cohort .vazio-cel {
+        color: var(--texto-3);
+      }
+
+      /* ===== Tabela de contas ===== */
+      .filtros {
+        display: flex;
+        gap: 10px;
+        padding: 14px 20px;
+        border-bottom: 1px solid var(--borda);
+        flex-wrap: wrap;
+        align-items: center;
+      }
+      .filtros input,
+      .filtros select {
+        border: 1px solid var(--borda);
+        border-radius: 8px;
+        padding: 8px 12px;
+        background: #fff;
+        font-size: 13px;
+      }
+      .filtros input {
+        flex: 1;
+        min-width: 170px;
+      }
+      .filtros input:focus,
+      .filtros select:focus {
+        border-color: var(--indigo);
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.14);
+        outline: none;
+      }
+      .contagem {
+        font-size: 12px;
+        color: var(--texto-2);
+        margin-left: auto;
+        white-space: nowrap;
+      }
+      tbody tr {
+        transition: background 0.15s;
+      }
+      tbody tr:hover {
+        background: #fafbff;
+      }
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 11.5px;
+        font-weight: 600;
+        border-radius: 99px;
+        padding: 2px 9px;
+        white-space: nowrap;
+      }
+      .badge::before {
+        content: "";
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: currentColor;
+      }
+      .badge.ativa {
+        color: var(--pos);
+        background: var(--pos-claro);
+      }
+      .badge.trial {
+        color: var(--indigo);
+        background: var(--indigo-claro);
+      }
+      .badge.inadimplente {
+        color: var(--ambar);
+        background: var(--ambar-claro);
+      }
+      .badge.cancelada {
+        color: var(--texto-2);
+        background: #f3f4f6;
+      }
+      .plano-tag {
+        font-weight: 600;
+        font-size: 12px;
+      }
+      .plano-tag small {
+        display: block;
+        font-weight: 400;
+        color: var(--texto-2);
+        font-size: 11px;
+      }
+      .acoes-item {
+        display: flex;
+        gap: 4px;
+        justify-content: flex-end;
+      }
+      .btn-icone {
+        width: 30px;
+        height: 30px;
+        border-radius: 7px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--texto-2);
+        transition:
+          background 0.15s,
+          color 0.15s;
+      }
+      .btn-icone:hover {
+        background: var(--indigo-claro);
+        color: var(--indigo);
+      }
+      .btn-icone.excluir:hover {
+        background: var(--neg-claro);
+        color: var(--neg);
+      }
+      .estado-vazio {
+        padding: 40px 20px;
+        text-align: center;
+        color: var(--texto-2);
+      }
+      .estado-vazio svg {
+        margin-bottom: 10px;
+      }
+      .estado-vazio b {
+        display: block;
+        color: var(--texto);
+        font-size: 14px;
+        margin-bottom: 3px;
+      }
+
+      /* ===== Modal ===== */
+      .modal-fundo {
+        position: fixed;
+        inset: 0;
+        z-index: 50;
+        background: rgba(14, 21, 38, 0.55);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        animation: aparecer 0.2s ease both;
+      }
+      .modal-fundo[hidden] {
+        display: none;
+      }
+      @keyframes aparecer {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+      .modal-caixa {
+        background: var(--card);
+        border-radius: 14px;
+        width: 100%;
+        max-width: 560px;
+        max-height: 92vh;
+        overflow-y: auto;
+        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
+        animation: subir 0.25s ease both;
+      }
+      .modal-cab {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 18px 22px 0;
+      }
+      .modal-cab h2 {
+        font-family: var(--display);
+        font-size: 16px;
+      }
+      .modal-corpo {
+        padding: 16px 22px 22px;
+      }
+      .form-grade {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px 14px;
+      }
+      .form-grade .campo {
+        margin-bottom: 0;
+      }
+      .form-grade .campo.largo {
+        grid-column: 1/-1;
+      }
+      .form-erro {
+        display: none;
+        background: var(--neg-claro);
+        color: var(--neg);
+        font-size: 12.5px;
+        font-weight: 500;
+        border-radius: 8px;
+        padding: 9px 12px;
+        margin-bottom: 12px;
+      }
+      .form-erro.visivel {
+        display: block;
+      }
+      .modal-acoes {
+        display: flex;
+        justify-content: flex-end;
+        gap: 9px;
+        margin-top: 18px;
+      }
+      input:invalid {
+        box-shadow: none;
+      }
+
+      /* ===== Banner demo ===== */
+      .banner-demo {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 40;
+        background: rgba(14, 21, 38, 0.94);
+        color: #b9c0d4;
+        font-size: 12px;
+        text-align: center;
+        padding: 8px 16px;
+        backdrop-filter: blur(6px);
+      }
+      .banner-demo a {
+        color: #fff;
+        font-weight: 600;
+        text-decoration: underline;
+        text-underline-offset: 2px;
+      }
+
+      /* ===== Responsivo ===== */
+      @media (max-width: 1100px) {
+        .kpis {
+          grid-template-columns: repeat(3, 1fr);
+        }
+        .grade-2 {
+          grid-template-columns: 1fr;
+        }
+      }
+      @media (max-width: 900px) {
+        .sidebar {
+          position: fixed;
+          left: 0;
+          top: 0;
+          bottom: 0;
+          z-index: 55;
+          transform: translateX(-100%);
+          transition: transform 0.25s ease;
+          box-shadow: 14px 0 40px rgba(0, 0, 0, 0.3);
+        }
+        .sidebar.aberta {
+          transform: none;
+        }
+        .hamburger {
+          display: inline-flex;
+        }
+        .topo {
+          padding: 12px 16px;
+        }
+        .conteudo {
+          padding: 18px 16px;
+        }
+        .sombra-mobile {
+          position: fixed;
+          inset: 0;
+          z-index: 54;
+          background: rgba(14, 21, 38, 0.5);
+        }
+      }
+      @media (max-width: 640px) {
+        .kpis {
+          grid-template-columns: 1fr 1fr;
+        }
+        .kpi-valor {
+          font-size: 20px;
+        }
+        .topo h1 {
+          font-size: 16px;
+        }
+        .form-grade {
+          grid-template-columns: 1fr;
+        }
+        /* tabela de contas vira cards */
+        .tabela-contas thead {
+          display: none;
+        }
+        .tabela-contas,
+        .tabela-contas tbody {
+          display: block;
+        }
+        .tabela-contas tr {
+          display: block;
+          border: 1px solid var(--borda);
+          border-radius: 10px;
+          margin: 10px 12px;
+          padding: 6px 2px;
+          background: #fff;
+        }
+        .tabela-contas td {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 12px;
+          border: 0;
+          padding: 6px 12px;
+          text-align: right;
+        }
+        .tabela-contas td::before {
+          content: attr(data-rotulo);
+          font-size: 10.5px;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.06em;
+          color: var(--texto-2);
+          text-align: left;
+        }
+        .tabela-contas td.sem-rotulo::before {
+          content: none;
+        }
+        .tabela-contas .acoes-item {
+          justify-content: flex-end;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Login fake -->
+    <div class="login-tela" id="loginTela">
+      <div class="login-card">
+        <div class="login-logo">
+          <svg width="34" height="34" viewBox="0 0 32 32" aria-hidden="true">
+            <rect width="32" height="32" rx="7" fill="#4F46E5" />
+            <path d="M8 10h5l3 6 3-6h5l-8 13z" fill="#fff" />
+          </svg>
+          <div>
+            <strong>VETOR</strong
+            ><span
+              style="display: block; font-size: 11px; color: var(--texto-2)"
+              >Analytics de assinaturas</span
+            >
+          </div>
+        </div>
+        <p class="login-sub">
+          BI de receita recorrente para o seu SaaS. Entre para explorar a
+          demonstração.
+        </p>
+        <div class="campo">
+          <label for="loginEmail">E-mail</label>
+          <input
+            id="loginEmail"
+            type="email"
+            value="demo@vetor-analytics.com.br"
+            autocomplete="off"
+          />
+        </div>
+        <div class="campo">
+          <label for="loginSenha">Senha</label>
+          <input
+            id="loginSenha"
+            type="password"
+            value="••••••••••"
+            autocomplete="off"
+          />
+        </div>
+        <button
+          type="button"
+          class="btn btn-primario"
+          data-testid="login-entrar"
+          id="btnEntrar"
+        >
+          Entrar na demonstração
+        </button>
+        <p class="login-nota">
+          Demonstração funcional — nenhum dado é enviado a servidor.
+        </p>
+      </div>
+    </div>
+
+    <!-- App -->
+    <div class="app" id="app" hidden>
+      <aside class="sidebar" id="sidebar" aria-label="Navegação principal">
+        <div class="sidebar-logo">
+          <svg width="30" height="30" viewBox="0 0 32 32" aria-hidden="true">
+            <rect width="32" height="32" rx="7" fill="#4F46E5" />
+            <path d="M8 10h5l3 6 3-6h5l-8 13z" fill="#fff" />
+          </svg>
+          <div><strong>VETOR</strong><span>Revenue analytics</span></div>
+        </div>
+        <nav class="nav">
+          <p class="nav-titulo">Análise</p>
+          <a href="#visao" class="ativo"
+            ><svg
+              width="15"
+              height="15"
+              viewBox="0 0 16 16"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                d="M1 9h5v6H1zM6.5 4h5v11h-5zM12 1h3v14h-3z"
+                opacity=".9"
+              /></svg
+            >Visão geral</a
+          >
+          <a href="#grafico-mrr"
+            ><svg
+              width="15"
+              height="15"
+              viewBox="0 0 16 16"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.6"
+              aria-hidden="true"
+            >
+              <path d="M1 13l4-5 3 3 5-7 2 2" /></svg
+            >MRR &amp; crescimento</a
+          >
+          <a href="#cohort"
+            ><svg
+              width="15"
+              height="15"
+              viewBox="0 0 16 16"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <rect x="1" y="1" width="6" height="6" rx="1" />
+              <rect x="9" y="1" width="6" height="6" rx="1" opacity=".6" />
+              <rect x="1" y="9" width="6" height="6" rx="1" opacity=".6" />
+              <rect x="9" y="9" width="6" height="6" rx="1" opacity=".3" /></svg
+            >Cohorts</a
+          >
+          <p class="nav-titulo">Operação</p>
+          <a href="#contas"
+            ><svg
+              width="15"
+              height="15"
+              viewBox="0 0 16 16"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.6"
+              aria-hidden="true"
+            >
+              <circle cx="8" cy="5" r="3" />
+              <path d="M2 14c1-3 4-4 6-4s5 1 6 4" /></svg
+            >Assinaturas</a
+          >
+          <a href="#inadimplentes"
+            ><svg
+              width="15"
+              height="15"
+              viewBox="0 0 16 16"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.6"
+              aria-hidden="true"
+            >
+              <path d="M8 2v7M8 12v2" stroke-linecap="round" />
+              <circle cx="8" cy="8" r="7" /></svg
+            >Cobrança</a
+          >
+          <a href="#visao" aria-disabled="true"
+            ><svg
+              width="15"
+              height="15"
+              viewBox="0 0 16 16"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.6"
+              aria-hidden="true"
+            >
+              <circle cx="8" cy="8" r="2.6" />
+              <path
+                d="M8 1v2.4M8 12.6V15M15 8h-2.4M3.4 8H1M12.9 3.1l-1.7 1.7M4.8 11.2l-1.7 1.7M12.9 12.9l-1.7-1.7M4.8 4.8L3.1 3.1"
+              /></svg
+            >Configurações</a
+          >
+        </nav>
+        <div class="sidebar-user">
+          <span class="avatar" aria-hidden="true">DM</span>
+          <div><b>Demo Master</b><span>Plano Business · admin</span></div>
+        </div>
+      </aside>
+
+      <div class="principal">
+        <header class="topo" id="visao">
+          <button
+            type="button"
+            class="hamburger"
+            id="btnMenu"
+            aria-label="Abrir menu"
+            aria-expanded="false"
+          >
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 18 18"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              aria-hidden="true"
+            >
+              <path d="M2 4h14M2 9h14M2 14h14" />
+            </svg>
+          </button>
+          <h1>Visão geral da receita</h1>
+          <span class="periodo num" id="periodoAtual"></span>
+          <div class="topo-acoes">
+            <button
+              type="button"
+              class="btn btn-fantasma"
+              data-testid="restaurar-demo"
+              id="btnRestaurar"
+            >
+              Restaurar demo
+            </button>
+            <button
+              type="button"
+              class="btn btn-primario"
+              data-testid="novo-registro"
+              id="btnNovo"
+            >
+              + Nova assinatura
+            </button>
+          </div>
+        </header>
+
+        <main class="conteudo">
+          <!-- KPIs -->
+          <section class="kpis" aria-label="Indicadores principais">
+            <div class="kpi">
+              <p class="kpi-rotulo">MRR total</p>
+              <p class="kpi-valor num" data-testid="kpi-total" id="kpiMrr">—</p>
+              <p class="kpi-extra" id="kpiMrrExtra"></p>
+            </div>
+            <div class="kpi">
+              <p class="kpi-rotulo">Variação vs mês anterior</p>
+              <p class="kpi-valor num" id="kpiVar">—</p>
+              <p class="kpi-extra" id="kpiVarExtra"></p>
+            </div>
+            <div class="kpi">
+              <p class="kpi-rotulo">Churn de MRR</p>
+              <p class="kpi-valor num" id="kpiChurn">—</p>
+              <p class="kpi-extra" id="kpiChurnExtra"></p>
+            </div>
+            <div class="kpi">
+              <p class="kpi-rotulo">ARPU</p>
+              <p class="kpi-valor num" id="kpiArpu">—</p>
+              <p class="kpi-extra" id="kpiArpuExtra"></p>
+            </div>
+            <div class="kpi">
+              <p class="kpi-rotulo">LTV : CAC</p>
+              <p class="kpi-valor num" id="kpiLtv">—</p>
+              <p class="kpi-extra">CAC médio de R$ 780</p>
+            </div>
+          </section>
+
+          <!-- Waterfall + Inadimplentes -->
+          <section class="grade-2">
+            <article class="card" id="grafico-waterfall">
+              <div class="card-cab">
+                <h2>Movimentação do MRR no mês</h2>
+                <span class="sub" id="waterfallSub"></span>
+              </div>
+              <div class="card-corpo">
+                <svg
+                  class="grafico"
+                  id="waterfallSvg"
+                  viewBox="0 0 660 300"
+                  role="img"
+                  aria-label="Gráfico waterfall da movimentação de MRR do mês"
+                ></svg>
+                <div class="legenda">
+                  <span
+                    ><i style="background: #3730a3"></i>MRR consolidado</span
+                  >
+                  <span
+                    ><i style="background: #047857"></i>Novo + Expansão</span
+                  >
+                  <span
+                    ><i style="background: #b91c1c"></i>Contração + Churn</span
+                  >
+                </div>
+              </div>
+            </article>
+
+            <article class="card" id="inadimplentes">
+              <div class="card-cab">
+                <h2>Inadimplentes recuperáveis</h2>
+                <span class="sub">régua de cobrança ativa</span>
+              </div>
+              <div class="inad-total">
+                <strong class="num" id="inadTotal">—</strong>
+                <span
+                  class="sub"
+                  id="inadContagem"
+                  style="font-size: 12px; color: var(--texto-2)"
+                ></span>
+              </div>
+              <ul class="inad-lista" id="inadLista"></ul>
+            </article>
+          </section>
+
+          <!-- Linha 12m + Donut -->
+          <section class="grade-2">
+            <article class="card" id="grafico-mrr">
+              <div class="card-cab">
+                <h2>MRR — últimos 12 meses</h2>
+                <span class="sub">receita recorrente mensal consolidada</span>
+              </div>
+              <div class="card-corpo">
+                <svg
+                  class="grafico"
+                  id="linhaSvg"
+                  viewBox="0 0 660 260"
+                  role="img"
+                  aria-label="Gráfico de linha do MRR nos últimos 12 meses"
+                ></svg>
+              </div>
+            </article>
+
+            <article class="card">
+              <div class="card-cab">
+                <h2>MRR por plano</h2>
+                <span class="sub">participação na receita</span>
+              </div>
+              <div
+                class="card-corpo"
+                style="
+                  display: flex;
+                  gap: 18px;
+                  align-items: center;
+                  flex-wrap: wrap;
+                "
+              >
+                <svg
+                  class="grafico"
+                  id="donutSvg"
+                  viewBox="0 0 200 200"
+                  style="max-width: 190px"
+                  role="img"
+                  aria-label="Gráfico de rosca do MRR por plano"
+                ></svg>
+                <div
+                  class="legenda"
+                  id="donutLegenda"
+                  style="
+                    flex-direction: column;
+                    gap: 10px;
+                    flex: 1;
+                    min-width: 150px;
+                  "
+                ></div>
+              </div>
+            </article>
+          </section>
+
+          <!-- Cohort -->
+          <section class="card" id="cohort">
+            <div class="card-cab">
+              <h2>Retenção por safra de entrada</h2>
+              <span class="sub"
+                >% de contas da safra que permanecem ativas após N meses</span
+              >
+            </div>
+            <div class="card-corpo tabela-wrap">
+              <table class="cohort">
+                <thead id="cohortHead"></thead>
+                <tbody id="cohortCorpo"></tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- Contas -->
+          <section class="card" id="contas">
+            <div class="card-cab" style="padding-bottom: 14px">
+              <h2>Assinaturas</h2>
+              <span class="sub">base completa de contas</span>
+            </div>
+            <div class="filtros">
+              <input
+                type="search"
+                id="campoBusca"
+                data-testid="busca"
+                placeholder="Buscar cliente…"
+                aria-label="Buscar cliente"
+              />
+              <select id="filtroPlano" aria-label="Filtrar por plano">
+                <option value="">Todos os planos</option>
+                <option>Starter</option>
+                <option>Pro</option>
+                <option>Business</option>
+              </select>
+              <select id="filtroStatus" aria-label="Filtrar por status">
+                <option value="">Todos os status</option>
+                <option value="ativa">Ativa</option>
+                <option value="em trial">Em trial</option>
+                <option value="inadimplente">Inadimplente</option>
+                <option value="cancelada">Cancelada</option>
+              </select>
+              <span class="contagem num" id="contagemContas"></span>
+            </div>
+            <div class="tabela-wrap">
+              <table class="tabela-contas">
+                <thead>
+                  <tr>
+                    <th scope="col">Cliente</th>
+                    <th scope="col">Plano</th>
+                    <th scope="col">Pagamento</th>
+                    <th scope="col">Valor/mês</th>
+                    <th scope="col">Início</th>
+                    <th scope="col">Próx. faturamento</th>
+                    <th scope="col">Status</th>
+                    <th scope="col"><span class="oculto">Ações</span></th>
+                  </tr>
+                </thead>
+                <tbody
+                  id="listaPrincipal"
+                  data-testid="lista-principal"
+                ></tbody>
+              </table>
+              <div class="estado-vazio" id="estadoVazio" hidden>
+                <svg
+                  width="72"
+                  height="52"
+                  viewBox="0 0 72 52"
+                  aria-hidden="true"
+                >
+                  <rect
+                    x="6"
+                    y="8"
+                    width="60"
+                    height="38"
+                    rx="6"
+                    fill="#EEF2FF"
+                  />
+                  <path
+                    d="M20 30l8-9 7 7 10-12 7 8"
+                    stroke="#4F46E5"
+                    stroke-width="2.5"
+                    fill="none"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <circle
+                    cx="55"
+                    cy="14"
+                    r="7"
+                    fill="#fff"
+                    stroke="#4F46E5"
+                    stroke-width="2"
+                  />
+                  <path
+                    d="M60 19l6 6"
+                    stroke="#4F46E5"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                  />
+                </svg>
+                <b>Nenhum resultado</b>
+                Ajuste a busca ou os filtros para encontrar contas.
+              </div>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <!-- Modal CRUD -->
+    <div
+      class="modal-fundo"
+      data-testid="modal"
+      id="modal"
+      hidden
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modalTitulo"
+    >
+      <div class="modal-caixa">
+        <div class="modal-cab">
+          <h2 id="modalTitulo">Nova assinatura</h2>
+          <button
+            type="button"
+            class="btn-icone"
+            id="btnFecharModal"
+            aria-label="Fechar"
+          >
+            <svg
+              width="15"
+              height="15"
+              viewBox="0 0 14 14"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              aria-hidden="true"
+            >
+              <path d="M2 2l10 10M12 2L2 12" />
+            </svg>
+          </button>
+        </div>
+        <div class="modal-corpo">
+          <form id="formRegistro" data-testid="form-registro" novalidate>
+            <p class="form-erro" id="formErro" role="alert"></p>
+            <div class="form-grade">
+              <div class="campo largo">
+                <label for="fCliente">Cliente *</label>
+                <input
+                  id="fCliente"
+                  type="text"
+                  placeholder="Ex.: Contabilix Ltda"
+                />
+              </div>
+              <div class="campo">
+                <label for="fPlano">Plano</label>
+                <select id="fPlano">
+                  <option value="Starter">Starter — R$ 149/mês</option>
+                  <option value="Pro" selected>Pro — R$ 399/mês</option>
+                  <option value="Business">Business — R$ 899/mês</option>
+                </select>
+              </div>
+              <div class="campo">
+                <label for="fCiclo">Ciclo</label>
+                <select id="fCiclo">
+                  <option value="mensal">Mensal</option>
+                  <option value="anual">Anual (−10%)</option>
+                </select>
+              </div>
+              <div class="campo">
+                <label for="fPagamento">Forma de pagamento</label>
+                <select id="fPagamento">
+                  <option>cartão recorrente</option>
+                  <option>PIX</option>
+                  <option>boleto</option>
+                </select>
+              </div>
+              <div class="campo">
+                <label for="fValor">Valor R$/mês *</label>
+                <input id="fValor" type="number" min="1" step="1" />
+              </div>
+              <div class="campo">
+                <label for="fInicio">Início *</label>
+                <input id="fInicio" type="date" />
+              </div>
+              <div class="campo">
+                <label for="fProxFat">Próximo faturamento</label>
+                <input id="fProxFat" type="date" />
+              </div>
+              <div class="campo">
+                <label for="fStatus">Status</label>
+                <select id="fStatus">
+                  <option value="ativa">Ativa</option>
+                  <option value="em trial">Em trial</option>
+                  <option value="inadimplente">Inadimplente</option>
+                  <option value="cancelada">Cancelada</option>
+                </select>
+              </div>
+              <div class="campo largo oculto" id="campoMotivo">
+                <label for="fMotivo">Motivo de cancelamento</label>
+                <input
+                  id="fMotivo"
+                  type="text"
+                  placeholder="Ex.: corte de custos"
+                />
+              </div>
+            </div>
+            <div class="modal-acoes">
+              <button
+                type="button"
+                class="btn btn-fantasma"
+                id="btnCancelarModal"
+              >
+                Cancelar
+              </button>
+              <button
+                type="submit"
+                class="btn btn-primario"
+                data-testid="salvar-registro"
+              >
+                Salvar assinatura
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <footer class="banner-demo" role="note">
+      Demonstração funcional · dados fictícios · tudo roda no seu navegador ·
+      <a href="/conceitos">ANDRADE, Estúdio digital</a>
+    </footer>
+    <script>
+      "use strict";
+      /* ===== Determinismo p/ verificação ===== */
+      const E2E =
+        new URLSearchParams(location.search).has("e2e") ||
+        matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (E2E) document.documentElement.classList.add("sem-motion");
+
+      /* ===== Utilidades ===== */
+      function esc(s) {
+        return String(s).replace(
+          /[&<>"']/g,
+          (c) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            })[c],
+        );
+      }
+      const fmtBRL = new Intl.NumberFormat("pt-BR", {
+        style: "currency",
+        currency: "BRL",
+      });
+      const fmtBRL0 = new Intl.NumberFormat("pt-BR", {
+        style: "currency",
+        currency: "BRL",
+        maximumFractionDigits: 0,
+      });
+      const MESES = [
+        "jan",
+        "fev",
+        "mar",
+        "abr",
+        "mai",
+        "jun",
+        "jul",
+        "ago",
+        "set",
+        "out",
+        "nov",
+        "dez",
+      ];
+      const HOJE = new Date();
+      const PLANOS = { Starter: 149, Pro: 399, Business: 899 };
+      const CAC_MEDIO = 780;
+      function mulberry32(a) {
+        return function () {
+          a |= 0;
+          a = (a + 0x6d2b79f5) | 0;
+          let t = Math.imul(a ^ (a >>> 15), 1 | a);
+          t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+          return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+        };
+      }
+      function iso(d) {
+        return (
+          d.getFullYear() +
+          "-" +
+          String(d.getMonth() + 1).padStart(2, "0") +
+          "-" +
+          String(d.getDate()).padStart(2, "0")
+        );
+      }
+      function deIso(s) {
+        const p = String(s).split("-").map(Number);
+        return new Date(p[0], (p[1] || 1) - 1, p[2] || 1);
+      }
+      function chaveIso(s) {
+        const p = String(s).split("-").map(Number);
+        return p[0] * 12 + (p[1] || 1) - 1;
+      }
+      const K0 = HOJE.getFullYear() * 12 + HOJE.getMonth();
+      function nomeChave(k) {
+        return MESES[k % 12] + "/" + String(Math.floor(k / 12)).slice(-2);
+      }
+      function fmtK(v) {
+        return v >= 1000
+          ? "R$ " +
+              (v / 1000).toLocaleString("pt-BR", { maximumFractionDigits: 1 }) +
+              "k"
+          : "R$ " + Math.round(v);
+      }
+      function pct(v) {
+        return v.toLocaleString("pt-BR", { maximumFractionDigits: 1 }) + "%";
+      }
+      function dataCurta(s) {
+        return deIso(s).toLocaleDateString("pt-BR", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "2-digit",
+        });
+      }
+      const $ = (id) => document.getElementById(id);
+      const NS = "http://www.w3.org/2000/svg";
+      function elSvg(tag, attrs, texto) {
+        const e = document.createElementNS(NS, tag);
+        for (const k in attrs) e.setAttribute(k, attrs[k]);
+        if (texto != null) e.textContent = texto;
+        return e;
+      }
+
+      /* ===== Seed determinístico (~92 assinaturas BR) ===== */
+      const PREFIXOS = [
+        "Contabil",
+        "Fisco",
+        "Frete",
+        "Log",
+        "Agro",
+        "Medi",
+        "Odonto",
+        "Educa",
+        "Vetor",
+        "Auto",
+        "Imobi",
+        "Advo",
+        "Gastro",
+        "Farma",
+        "Constru",
+        "Solar",
+        "Enge",
+        "Turis",
+        "Belle",
+        "Moda",
+        "Sport",
+        "Padoca",
+        "Clini",
+        "Nutri",
+      ];
+      const SUFIXOS = [
+        "ix",
+        "Hub",
+        "Flow",
+        "Prime",
+        "Plus",
+        "Sys",
+        "Now",
+        "Mais",
+        "Pro",
+        "Lab",
+        "One",
+        "Tech",
+      ];
+      const JURIDICO = [
+        " Ltda",
+        " ME",
+        " Sistemas",
+        " Digital",
+        " Brasil",
+        " & Cia",
+        "",
+        "",
+      ];
+      const MOTIVOS = [
+        "Corte de custos",
+        "Encerrou operação",
+        "Migrou para concorrente",
+        "Baixo uso da plataforma",
+        "Sensibilidade a preço",
+      ];
+      function criarSeed() {
+        const rnd = mulberry32(20240613);
+        const usados = new Set();
+        function nome() {
+          for (let t = 0; t < 50; t++) {
+            const n =
+              PREFIXOS[(rnd() * PREFIXOS.length) | 0] +
+              SUFIXOS[(rnd() * SUFIXOS.length) | 0] +
+              JURIDICO[(rnd() * JURIDICO.length) | 0];
+            if (!usados.has(n)) {
+              usados.add(n);
+              return n;
+            }
+          }
+          const n = "Empresa Fictícia " + (usados.size + 1);
+          usados.add(n);
+          return n;
+        }
+        const assinaturas = [];
+        const diaHoje = HOJE.getDate();
+        for (let i = 0; i < 92; i++) {
+          const rp = rnd();
+          const plano = rp < 0.45 ? "Starter" : rp < 0.8 ? "Pro" : "Business";
+          const ciclo = rnd() < 0.3 ? "anual" : "mensal";
+          const rg = rnd();
+          const pagamento =
+            rg < 0.55 ? "cartão recorrente" : rg < 0.8 ? "PIX" : "boleto";
+          const valor =
+            ciclo === "anual" ? Math.round(PLANOS[plano] * 0.9) : PLANOS[plano];
+          let status = "ativa",
+            mesesAtras,
+            motivo = "",
+            cancelamento = null,
+            proxFat = null;
+          if (i < 4) {
+            mesesAtras = 0;
+          } // novas do mês (Novo no waterfall)
+          else if (i < 9) {
+            status = "em trial";
+            mesesAtras = 0;
+          } // trials recentes
+          else if (i < 21) {
+            status = "cancelada";
+            mesesAtras = 6 + ((rnd() * 17) | 0);
+          } else if (i < 28) {
+            status = "inadimplente";
+            mesesAtras = 2 + ((rnd() * 20) | 0);
+          } else {
+            mesesAtras = 1 + ((rnd() * 23) | 0);
+          }
+          const diaMax = mesesAtras === 0 ? Math.max(diaHoje, 1) : 26;
+          const inicioD = new Date(
+            HOJE.getFullYear(),
+            HOJE.getMonth() - mesesAtras,
+            1 + ((rnd() * diaMax) | 0),
+          );
+          const inicio = iso(inicioD);
+          if (status === "cancelada") {
+            let cMeses =
+              i === 9 || i === 10
+                ? 0
+                : i === 11 || i === 12
+                  ? 1
+                  : 2 + ((rnd() * Math.max(mesesAtras - 3, 1)) | 0);
+            cMeses = Math.min(cMeses, mesesAtras - 1);
+            const dC = cMeses === 0 ? Math.max(diaHoje, 1) : 26;
+            cancelamento = iso(
+              new Date(
+                HOJE.getFullYear(),
+                HOJE.getMonth() - cMeses,
+                1 + ((rnd() * dC) | 0),
+              ),
+            );
+            motivo = MOTIVOS[(rnd() * MOTIVOS.length) | 0];
+          } else if (status === "inadimplente") {
+            const atraso = 3 + ((rnd() * 42) | 0);
+            proxFat = iso(
+              new Date(
+                HOJE.getFullYear(),
+                HOJE.getMonth(),
+                HOJE.getDate() - atraso,
+              ),
+            );
+          } else if (status === "em trial") {
+            proxFat = iso(
+              new Date(
+                inicioD.getFullYear(),
+                inicioD.getMonth(),
+                inicioD.getDate() + 14,
+              ),
+            );
+          } else {
+            proxFat = iso(
+              new Date(
+                HOJE.getFullYear(),
+                HOJE.getMonth(),
+                HOJE.getDate() + 1 + ((rnd() * 29) | 0),
+              ),
+            );
+          }
+          assinaturas.push({
+            id: "as-" + String(i + 1).padStart(3, "0"),
+            cliente: nome(),
+            plano,
+            ciclo,
+            pagamento,
+            valor,
+            inicio,
+            status,
+            motivo,
+            proxFat,
+            cancelamento,
+            mudanca: null,
+          });
+        }
+        /* mudanças de plano (expansão/contração p/ waterfall) */
+        const candidatos = assinaturas.filter(
+          (a) => a.status === "ativa" && chaveIso(a.inicio) <= K0 - 5,
+        );
+        let exp = 0,
+          con = 0;
+        for (const c of candidatos) {
+          if (exp + con >= 10) break;
+          const querExp = exp + con === 1 ? false : exp < 6;
+          const idadeMeses = K0 - chaveIso(c.inicio);
+          let mMeses =
+            exp + con === 0 || exp + con === 1 ? 0 : 1 + ((rnd() * 7) | 0);
+          mMeses = Math.min(mMeses, idadeMeses - 1);
+          const dM = mMeses === 0 ? Math.max(diaHoje, 1) : 26;
+          const data = iso(
+            new Date(
+              HOJE.getFullYear(),
+              HOJE.getMonth() - mMeses,
+              1 + ((rnd() * dM) | 0),
+            ),
+          );
+          if (querExp && c.plano !== "Starter") {
+            c.mudanca = { delta: c.plano === "Business" ? 500 : 250, data };
+            exp++;
+          } else if (!querExp && c.plano !== "Business" && con < 4) {
+            c.mudanca = { delta: c.plano === "Starter" ? -250 : -500, data };
+            con++;
+          }
+        }
+        return { assinaturas };
+      }
+
+      /* ===== Armazenamento resiliente ===== */
+      const STORE_KEY = "andrade:vetor-analytics:v1";
+      let _mem = null; // fallback p/ modo privado
+      function dadosValidos(o) {
+        return (
+          !!o &&
+          Array.isArray(o.assinaturas) &&
+          o.assinaturas.every(
+            (a) =>
+              a && typeof a.cliente === "string" && typeof a.valor === "number",
+          )
+        );
+      }
+      function carregarDados() {
+        try {
+          const bruto = localStorage.getItem(STORE_KEY);
+          if (bruto) {
+            const o = JSON.parse(bruto);
+            if (dadosValidos(o)) return o;
+          }
+        } catch {}
+        return _mem ?? criarSeed();
+      }
+      function salvarDados(d) {
+        _mem = d;
+        try {
+          localStorage.setItem(STORE_KEY, JSON.stringify(d));
+        } catch {}
+      }
+      function restaurarDemo() {
+        // limpa SÓ o próprio namespace
+        try {
+          localStorage.removeItem(STORE_KEY);
+        } catch {}
+        _mem = null;
+        estado = criarSeed();
+        salvarDados(estado);
+        renderTudo();
+      }
+      let estado = carregarDados();
+      salvarDados(estado);
+
+      /* ===== Métricas derivadas (sempre recomputadas) ===== */
+      function valorNoMes(a, k) {
+        if (chaveIso(a.inicio) > k) return 0;
+        if (a.status === "em trial") return 0;
+        if (a.cancelamento && chaveIso(a.cancelamento) <= k) return 0;
+        let v = a.valor;
+        if (a.mudanca && chaveIso(a.mudanca.data) > k)
+          v = a.valor - a.mudanca.delta;
+        return v;
+      }
+      function mrrMes(k) {
+        return estado.assinaturas.reduce((s, a) => s + valorNoMes(a, k), 0);
+      }
+      function movimentoMes(k) {
+        let novo = 0,
+          expansao = 0,
+          contracao = 0,
+          churn = 0;
+        for (const a of estado.assinaturas) {
+          if (a.status !== "em trial" && chaveIso(a.inicio) === k)
+            novo += valorNoMes(a, k);
+          if (a.cancelamento && chaveIso(a.cancelamento) === k)
+            churn += valorNoMes(a, k - 1);
+          if (
+            a.mudanca &&
+            chaveIso(a.mudanca.data) === k &&
+            valorNoMes(a, k) > 0
+          ) {
+            if (a.mudanca.delta > 0) expansao += a.mudanca.delta;
+            else contracao += -a.mudanca.delta;
+          }
+        }
+        return { novo, expansao, contracao, churn };
+      }
+
+      /* ===== KPIs ===== */
+      function renderKPIs() {
+        const mrr = mrrMes(K0),
+          mrrPrev = mrrMes(K0 - 1);
+        const mov = movimentoMes(K0);
+        const pagantes = estado.assinaturas.filter(
+          (a) => valorNoMes(a, K0) > 0,
+        );
+        $("kpiMrr").textContent = fmtBRL0.format(mrr);
+        $("kpiMrrExtra").textContent = pagantes.length + " contas pagantes";
+        const dif = mrr - mrrPrev;
+        const vp = mrrPrev > 0 ? (dif / mrrPrev) * 100 : 0;
+        $("kpiVar").innerHTML =
+          `<span class="delta ${dif >= 0 ? "pos" : "neg"}">${dif >= 0 ? "▲" : "▼"} ${esc(pct(Math.abs(vp)))}</span>`;
+        $("kpiVarExtra").textContent =
+          (dif >= 0 ? "+" : "−") + fmtBRL0.format(Math.abs(dif)) + " no mês";
+        const churnPct = mrrPrev > 0 ? (mov.churn / mrrPrev) * 100 : 0;
+        $("kpiChurn").textContent = pct(churnPct);
+        $("kpiChurnExtra").textContent =
+          fmtBRL0.format(mov.churn) + " perdidos no mês";
+        const arpu = pagantes.length ? mrr / pagantes.length : 0;
+        $("kpiArpu").textContent = fmtBRL.format(arpu);
+        $("kpiArpuExtra").textContent = "receita média por conta";
+        const ltv = arpu / Math.max(churnPct / 100, 0.005);
+        $("kpiLtv").textContent =
+          (ltv / CAC_MEDIO).toLocaleString("pt-BR", {
+            maximumFractionDigits: 1,
+          }) + "×";
+      }
+
+      /* ===== Waterfall SVG ===== */
+      function renderWaterfall() {
+        const svg = $("waterfallSvg");
+        svg.textContent = "";
+        const mrrPrev = mrrMes(K0 - 1),
+          mrr = mrrMes(K0),
+          mov = movimentoMes(K0);
+        $("waterfallSub").textContent =
+          nomeChave(K0 - 1) + " → " + nomeChave(K0);
+        const cols = [
+          {
+            rotulo: "MRR " + nomeChave(K0 - 1),
+            tipo: "total",
+            de: 0,
+            ate: mrrPrev,
+          },
+          { rotulo: "Novo", tipo: "pos", delta: mov.novo },
+          { rotulo: "Expansão", tipo: "pos", delta: mov.expansao },
+          { rotulo: "Contração", tipo: "neg", delta: -mov.contracao },
+          { rotulo: "Churn", tipo: "neg", delta: -mov.churn },
+          { rotulo: "MRR " + nomeChave(K0), tipo: "total", de: 0, ate: mrr },
+        ];
+        let acum = mrrPrev;
+        for (const c of cols) {
+          if (c.tipo !== "total") {
+            c.de = acum;
+            acum += c.delta;
+            c.ate = acum;
+          }
+        }
+        const vals = cols.flatMap((c) => [c.de, c.ate]);
+        const vMin = Math.max(0, Math.min(...vals.filter((v) => v > 0)) * 0.88);
+        const vMax = Math.max(...vals) * 1.03;
+        const X0 = 64,
+          X1 = 648,
+          Y0 = 18,
+          Y1 = 252;
+        const y = (v) =>
+          Y1 - ((Math.max(v, vMin) - vMin) / (vMax - vMin)) * (Y1 - Y0);
+        for (let g = 0; g <= 4; g++) {
+          const v = vMin + ((vMax - vMin) * g) / 4,
+            yy = y(v);
+          svg.appendChild(
+            elSvg("line", {
+              x1: X0,
+              y1: yy,
+              x2: X1,
+              y2: yy,
+              stroke: "#EEF0F4",
+              "stroke-width": 1,
+            }),
+          );
+          svg.appendChild(
+            elSvg(
+              "text",
+              {
+                x: X0 - 8,
+                y: yy + 4,
+                "text-anchor": "end",
+                "font-size": 10.5,
+                fill: "#9CA3AF",
+                "font-family": "Inter",
+              },
+              fmtK(v),
+            ),
+          );
+        }
+        const n = cols.length,
+          larg = (X1 - X0) / n,
+          bw = Math.min(70, larg * 0.58);
+        cols.forEach((c, i) => {
+          const cx = X0 + larg * i + larg / 2;
+          const topo = Math.max(c.de, c.ate),
+            base = Math.min(c.de, c.ate);
+          const yT = y(topo),
+            h = Math.max(y(base) - yT, 3);
+          const cor =
+            c.tipo === "total"
+              ? "#3730A3"
+              : c.tipo === "pos"
+                ? "#047857"
+                : "#B91C1C";
+          svg.appendChild(
+            elSvg("rect", {
+              x: cx - bw / 2,
+              y: yT,
+              width: bw,
+              height: h,
+              rx: 4,
+              fill: cor,
+              opacity: c.tipo === "total" ? 1 : 0.92,
+            }),
+          );
+          const valTexto =
+            c.tipo === "total"
+              ? fmtK(c.ate)
+              : (c.delta >= 0 ? "+" : "−") + fmtK(Math.abs(c.delta));
+          svg.appendChild(
+            elSvg(
+              "text",
+              {
+                x: cx,
+                y: yT - 7,
+                "text-anchor": "middle",
+                "font-size": 11.5,
+                "font-weight": 700,
+                fill: c.tipo === "total" ? "#111827" : cor,
+                "font-family": "Sora",
+              },
+              valTexto,
+            ),
+          );
+          svg.appendChild(
+            elSvg(
+              "text",
+              {
+                x: cx,
+                y: Y1 + 18,
+                "text-anchor": "middle",
+                "font-size": 10.5,
+                fill: "#6B7280",
+                "font-family": "Inter",
+              },
+              c.rotulo,
+            ),
+          );
+          if (i < n - 1) {
+            const yc = y(c.ate);
+            svg.appendChild(
+              elSvg("line", {
+                x1: cx + bw / 2,
+                y1: yc,
+                x2: X0 + larg * (i + 1) + larg / 2 - bw / 2,
+                y2: yc,
+                stroke: "#C3C8D4",
+                "stroke-width": 1,
+                "stroke-dasharray": "3 3",
+              }),
+            );
+          }
+        });
+      }
+
+      /* ===== Linha 12 meses ===== */
+      function renderLinha() {
+        const svg = $("linhaSvg");
+        svg.textContent = "";
+        const pontos = [];
+        for (let k = K0 - 11; k <= K0; k++) pontos.push({ k, v: mrrMes(k) });
+        const vs = pontos.map((p) => p.v);
+        const vMin = Math.min(...vs) * 0.94,
+          vMax = Math.max(...vs) * 1.05;
+        const X0 = 58,
+          X1 = 648,
+          Y0 = 14,
+          Y1 = 214;
+        const x = (i) => X0 + ((X1 - X0) * i) / (pontos.length - 1);
+        const y = (v) => Y1 - ((v - vMin) / (vMax - vMin || 1)) * (Y1 - Y0);
+        const defs = elSvg("defs", {});
+        const grad = elSvg("linearGradient", {
+          id: "gradArea",
+          x1: 0,
+          y1: 0,
+          x2: 0,
+          y2: 1,
+        });
+        grad.appendChild(
+          elSvg("stop", {
+            offset: "0%",
+            "stop-color": "#4F46E5",
+            "stop-opacity": 0.22,
+          }),
+        );
+        grad.appendChild(
+          elSvg("stop", {
+            offset: "100%",
+            "stop-color": "#4F46E5",
+            "stop-opacity": 0,
+          }),
+        );
+        defs.appendChild(grad);
+        svg.appendChild(defs);
+        for (let g = 0; g <= 3; g++) {
+          const v = vMin + ((vMax - vMin) * g) / 3,
+            yy = y(v);
+          svg.appendChild(
+            elSvg("line", {
+              x1: X0,
+              y1: yy,
+              x2: X1,
+              y2: yy,
+              stroke: "#EEF0F4",
+              "stroke-width": 1,
+            }),
+          );
+          svg.appendChild(
+            elSvg(
+              "text",
+              {
+                x: X0 - 8,
+                y: yy + 4,
+                "text-anchor": "end",
+                "font-size": 10.5,
+                fill: "#9CA3AF",
+                "font-family": "Inter",
+              },
+              fmtK(v),
+            ),
+          );
+        }
+        let dL = "",
+          dA = "";
+        pontos.forEach((p, i) => {
+          const px = x(i),
+            py = y(p.v);
+          dL += (i ? " L" : "M") + px + " " + py;
+          dA += (i ? " L" : "M") + px + " " + py;
+        });
+        dA += " L" + X1 + " " + Y1 + " L" + X0 + " " + Y1 + " Z";
+        svg.appendChild(elSvg("path", { d: dA, fill: "url(#gradArea)" }));
+        svg.appendChild(
+          elSvg("path", {
+            d: dL,
+            fill: "none",
+            stroke: "#4F46E5",
+            "stroke-width": 2.5,
+            "stroke-linejoin": "round",
+            "stroke-linecap": "round",
+          }),
+        );
+        pontos.forEach((p, i) => {
+          const px = x(i),
+            py = y(p.v),
+            ultimo = i === pontos.length - 1;
+          svg.appendChild(
+            elSvg("circle", {
+              cx: px,
+              cy: py,
+              r: ultimo ? 5 : 3,
+              fill: ultimo ? "#4F46E5" : "#fff",
+              stroke: "#4F46E5",
+              "stroke-width": 2,
+            }),
+          );
+          if (ultimo)
+            svg.appendChild(
+              elSvg(
+                "text",
+                {
+                  x: px - 6,
+                  y: py - 12,
+                  "text-anchor": "end",
+                  "font-size": 12,
+                  "font-weight": 700,
+                  fill: "#3730A3",
+                  "font-family": "Sora",
+                },
+                fmtK(p.v),
+              ),
+            );
+          if (i % 2 === 1)
+            svg.appendChild(
+              elSvg(
+                "text",
+                {
+                  x: px,
+                  y: Y1 + 20,
+                  "text-anchor": "middle",
+                  "font-size": 10,
+                  fill: "#9CA3AF",
+                  "font-family": "Inter",
+                },
+                nomeChave(p.k),
+              ),
+            );
+        });
+      }
+
+      /* ===== Donut por plano ===== */
+      function renderDonut() {
+        const svg = $("donutSvg");
+        svg.textContent = "";
+        const cores = {
+          Starter: "#C7D2FE",
+          Pro: "#6366F1",
+          Business: "#312E81",
+        };
+        const porPlano = { Starter: 0, Pro: 0, Business: 0 };
+        for (const a of estado.assinaturas)
+          porPlano[a.plano] = (porPlano[a.plano] || 0) + valorNoMes(a, K0);
+        const total = porPlano.Starter + porPlano.Pro + porPlano.Business;
+        const R = 70,
+          C = 2 * Math.PI * R;
+        let off = 0;
+        for (const plano of ["Starter", "Pro", "Business"]) {
+          const frac = total ? porPlano[plano] / total : 0,
+            len = frac * C;
+          const c = elSvg("circle", {
+            cx: 100,
+            cy: 100,
+            r: R,
+            fill: "none",
+            stroke: cores[plano],
+            "stroke-width": 30,
+            "stroke-dasharray": len + " " + (C - len),
+            "stroke-dashoffset": -off,
+            transform: "rotate(-90 100 100)",
+          });
+          svg.appendChild(c);
+          off += len;
+        }
+        svg.appendChild(
+          elSvg(
+            "text",
+            {
+              x: 100,
+              y: 96,
+              "text-anchor": "middle",
+              "font-size": 19,
+              "font-weight": 700,
+              fill: "#111827",
+              "font-family": "Sora",
+            },
+            fmtK(total),
+          ),
+        );
+        svg.appendChild(
+          elSvg(
+            "text",
+            {
+              x: 100,
+              y: 114,
+              "text-anchor": "middle",
+              "font-size": 10.5,
+              fill: "#6B7280",
+              "font-family": "Inter",
+            },
+            "MRR total",
+          ),
+        );
+        $("donutLegenda").innerHTML = ["Starter", "Pro", "Business"]
+          .map((p) => {
+            const frac = total ? (porPlano[p] / total) * 100 : 0;
+            return `<span><i style="background:${cores[p]}"></i><b>${p}</b> · <span class="num">${esc(fmtBRL0.format(porPlano[p]))}</span> <span style="color:var(--texto-3)">(${esc(pct(frac))})</span></span>`;
+          })
+          .join("");
+      }
+
+      /* ===== Inadimplentes + régua ===== */
+      function renderInadimplentes() {
+        const lista = estado.assinaturas
+          .filter((a) => a.status === "inadimplente")
+          .map((a) => ({
+            ...a,
+            dias: a.proxFat
+              ? Math.max(0, Math.floor((HOJE - deIso(a.proxFat)) / 864e5))
+              : 0,
+          }))
+          .sort((a, b) => b.dias - a.dias);
+        const total = lista.reduce((s, a) => s + a.valor, 0);
+        $("inadTotal").textContent = fmtBRL0.format(total);
+        $("inadContagem").textContent =
+          lista.length +
+          " conta" +
+          (lista.length === 1 ? "" : "s") +
+          " em atraso";
+        $("inadLista").innerHTML = lista.length
+          ? lista
+              .map(
+                (a) => `
+    <li>
+      <div class="inad-linha1"><b>${esc(a.cliente)}</b><span class="num">${esc(fmtBRL.format(a.valor))}</span></div>
+      <p class="inad-meta">${esc(a.plano)} · ${esc(a.pagamento)} · <b>${a.dias} dia${a.dias === 1 ? "" : "s"} de atraso</b></p>
+      <div class="regua" aria-label="Régua de cobrança">
+        <span class="${a.dias >= 1 ? "feito" : ""}">D+1 PIX</span>
+        <span class="${a.dias >= 3 ? "feito" : ""}">D+3 e-mail</span>
+        <span class="${a.dias >= 7 ? "feito critico" : ""}">D+7 suspensão</span>
+      </div>
+    </li>`,
+              )
+              .join("")
+          : `<li><p class="inad-meta" style="padding:8px 0">Nenhuma conta em atraso. 🎉</p></li>`;
+      }
+
+      /* ===== Cohort ===== */
+      function renderCohort() {
+        const head = $("cohortHead"),
+          corpo = $("cohortCorpo");
+        let h = `<tr><th scope="col">Safra</th><th scope="col" class="c">Contas</th>`;
+        for (let m = 0; m < 6; m++) h += `<th scope="col" class="c">M${m}</th>`;
+        head.innerHTML = h + "</tr>";
+        let linhas = "";
+        for (let s = K0 - 7; s <= K0; s++) {
+          const membros = estado.assinaturas.filter(
+            (a) => a.status !== "em trial" && chaveIso(a.inicio) === s,
+          );
+          let cels = "";
+          for (let m = 0; m < 6; m++) {
+            if (s + m > K0 || !membros.length) {
+              cels += `<td class="cel vazio-cel">·</td>`;
+              continue;
+            }
+            const ret =
+              membros.filter(
+                (a) => !(a.cancelamento && chaveIso(a.cancelamento) <= s + m),
+              ).length / membros.length;
+            const alpha = (0.08 + ret * 0.82).toFixed(2);
+            cels += `<td class="cel" style="background:rgba(79,70,229,${alpha});color:${ret > 0.55 ? "#fff" : "#312E81"}">${Math.round(ret * 100)}%</td>`;
+          }
+          linhas += `<tr><td>${esc(nomeChave(s))}</td><td class="cel num" style="color:var(--texto-2)">${membros.length}</td>${cels}</tr>`;
+        }
+        corpo.innerHTML = linhas;
+      }
+
+      /* ===== Tabela de contas (CRUD) ===== */
+      const CLASSE_STATUS = {
+        ativa: "ativa",
+        "em trial": "trial",
+        inadimplente: "inadimplente",
+        cancelada: "cancelada",
+      };
+      const ROTULO_STATUS = {
+        ativa: "Ativa",
+        "em trial": "Em trial",
+        inadimplente: "Inadimplente",
+        cancelada: "Cancelada",
+      };
+      function filtrados() {
+        const q = $("campoBusca").value.trim().toLowerCase();
+        const fp = $("filtroPlano").value,
+          fs = $("filtroStatus").value;
+        return estado.assinaturas.filter(
+          (a) =>
+            (!q || a.cliente.toLowerCase().includes(q)) &&
+            (!fp || a.plano === fp) &&
+            (!fs || a.status === fs),
+        );
+      }
+      function renderTabela() {
+        const lista = filtrados()
+          .slice()
+          .sort(
+            (a, b) =>
+              b.inicio.localeCompare(a.inicio) ||
+              a.cliente.localeCompare(b.cliente),
+          );
+        $("contagemContas").textContent =
+          lista.length + " de " + estado.assinaturas.length + " contas";
+        $("estadoVazio").hidden = lista.length > 0;
+        $("listaPrincipal").innerHTML = lista
+          .map(
+            (a) => `
+    <tr data-item data-id="${esc(a.id)}">
+      <td data-rotulo="Cliente"><b>${esc(a.cliente)}</b></td>
+      <td data-rotulo="Plano"><span class="plano-tag">${esc(a.plano)}<small>${esc(a.ciclo)} · ${esc(fmtBRL0.format(a.valor))}/mês</small></span></td>
+      <td data-rotulo="Pagamento">${esc(a.pagamento)}</td>
+      <td data-rotulo="Valor/mês" class="num">${esc(fmtBRL.format(a.valor))}</td>
+      <td data-rotulo="Início" class="num">${esc(dataCurta(a.inicio))}</td>
+      <td data-rotulo="Próx. faturamento" class="num">${a.status === "cancelada" ? "—" : a.proxFat ? esc(dataCurta(a.proxFat)) : "—"}</td>
+      <td data-rotulo="Status"><span class="badge ${CLASSE_STATUS[a.status] || "cancelada"}" ${a.motivo ? `title="Motivo: ${esc(a.motivo)}"` : ""}>${esc(ROTULO_STATUS[a.status] || a.status)}</span></td>
+      <td class="sem-rotulo"><div class="acoes-item">
+        <button type="button" class="btn-icone" data-testid="editar-item" data-acao="editar" data-id="${esc(a.id)}" aria-label="Editar ${esc(a.cliente)}">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M11.3 2.3a1.6 1.6 0 012.4 2.4L5 13.4l-3 .6.6-3z"/></svg>
+        </button>
+        <button type="button" class="btn-icone excluir" data-testid="excluir-item" data-acao="excluir" data-id="${esc(a.id)}" aria-label="Excluir ${esc(a.cliente)}">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2.5 4h11M6.5 4V2.5h3V4M4 4l.8 9.5h6.4L12 4M6.7 7v4M9.3 7v4"/></svg>
+        </button>
+      </div></td>
+    </tr>`,
+          )
+          .join("");
+      }
+
+      function renderTudo() {
+        renderKPIs();
+        renderWaterfall();
+        renderLinha();
+        renderDonut();
+        renderInadimplentes();
+        renderCohort();
+        renderTabela();
+      }
+
+      /* ===== Modal / formulário ===== */
+      let editandoId = null,
+        focoAnterior = null;
+      const modal = $("modal");
+      function valorSugerido() {
+        const base = PLANOS[$("fPlano").value] || 0;
+        return $("fCiclo").value === "anual" ? Math.round(base * 0.9) : base;
+      }
+      function abrirModal(a) {
+        editandoId = a ? a.id : null;
+        focoAnterior = document.activeElement;
+        $("modalTitulo").textContent = a
+          ? "Editar assinatura"
+          : "Nova assinatura";
+        $("formErro").classList.remove("visivel");
+        $("fCliente").value = a ? a.cliente : "";
+        $("fPlano").value = a ? a.plano : "Pro";
+        $("fCiclo").value = a ? a.ciclo : "mensal";
+        $("fPagamento").value = a ? a.pagamento : "cartão recorrente";
+        $("fValor").value = a ? a.valor : valorSugerido();
+        $("fInicio").value = a ? a.inicio : iso(HOJE);
+        $("fProxFat").value = a
+          ? a.proxFat || ""
+          : iso(
+              new Date(
+                HOJE.getFullYear(),
+                HOJE.getMonth(),
+                HOJE.getDate() + 30,
+              ),
+            );
+        $("fStatus").value = a ? a.status : "ativa";
+        $("fMotivo").value = a ? a.motivo || "" : "";
+        $("campoMotivo").classList.toggle(
+          "oculto",
+          $("fStatus").value !== "cancelada",
+        );
+        modal.hidden = false;
+        $("fCliente").focus();
+      }
+      function fecharModal() {
+        modal.hidden = true;
+        editandoId = null;
+        if (focoAnterior && document.contains(focoAnterior))
+          focoAnterior.focus();
+      }
+      $("fPlano").addEventListener("change", () => {
+        $("fValor").value = valorSugerido();
+      });
+      $("fCiclo").addEventListener("change", () => {
+        $("fValor").value = valorSugerido();
+      });
+      $("fStatus").addEventListener("change", () => {
+        $("campoMotivo").classList.toggle(
+          "oculto",
+          $("fStatus").value !== "cancelada",
+        );
+      });
+      $("btnFecharModal").addEventListener("click", fecharModal);
+      $("btnCancelarModal").addEventListener("click", fecharModal);
+      modal.addEventListener("click", (e) => {
+        if (e.target === modal) fecharModal();
+      });
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          if (!modal.hidden) fecharModal();
+          else fecharMenuMobile();
+        }
+      });
+      $("formRegistro").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const erros = [];
+        const cliente = $("fCliente").value.trim();
+        const valor = parseFloat($("fValor").value);
+        const inicio = $("fInicio").value;
+        if (!cliente) erros.push("informe o nome do cliente");
+        if (!(valor > 0)) erros.push("informe um valor mensal maior que zero");
+        if (!inicio) erros.push("informe a data de início");
+        if (erros.length) {
+          const el = $("formErro");
+          el.textContent = "Não foi possível salvar: " + erros.join("; ") + ".";
+          el.classList.add("visivel");
+          return;
+        }
+        const status = $("fStatus").value;
+        const dados = {
+          cliente,
+          valor: Math.round(valor),
+          inicio,
+          plano: $("fPlano").value,
+          ciclo: $("fCiclo").value,
+          pagamento: $("fPagamento").value,
+          proxFat: $("fProxFat").value || null,
+          status,
+          motivo: status === "cancelada" ? $("fMotivo").value.trim() : "",
+          cancelamento: status === "cancelada" ? iso(HOJE) : null,
+        };
+        if (editandoId) {
+          const a = estado.assinaturas.find((x) => x.id === editandoId);
+          if (a) {
+            const mud = a.mudanca;
+            Object.assign(a, dados);
+            a.mudanca = a.status === "ativa" ? mud : null;
+          }
+        } else {
+          estado.assinaturas.push({
+            id:
+              "as-" + Date.now().toString(36) + Math.floor(Math.random() * 1e3),
+            mudanca: null,
+            ...dados,
+          });
+        }
+        salvarDados(estado);
+        fecharModal();
+        renderTudo();
+      });
+
+      /* ===== Ações da tabela ===== */
+      $("listaPrincipal").addEventListener("click", (e) => {
+        const btn = e.target.closest("button[data-acao]");
+        if (!btn) return;
+        const a = estado.assinaturas.find((x) => x.id === btn.dataset.id);
+        if (!a) return;
+        if (btn.dataset.acao === "editar") abrirModal(a);
+        else {
+          estado.assinaturas = estado.assinaturas.filter((x) => x.id !== a.id);
+          salvarDados(estado);
+          renderTudo();
+        }
+      });
+      $("btnNovo").addEventListener("click", () => abrirModal(null));
+      $("btnRestaurar").addEventListener("click", restaurarDemo);
+      ["campoBusca", "filtroPlano", "filtroStatus"].forEach((id) => {
+        $(id).addEventListener("input", renderTabela);
+      });
+
+      /* ===== Menu mobile ===== */
+      let sombra = null;
+      function fecharMenuMobile() {
+        $("sidebar").classList.remove("aberta");
+        $("btnMenu").setAttribute("aria-expanded", "false");
+        if (sombra) {
+          sombra.remove();
+          sombra = null;
+        }
+      }
+      $("btnMenu").addEventListener("click", () => {
+        const sb = $("sidebar");
+        if (sb.classList.contains("aberta")) {
+          fecharMenuMobile();
+          return;
+        }
+        sb.classList.add("aberta");
+        $("btnMenu").setAttribute("aria-expanded", "true");
+        sombra = document.createElement("div");
+        sombra.className = "sombra-mobile";
+        sombra.addEventListener("click", fecharMenuMobile);
+        document.body.appendChild(sombra);
+      });
+      document
+        .querySelectorAll(".nav a")
+        .forEach((a) => a.addEventListener("click", fecharMenuMobile));
+
+      /* ===== Login fake ===== */
+      $("btnEntrar").addEventListener("click", () => {
+        $("loginTela").style.display = "none";
+        $("app").hidden = false;
+      });
+
+      /* ===== Boot ===== */
+      $("periodoAtual").textContent = HOJE.toLocaleDateString("pt-BR", {
+        month: "long",
+        year: "numeric",
+      });
+      renderTudo();
+    </script>
+  </body>
+</html>
